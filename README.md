@@ -14,6 +14,6 @@ A game-like environment where anyone can play with the AI on the web. The AI can
 
 ## What's the MVP version of this project?
 
-A locally run Unity3D game where you stack blocks of commonly found objects and the AI states a guess at what that object is and adds a few blocks to partially complete the object geometry.
+A locally run Unity3D game where you stack blocks to make a common 3D object and the AI states a guess at what that object is and adds a few blocks to partially complete the 3D object geometry.
 
-Additionally, a survey of questions on people's subjective experience building blocks with AI can highlight if the AI is really helping with people's creativity and efficiency.
+Additionally, a survey of questions on people's subjective experience building blocks with AI can document if the AI is really helping with people's creativity and efficiency.
