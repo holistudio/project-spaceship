@@ -6,6 +6,7 @@ A log of project progress and specific lessons learned.
 
 - [ ] **Mercury**: A 3D block environment within Unity's GUI that can read a JSON file to display an arrangement of blocks of predefined sizes.
 - [ ] **Venus**: A labeled dataset of 3D models of object that are built with blocks of predefined sizes
+  - [ ] Look into ShapeNet
 - [ ] **Earth**: A trained Block Planning Agent
 - [ ] **Moon**: Revisit overall approach. Is RL a necessary part of this approach?
 - [ ] **Mars**: Build a standalone 3D block environment app
