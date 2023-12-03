@@ -70,3 +70,75 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+dist/
+build/
+*.exe
+*.spec
+
+# pytest
+pytest_cache/
+
+# macOS
+.DS_Store
+
+# Virtual Environment
+venv/
+env/
+*.env
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# PyTorch checkpoints
+*.pth
+
+# Ignore history file
+.history
+
+# Ignore PyTorch Lightning logs
+lightning_logs/
+
+# Ignore tensorboard logs
+runs/
+
+# Ignore IDE files
+.vscode/
+*.idea/
+
+# Ignore system-specific files
+*.DS_Store
+Thumbs.db
+
+# Ignore backup and temporary files
+*~
+*.bak
+*.swp
