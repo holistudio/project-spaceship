@@ -142,3 +142,5 @@ Thumbs.db
 *~
 *.bak
 *.swp
+
+*.drawio.dtmp
