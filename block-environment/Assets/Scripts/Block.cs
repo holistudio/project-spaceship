@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public class Block : MonoBehaviour
@@ -18,8 +20,7 @@ public class Block : MonoBehaviour
         position = transform.position;
         orientation = GetOrientation();
         Color rgba_color = gameObject.GetComponent<MeshRenderer>().material.color;
-        color = new Vector3(rgba_color.r,rgba_color.g,rgba_color.b);
-        print(color);
+        color = new Vector3(rgba_color.r,rgba_color.g,rgba_color.b); 
     }
     // Start is called before the first frame update
     void Start()
@@ -29,7 +30,20 @@ public class Block : MonoBehaviour
 
     int GetOrientation()
     {
-        return 1;
+        int angle = (int) Math.Round(transform.rotation.eulerAngles.y);
+
+        if (angle % 90 == 0)
+        {
+            if ((angle/90 % 2) == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+        return -1;
     }
 
     bool CheckModified()
