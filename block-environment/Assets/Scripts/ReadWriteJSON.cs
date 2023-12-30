@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 
 using System.IO;
-using System.Runtime.Serialization.Json;
+using System.Text.Json;
 
 using static Block;
 
@@ -19,13 +19,11 @@ public class Design
 
 public class ReadWriteJSON : MonoBehaviour
 {
-    public bool readMode = false;
-
     private string filePath = "design.json";
 
     private int designID = -1; // even designIDs are for the architect, odd designIDs are for the agent
 
-    public bool waiting = false;
+    public bool waiting = true;
 
     //boolean for checking if JSON has been read
     private bool jsonRead = false;
@@ -35,7 +33,7 @@ public class ReadWriteJSON : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        WriteDesignJSON("user");
+        
     }
 
     Design recordDesignBlocks()
@@ -97,12 +95,9 @@ public class ReadWriteJSON : MonoBehaviour
         newDesign.lastModified = formattedTime;
 
         // Serialize the object to JSON
-        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(Design));
+        string json = JsonUtility.ToJson(newDesign);
 
-        using (FileStream stream = new FileStream(filePath, FileMode.Create))
-        {
-            serializer.WriteObject(stream, newDesign);
-        }
+        File.WriteAllText(filePath, json);
 
         if(author.Equals("user"))
         {
@@ -114,6 +109,9 @@ public class ReadWriteJSON : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(!waiting)
+        {
+            WriteDesignJSON("user");
+        }
     }
 }
