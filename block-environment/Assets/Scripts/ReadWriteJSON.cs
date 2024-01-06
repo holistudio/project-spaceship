@@ -17,8 +17,19 @@ public class Design
     public string[] objectList;
 }
 
+public class BlockData
+{
+    public string type;
+    public Vector3 position;
+    public int orientation;
+    public Vector3 color;
+    public int sequenceIndex;
+}
+
 public class ReadWriteJSON : MonoBehaviour
 {
+    public GameObject blockSet;
+
     private string filePath = "design.json";
 
     private int designID = -1; // even designIDs are for the architect, odd designIDs are for the agent
@@ -33,7 +44,7 @@ public class ReadWriteJSON : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        ReadDesignJSON();
     }
 
     Design recordDesignBlocks()
@@ -75,6 +86,56 @@ public class ReadWriteJSON : MonoBehaviour
         return newDesign;
     }
 
+    public void ReadDesignJSON()
+    {
+        if (File.Exists(filePath))
+        {
+            // Load design from the JSON file
+            Design currentDesign = JsonUtility.FromJson<Design>(File.ReadAllText(filePath));
+
+            // If the Design ID has changed, update objects based one the new design
+            if(currentDesign.ID > designID)
+            {
+                // waiting = false;
+                designID = currentDesign.ID;
+
+                //load new design
+                for (int i = 0; i < currentDesign.objectList.Length; i++)
+                {
+                }
+
+                BlockData listBlockData = JsonUtility.FromJson<BlockData>(currentDesign.objectList[0]);
+
+                // copy block type in block 
+                Transform childTransform = blockSet.transform.Find(listBlockData.type);
+
+                if (childTransform != null)
+                {
+                    GameObject blockType = childTransform.gameObject;
+                    // Instantiate a copy of the original GameObject
+                    GameObject blockCopy = Instantiate(blockType);
+
+                    blockCopy.name = listBlockData.type;
+
+                    // Set the copy's parent to this game object
+                    blockCopy.transform.SetParent(transform);
+
+                    Quaternion blockRotation;
+
+                    if(listBlockData.orientation == 0)
+                    {
+                        blockRotation = Quaternion.Euler(0, 0, 0);
+                    }
+                    else
+                    {
+                        blockRotation = Quaternion.Euler(0, 90, 0);
+                    }
+                    blockCopy.transform.SetLocalPositionAndRotation(listBlockData.position,blockRotation);
+                }
+
+            }
+        }
+    }
     public void WriteDesignJSON(string author)
     {
         if(author.Equals("user"))
@@ -111,7 +172,7 @@ public class ReadWriteJSON : MonoBehaviour
     {
         if(!waiting)
         {
-            WriteDesignJSON("user");
+            // WriteDesignJSON("user");
         }
     }
 }
