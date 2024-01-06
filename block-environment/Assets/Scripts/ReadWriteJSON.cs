@@ -102,37 +102,35 @@ public class ReadWriteJSON : MonoBehaviour
                 //load new design
                 for (int i = 0; i < currentDesign.objectList.Length; i++)
                 {
-                }
+                    BlockData listBlockData = JsonUtility.FromJson<BlockData>(currentDesign.objectList[i]);
 
-                BlockData listBlockData = JsonUtility.FromJson<BlockData>(currentDesign.objectList[0]);
+                    // copy block type in block 
+                    Transform childTransform = blockSet.transform.Find(listBlockData.type);
 
-                // copy block type in block 
-                Transform childTransform = blockSet.transform.Find(listBlockData.type);
-
-                if (childTransform != null)
-                {
-                    GameObject blockType = childTransform.gameObject;
-                    // Instantiate a copy of the original GameObject
-                    GameObject blockCopy = Instantiate(blockType);
-
-                    blockCopy.name = listBlockData.type;
-
-                    // Set the copy's parent to this game object
-                    blockCopy.transform.SetParent(transform);
-
-                    Quaternion blockRotation;
-
-                    if(listBlockData.orientation == 0)
+                    if (childTransform != null)
                     {
-                        blockRotation = Quaternion.Euler(0, 0, 0);
-                    }
-                    else
-                    {
-                        blockRotation = Quaternion.Euler(0, 90, 0);
-                    }
-                    blockCopy.transform.SetLocalPositionAndRotation(listBlockData.position,blockRotation);
-                }
+                        GameObject blockType = childTransform.gameObject;
+                        // Instantiate a copy of the original GameObject
+                        GameObject blockCopy = Instantiate(blockType);
 
+                        blockCopy.name = listBlockData.type;
+
+                        // Set the copy's parent to this game object
+                        blockCopy.transform.SetParent(transform);
+
+                        Quaternion blockRotation;
+
+                        if(listBlockData.orientation == 0)
+                        {
+                            blockRotation = Quaternion.Euler(0, 0, 0);
+                        }
+                        else
+                        {
+                            blockRotation = Quaternion.Euler(0, 90, 0);
+                        }
+                        blockCopy.transform.SetLocalPositionAndRotation(listBlockData.position,blockRotation);
+                    }
+                }
             }
         }
     }
