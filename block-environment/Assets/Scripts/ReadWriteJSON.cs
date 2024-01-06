@@ -30,7 +30,7 @@ public class ReadWriteJSON : MonoBehaviour
 {
     public GameObject blockSet;
 
-    private string filePath = "design.json";
+    private string filePath = "design_shapenet.json";
 
     private int designID = -1; // even designIDs are for the architect, odd designIDs are for the agent
 
@@ -104,8 +104,18 @@ public class ReadWriteJSON : MonoBehaviour
                 {
                     BlockData listBlockData = JsonUtility.FromJson<BlockData>(currentDesign.objectList[i]);
 
-                    // copy block type in block 
-                    Transform childTransform = blockSet.transform.Find(listBlockData.type);
+                    Transform childTransform;
+                    if(listBlockData.type.Equals("1x1"))
+                    {
+                        // copy block type in block 
+                        childTransform = blockSet.transform.Find("Cube");
+                    }
+                    else
+                    {
+                        // copy block type in block 
+                        childTransform = blockSet.transform.Find(listBlockData.type);
+                    }
+                    
 
                     if (childTransform != null)
                     {
