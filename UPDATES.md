@@ -19,6 +19,13 @@ A log of project progress and specific lessons learned.
 ## Log
 
 
+### 2024-02-25
+
+Played around with the Conv3D function. Assuming an input tensor of (7, 500, 500, 500), it takes awhile for a 3D convolution to finish given the large size and the Conv3D's stride=1. Increasing the kernel size obviously doesn't help because that just increases the amount of computations per "kernel sliding window." Increasing the stride helps reduce the number of computations but at the trade off of reducing the dimensions of the output "too much" - you may lose the complexity in the data after the convolution encodes it to lower dimensional space.
+
+Given that these 3D convolutions can take a long time it might be worth looking at ways to reduce the necessary computations by considering which parts of the input tensor has not changed. Can PyTorch make this comparison between one tensor and a previously processed tensor and just look at the kernels that need re-calculation? The thing is, parts of the 3D grid will remain blank for some time in the initial steps when the Block Laying Agent is just starting to place blocks in a small area of the block
+
+
 ### 2024-02-24
 
 Finished playing around with Conv2D function parameters. Started diagramming how Block Laying Agent could work with dataset. 
