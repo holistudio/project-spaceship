@@ -23,7 +23,7 @@ A log of project progress and specific lessons learned.
 
 Somehow I need to go from an input tensor of shape (7,100,100,100) (i.e., `block_info, num_x, num_y, num_z`) and generate a tensor of shape (6,2,100,100,100) (i.e., `block_types, num_orientations, num_x, num_y, num_z`) to interpret as the Block Laying Agent's action space.
 
-The simplest architecture seems to be a single Conv3D layer with `in_channels=7` and `out_channels=10` (`block_types*num_orientations`) and `kernel_size=1` and then reshaping a (10,100,100,100) tensor to (6,2,100,100,100). The nice thing is that this generates the action space "all in one shot" that hopefull the neural net "considers everything all at once" when deciding which block type to use, what orientation it has to be in and where to place it in XYZ coordinates.
+The simplest architecture seems to be a single Conv3D layer with `in_channels=7` and `out_channels=12` (`block_types*num_orientations`) and `kernel_size=1` and then reshaping the resulting (12,100,100,100) tensor to (6,2,100,100,100). The nice thing is that this generates the action space "all in one shot" that hopefull the neural net "considers everything all at once" when deciding which block type to use, what orientation it has to be in and where to place it in XYZ coordinates.
 
 But I suspect there may be better ways to do it. With respect to the architecture, adding more layers may reflect the hierarchical nature of placing blocks (i.e., "first you find the best block type then figure out where to put it..."). With respect to creating higher dimensional spaces (4D->5D tensor), there might be other ways besides reshaping an oversized 4D tensor.
 
