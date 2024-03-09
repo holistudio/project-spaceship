@@ -2,6 +2,11 @@ import numpy as np
 import torch
 import binvox_rw
 
+BLOCK_INFO = 7
+NUM_ORIENTATION = 2
+
+BLOCK_TYPES = 6
+
 # ShapeNetID as integer
 ShapeNetID = int('02843684')
 
@@ -40,3 +45,11 @@ while (x<max_x):
     vx += 1
 
 NUM_X, NUM_Y, NUM_Z = target_vox_tensor.shape
+
+# Initialize current_design_tensor
+
+current_design_tensor = torch.ones((BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long) * -1
+
+current_design_tensor[0,:,:,:] = ShapeNetID
+
+print(current_design_tensor[:,0,0,0])
