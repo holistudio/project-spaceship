@@ -92,6 +92,20 @@ while (x<max_x):
 
 NUM_X, NUM_Y, NUM_Z = target_vox_tensor.shape
 
+filled = 0
+unfilled = 0
+for x in range(NUM_X):
+    for y in range(NUM_Y):
+        for z in range(NUM_Z):
+            if target_vox_tensor[x,y,z] == 1:
+                filled += 1
+            else:
+                unfilled += 1
+
+print(NUM_X*NUM_Y*NUM_Z)
+print(filled)
+print(unfilled)
+
 grid_sizes = (NUM_X, NUM_Y, NUM_Z)
 grid_tensor = torch.zeros((NUM_X,NUM_Y,NUM_Z), dtype=torch.long) # just tracks which cells are occupied
 
@@ -127,6 +141,25 @@ def add_block(actions, design_tensor):
         grid_tensor[x,y,z] = 1
     return design_tensor
 
+def calc_reward():
+    rew = 0
+    diff_tensor = target_vox_tensor - grid_tensor
+    # value of 0 means either true positive (block where should be a block) or true negative (blank where should be blank)
+    # value of -1 means false positive (block placed by agent but should be blank)
+    # value of +1 means false negative (should block but none placed by agent)
+    for x in range(NUM_X):
+        for y in range(NUM_Y):
+            for z in range(NUM_Z):
+                if diff_tensor[x,y,z] == 0:
+                    if target_vox_tensor[x,y,z] == 0:
+                        rew += 0.1
+                    else:
+                        rew += 1
+                if diff_tensor[x,y,z] == -1:
+                    rew -= 1
+                if diff_tensor[x,y,z] == 1:
+                    rew -= 1
+    return rew
 def step(state):
     agent = Agent.CNNAgent(grid_sizes=grid_sizes, num_orient=NUM_ORIENTATION, block_info_size=BLOCK_INFO, block_types=BLOCK_TYPES)
 
@@ -162,6 +195,7 @@ def step(state):
                 if grid_tensor[x,y,z] == 1:
                     print(x,y,z)
                     print(state[:,x,y,z])
+    print(calc_reward())
     
     
 
