@@ -7,6 +7,51 @@ import CNN_agent as Agent
 BLOCK_INFO = 7
 NUM_ORIENTATION = 2
 
+BLOCK_DEFINITIONS = {
+    "2x1":{
+        "length":2,
+        "width":1,
+        "height":1,
+        "o0_cells": np.array([[0,0,0],[1,0,0]]),
+        "o1_cells": np.array([[0,0,0],[0,0,1]])
+    },
+    "3x1":{
+        "length":3,
+        "width":1,
+        "height":1,
+        "o0_cells": np.array([[0,0,0],[1,0,0],[2,0,0]]),
+        "o1_cells": np.array([[0,0,0],[0,0,1],[0,0,2]])
+    },
+    "4x1":{
+        "length":4,
+        "width":1,
+        "height":1,
+        "o0_cells": np.array([[0,0,0],[1,0,0],[2,0,0],[3,0,0]]),
+        "o1_cells": np.array([[0,0,0],[0,0,1],[0,0,2],[0,0,3]])
+    },
+    "2x2":{
+        "length":2,
+        "width":2,
+        "height":1,
+        "o0_cells": np.array([[0,0,0],[1,0,0],[1,0,1],[0,0,1]]),
+        "o1_cells": np.array([[0,0,0],[1,0,0],[1,0,1],[0,0,1]])
+    },
+    "3x2":{
+        "length":2,
+        "width":2,
+        "height":1,
+        "o0_cells": np.array([[0,0,0],[1,0,0],[2,0,0],[2,0,1],[1,0,1],[0,0,1]]),
+        "o1_cells": np.array([[0,0,0],[1,0,0],[1,0,1],[1,0,2],[0,0,2],[0,0,1]])
+    },
+    "4x2":{
+        "length":2,
+        "width":2,
+        "height":1,
+        "o0_cells": np.array([[0,0,0],[1,0,0],[2,0,0],[3,0,0],[3,0,1],[2,0,1],[1,0,1],[0,0,1]]),
+        "o1_cells": np.array([[0,0,0],[1,0,0],[1,0,1],[1,0,2],[1,0,3],[0,0,3],[0,0,2],[0,0,1]])
+    }
+}
+BLOCK_TYPES = len(BLOCK_DEFINITIONS.keys())
 
 # ShapeNetID as integer
 ShapeNetID = int('02843684')
