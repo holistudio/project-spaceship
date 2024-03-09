@@ -95,6 +95,8 @@ NUM_X, NUM_Y, NUM_Z = target_vox_tensor.shape
 grid_sizes = (NUM_X, NUM_Y, NUM_Z)
 grid_tensor = torch.zeros((NUM_X,NUM_Y,NUM_Z), dtype=torch.long) # just tracks which cells are occupied
 
+block_seq_index = 0
+
 def reset():
     # Initialize current_design_tensor
 
@@ -113,6 +115,17 @@ def no_block_conflict(actions):
         if grid_tensor[x,y,z] == 1:
             return False
     return True
+
+def add_block(actions, design_tensor):
+    pos_x, pos_y, pos_z = actions["grid_position"]
+    occupied_cells = actions['occupied_cells']
+    n_cells, _ = occupied_cells.shape
+    for i in range(n_cells):
+        x,y,z = list(occupied_cells[i])
+        design_tensor[:,x,y,z] = torch.tensor([ShapeNetID, actions["block_type_i"], pos_x, pos_y, pos_z,
+                                               actions['orientation'], block_seq_index], dtype=torch.long)
+        grid_tensor[x,y,z] = 1
+    return design_tensor
 
 def step(state):
     agent = Agent.CNNAgent(grid_sizes=grid_sizes, num_orient=NUM_ORIENTATION, block_info_size=BLOCK_INFO, block_types=BLOCK_TYPES)
@@ -133,16 +146,26 @@ def step(state):
 
         actions = {
             "block_type": block_type,
-            "grid_x": grid_x,
-            "grid_y": grid_y,
-            "grid_z": grid_z,
+            "block_type_i": block_type_i,
+            "grid_position": grid_position,
             "orientation": orientation,
             "occupied_cells": occupied_cells
         }
         conflict_check_passed = no_block_conflict(actions)
+    print(actions)
+    
+    state = add_block(actions, state)
 
-    print("Passed")
+    for x in range(NUM_X):
+        for y in range(NUM_Y):
+            for z in range(NUM_Z):
+                if grid_tensor[x,y,z] == 1:
+                    print(x,y,z)
+                    print(state[:,x,y,z])
+    
+    
 
 if __name__ == "__main__":
     current_design_tensor = reset()
     step(state=current_design_tensor)
+    block_seq_index += 1
