@@ -7,7 +7,6 @@ import CNN_agent as Agent
 BLOCK_INFO = 7
 NUM_ORIENTATION = 2
 
-BLOCK_TYPES = 6
 
 # ShapeNetID as integer
 ShapeNetID = int('02843684')
@@ -49,16 +48,28 @@ while (x<max_x):
 NUM_X, NUM_Y, NUM_Z = target_vox_tensor.shape
 
 grid_sizes = (NUM_X, NUM_Y, NUM_Z)
+occupied_tensor = torch.zeros((NUM_X,NUM_Y,NUM_Z), dtype=torch.long)
 
-# Initialize current_design_tensor
+def reset():
+    # Initialize current_design_tensor
 
-current_design_tensor = torch.ones((BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long) * -1
-# current_design_tensor = torch.randint(low=-1, high=40, size=(BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long)
+    current_design_tensor = torch.ones((BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long) * -1
+    # current_design_tensor = torch.randint(low=-1, high=40, size=(BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long)
 
-current_design_tensor[0,:,:,:] = ShapeNetID
+    current_design_tensor[0,:,:,:] = ShapeNetID
 
-agent = Agent.CNNAgent(grid_sizes=grid_sizes, num_orient=NUM_ORIENTATION, block_info_size=BLOCK_INFO, block_types=BLOCK_TYPES)
+    return current_design_tensor
 
-actions = agent.select_actions(current_design_tensor)
+def no_block_conflict(actions):
+    return True
 
-print(actions)
+def step(state):
+    agent = Agent.CNNAgent(grid_sizes=grid_sizes, num_orient=NUM_ORIENTATION, block_info_size=BLOCK_INFO, block_types=BLOCK_TYPES)
+
+    actions = agent.select_actions(state)
+
+    print(actions)
+
+if __name__ == "__main__":
+    current_design_tensor = reset()
+    step(state=current_design_tensor)
