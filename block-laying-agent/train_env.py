@@ -141,9 +141,9 @@ def add_block(actions, design_tensor):
         grid_tensor[x,y,z] = 1
     return design_tensor
 
-def calc_reward():
+def calc_reward(diff_tensor):
     rew = 0
-    diff_tensor = target_vox_tensor - grid_tensor
+    
     # value of 0 means either true positive (block where should be a block) or true negative (blank where should be blank)
     # value of -1 means false positive (block placed by agent but should be blank)
     # value of +1 means false negative (should block but none placed by agent)
@@ -160,6 +160,14 @@ def calc_reward():
                 if diff_tensor[x,y,z] == 1:
                     rew -= 1
     return rew
+
+def determine_terminal(diff_tensor):
+    if torch.all(diff_tensor == 0):
+        return True
+    if block_seq_index*2 > filled:
+        return True
+    return False
+
 def step(state):
     agent = Agent.CNNAgent(grid_sizes=grid_sizes, num_orient=NUM_ORIENTATION, block_info_size=BLOCK_INFO, block_types=BLOCK_TYPES)
 
@@ -195,11 +203,19 @@ def step(state):
                 if grid_tensor[x,y,z] == 1:
                     print(x,y,z)
                     print(state[:,x,y,z])
-    print(calc_reward())
+    
+    diff_tensor = target_vox_tensor - grid_tensor
+
+    reward = calc_reward(diff_tensor)
+
+    terminal = determine_terminal(diff_tensor)
+    print(terminal)
+
+    return state, reward, terminal
     
     
 
 if __name__ == "__main__":
     current_design_tensor = reset()
-    step(state=current_design_tensor)
+    state = step(state=current_design_tensor)
     block_seq_index += 1
