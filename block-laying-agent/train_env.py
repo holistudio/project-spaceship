@@ -2,6 +2,8 @@ import numpy as np
 import torch
 import binvox_rw
 
+import CNN_agent as Agent
+
 BLOCK_INFO = 7
 NUM_ORIENTATION = 2
 
@@ -46,10 +48,17 @@ while (x<max_x):
 
 NUM_X, NUM_Y, NUM_Z = target_vox_tensor.shape
 
+grid_sizes = (NUM_X, NUM_Y, NUM_Z)
+
 # Initialize current_design_tensor
 
 current_design_tensor = torch.ones((BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long) * -1
+# current_design_tensor = torch.randint(low=-1, high=40, size=(BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long)
 
 current_design_tensor[0,:,:,:] = ShapeNetID
 
-print(current_design_tensor[:,0,0,0])
+agent = Agent.CNNAgent(grid_sizes=grid_sizes, num_orient=NUM_ORIENTATION, block_info_size=BLOCK_INFO, block_types=BLOCK_TYPES)
+
+actions = agent.select_actions(current_design_tensor)
+
+print(actions)
