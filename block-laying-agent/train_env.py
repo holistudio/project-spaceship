@@ -102,9 +102,9 @@ for x in range(NUM_X):
             else:
                 unfilled += 1
 
-print(NUM_X*NUM_Y*NUM_Z)
-print(filled)
-print(unfilled)
+# print(NUM_X*NUM_Y*NUM_Z)
+print(f'Filled Percent = {filled*100/(NUM_X*NUM_Y*NUM_Z):.2f}%')
+# print(unfilled)
 
 grid_sizes = (NUM_X, NUM_Y, NUM_Z)
 grid_tensor = torch.zeros((NUM_X,NUM_Y,NUM_Z), dtype=torch.long) # just tracks which cells are occupied
@@ -112,14 +112,14 @@ grid_tensor = torch.zeros((NUM_X,NUM_Y,NUM_Z), dtype=torch.long) # just tracks w
 block_seq_index = 0
 
 def reset():
-    # Initialize current_design_tensor
+    # Initialize design_tensor
 
-    current_design_tensor = torch.ones((BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long) * -1
-    # current_design_tensor = torch.randint(low=-1, high=40, size=(BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long)
+    design_tensor = torch.ones((BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long) * -1
+    # design_tensor = torch.randint(low=-1, high=40, size=(BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long)
 
-    current_design_tensor[0,:,:,:] = ShapeNetID
+    design_tensor[0,:,:,:] = ShapeNetID
 
-    return current_design_tensor
+    return design_tensor, 0, False
 
 def no_block_conflict(actions):
     check_cells = actions['occupied_cells']
@@ -127,6 +127,7 @@ def no_block_conflict(actions):
     for i in range(n_cells):
         x,y,z = list(check_cells[i])
         if grid_tensor[x,y,z] == 1:
+            print(f'! Block Conflict at {x,y,z} !')
             return False
     return True
 
@@ -143,6 +144,7 @@ def add_block(actions, design_tensor):
 
 def calc_reward(diff_tensor):
     rew = 0
+    perc_complete = 0
     
     # value of 0 means either true positive (block where should be a block) or true negative (blank where should be blank)
     # value of -1 means false positive (block placed by agent but should be blank)
@@ -155,11 +157,13 @@ def calc_reward(diff_tensor):
                         rew += 0.1
                     else:
                         rew += 1
+                        perc_complete += 1
                 if diff_tensor[x,y,z] == -1:
                     rew -= 1
                 if diff_tensor[x,y,z] == 1:
                     rew -= 1
-    return rew
+    perc_complete = perc_complete/filled
+    return rew, perc_complete
 
 def determine_terminal(diff_tensor):
     if torch.all(diff_tensor == 0):
@@ -192,21 +196,17 @@ def step(state):
             "orientation": orientation,
             "occupied_cells": occupied_cells
         }
+
+        print(f'Agent places {block_type} block at {grid_position}')
         conflict_check_passed = no_block_conflict(actions)
-    print(actions)
     
     state = add_block(actions, state)
-
-    for x in range(NUM_X):
-        for y in range(NUM_Y):
-            for z in range(NUM_Z):
-                if grid_tensor[x,y,z] == 1:
-                    print(x,y,z)
-                    print(state[:,x,y,z])
     
     diff_tensor = target_vox_tensor - grid_tensor
 
-    reward = calc_reward(diff_tensor)
+    reward, perc_complete = calc_reward(diff_tensor)
+    print(f'Reward = {reward}')
+    print(f'Percent complete = {perc_complete*100:.2f}%')
 
     terminal = determine_terminal(diff_tensor)
     print(terminal)
@@ -216,6 +216,7 @@ def step(state):
     
 
 if __name__ == "__main__":
-    current_design_tensor = reset()
-    state = step(state=current_design_tensor)
-    block_seq_index += 1
+    state, reward, terminal = reset()
+    while not terminal:
+        state, reward, terminal = step(state)
+        block_seq_index += 1
