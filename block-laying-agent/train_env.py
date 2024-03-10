@@ -152,25 +152,27 @@ def add_block(actions, design_tensor):
 
 def calc_reward(diff_tensor):
     rew = 0
-    perc_complete = 0
     
     # value of 0 means either true positive (block where should be a block) or true negative (blank where should be blank)
+    zero_indices = torch.nonzero(diff_tensor == 0)
+    target_values = target_vox_tensor[zero_indices[:, 0], zero_indices[:, 1], zero_indices[:, 2]]
+    fill_mask = (target_values == 1)
+    n_fill = torch.sum(fill_mask).item()
+    n_empty = len(zero_indices) - n_fill
+    rew += n_fill
+    rew += n_empty * 0.1
+
     # value of -1 means false positive (block placed by agent but should be blank)
+    neg_1_mask = (diff_tensor == -1)
+    n_fp = torch.sum(neg_1_mask).item()
+    rew -= n_fp
+
     # value of +1 means false negative (should block but none placed by agent)
-    for x in range(NUM_X):
-        for y in range(NUM_Y):
-            for z in range(NUM_Z):
-                if diff_tensor[x,y,z] == 0:
-                    if target_vox_tensor[x,y,z] == 0:
-                        rew += 0.1
-                    else:
-                        rew += 1
-                        perc_complete += 1
-                if diff_tensor[x,y,z] == -1:
-                    rew -= 1
-                if diff_tensor[x,y,z] == 1:
-                    rew -= 1
-    perc_complete = perc_complete/filled
+    pos_1_mask = (diff_tensor == 1)
+    n_fn = torch.sum(pos_1_mask).item()
+    rew -= n_fn
+
+    perc_complete = n_fill/filled
     return rew, perc_complete
 
 def determine_terminal(diff_tensor, block_seq_index):
