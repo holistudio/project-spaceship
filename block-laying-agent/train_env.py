@@ -226,6 +226,9 @@ if __name__ == "__main__":
         agent_actions = agent.select_actions(state)
 
         env_actions = list(agent_actions.cpu().numpy())
-        state, reward, terminal, block_seq_index = step(state, env_actions, block_seq_index)
+        next_state, reward, terminal, block_seq_index = step(state, env_actions, block_seq_index)
+        agent.update_experience(state,agent_actions,next_state,reward,terminal)
+
+        state = next_state
         print()
         

@@ -76,6 +76,18 @@ class CNNAgent(object):
         agent_actions = torch.tensor(indices, device=device, dtype=torch.long)
 
         return agent_actions
+    
+    def soft_update(self):
+        # Soft update of the target network's weights
+        # θ′ ← τ θ + (1 −τ )θ′
+        target_net_state_dict = self.target_net.state_dict()
+        policy_net_state_dict = self.policy_net.state_dict()
+        for key in policy_net_state_dict:
+            target_net_state_dict[key] = policy_net_state_dict[key]*TAU + target_net_state_dict[key]*(1-TAU)
+        self.target_net.load_state_dict(target_net_state_dict)
+    
+    def update_experience(self,state,agent_actions,next_state,reward,terminal):
+        self.soft_update()
 
 if __name__ == "__main__":
     x = torch.rand((7,100,100,100))
