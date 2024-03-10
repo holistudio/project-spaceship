@@ -165,58 +165,58 @@ def calc_reward(diff_tensor):
     perc_complete = perc_complete/filled
     return rew, perc_complete
 
-def determine_terminal(diff_tensor):
+def determine_terminal(diff_tensor, block_seq_index):
     if torch.all(diff_tensor == 0):
         return True
     if block_seq_index*2 > filled:
         return True
     return False
 
-def step(state):
-    agent = Agent.CNNAgent(grid_sizes=grid_sizes, num_orient=NUM_ORIENTATION, block_info_size=BLOCK_INFO, block_types=BLOCK_TYPES)
+def step(state, agent_actions, block_seq_index):
+    block_type_i, orientation, grid_x, grid_y, grid_z = agent_actions
+    block_type = list(BLOCK_DEFINITIONS.keys())[block_type_i]
 
-    conflict_check_passed = False
-    while (not conflict_check_passed):
-        agent_actions = agent.select_actions(state)
+    if orientation == 0:
+        grid_position = np.array([grid_x,grid_y,grid_z])
+        occupied_cells = grid_position + BLOCK_DEFINITIONS[block_type]['o0_cells']
+    if orientation == 1:
+        grid_position = np.array([grid_x,grid_y,grid_z])
+        occupied_cells = grid_position + BLOCK_DEFINITIONS[block_type]['o1_cells']
 
-        block_type_i, orientation, grid_x, grid_y, grid_z = agent_actions
-        block_type = list(BLOCK_DEFINITIONS.keys())[block_type_i]
+    actions = {
+        "block_type": block_type,
+        "block_type_i": block_type_i,
+        "grid_position": grid_position,
+        "orientation": orientation,
+        "occupied_cells": occupied_cells
+    }
 
-        if orientation == 0:
-            grid_position = np.array([grid_x,grid_y,grid_z])
-            occupied_cells = grid_position + BLOCK_DEFINITIONS[block_type]['o0_cells']
-        if orientation == 1:
-            grid_position = np.array([grid_x,grid_y,grid_z])
-            occupied_cells = grid_position + BLOCK_DEFINITIONS[block_type]['o1_cells']
-
-        actions = {
-            "block_type": block_type,
-            "block_type_i": block_type_i,
-            "grid_position": grid_position,
-            "orientation": orientation,
-            "occupied_cells": occupied_cells
-        }
-
-        print(f'Agent places {block_type} block at {grid_position}')
-        conflict_check_passed = no_block_conflict(actions)
+    if (not no_block_conflict(actions)):
+        block_conflict_penalty = -100000
+        return state, block_conflict_penalty, False
     
+    print(f'Agent places {block_type} block at {grid_position}')
     state = add_block(actions, state)
-    
+    block_seq_index += 1
     diff_tensor = target_vox_tensor - grid_tensor
 
     reward, perc_complete = calc_reward(diff_tensor)
     print(f'Reward = {reward}')
     print(f'Percent complete = {perc_complete*100:.2f}%')
 
-    terminal = determine_terminal(diff_tensor)
+    terminal = determine_terminal(diff_tensor, block_seq_index)
     print(terminal)
 
-    return state, reward, terminal
+    return state, reward, terminal, block_seq_index
     
     
 
 if __name__ == "__main__":
+    agent = Agent.CNNAgent(grid_sizes=grid_sizes, num_orient=NUM_ORIENTATION, block_info_size=BLOCK_INFO, block_types=BLOCK_TYPES)
+
     state, reward, terminal = reset()
+
     while not terminal:
-        state, reward, terminal = step(state)
-        block_seq_index += 1
+        agent_actions = agent.select_actions(state)
+        state, reward, terminal, block_seq_index = step(state, agent_actions, block_seq_index)
+        
