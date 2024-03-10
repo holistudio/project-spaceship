@@ -7,13 +7,18 @@ from collections import namedtuple, deque
 
 n_h = 64
 
-BATCH_SIZE = 2 #128
-GAMMA = 0.99
+BATCH_SIZE = 16 #128
+LR = 1e-4
+
 EPS_START = 0.9
 EPS_END = 0.05
 EPS_DECAY = 1000
+
+GAMMA = 0.99
+
 TAU = 0.005
-LR = 1e-4
+
+UPDATE_TARGET_EP = 5
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -188,26 +193,7 @@ class CNNAgent(object):
         self.optimize_model()
         self.soft_update()
 
-if __name__ == "__main__":
-    x = torch.rand((7,100,100,100))
-    x = x.unsqueeze(0)
-
-    model = CNN_DQN(n_hidden=n_h)
-
-    out = model(x)
-
-    out = out.squeeze()
-
-    # Find the index of the maximum value
-    max_index = torch.argmax(out)
-
-    # Convert the flat index to multidimensional indices
-    indices = []
-    for dim_size in reversed(out.shape):
-        indices.append((max_index % dim_size).item())
-        max_index //= dim_size
-
-    # Reverse the list of indices to match the tensor's shape
-    indices.reverse()
-
-    print("Indices of the maximum Q-value:", indices)
+    def update_policy(self, episode):
+        if episode % UPDATE_TARGET_EP == 0:
+            print('Setting target_net to policy_net...')
+            self.target_net.load_state_dict(self.policy_net.state_dict())

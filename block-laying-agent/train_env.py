@@ -53,6 +53,8 @@ BLOCK_DEFINITIONS = {
 }
 BLOCK_TYPES = len(BLOCK_DEFINITIONS.keys())
 
+NUM_EPISODES = 7
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # ShapeNetID as integer
@@ -121,7 +123,9 @@ def reset():
 
     design_tensor[0,:,:,:] = ShapeNetID
 
-    return design_tensor, 0, False
+    block_seq_index = 0 
+
+    return design_tensor, 0, False, block_seq_index
 
 def no_block_conflict(actions):
     check_cells = actions['occupied_cells']
@@ -179,7 +183,7 @@ def determine_terminal(diff_tensor, block_seq_index):
     if torch.all(diff_tensor == 0):
         return True
     # if block_seq_index*2 > filled:
-    if block_seq_index > 5:
+    if block_seq_index > 10:
         return True
     return False
 
@@ -227,15 +231,20 @@ def step(state, agent_actions, block_seq_index):
 if __name__ == "__main__":
     agent = Agent.CNNAgent(grid_sizes=grid_sizes, num_orient=NUM_ORIENTATION, block_info_size=BLOCK_INFO, block_types=BLOCK_TYPES)
 
-    state, reward, terminal = reset()
+    for ep in range(NUM_EPISODES):
+        print(f'==EPISODE {ep}==')
+        state, reward, terminal, block_seq_index = reset()
 
-    while not terminal:
-        agent_actions = agent.select_actions(state)
+        while not terminal:
+            agent_actions = agent.select_actions(state)
 
-        next_state, reward, terminal, block_seq_index = step(state, agent_actions, block_seq_index)
+            next_state, reward, terminal, block_seq_index = step(state, agent_actions, block_seq_index)
 
-        agent.update_experience(state,agent_actions,next_state,reward,terminal)
+            agent.update_experience(state,agent_actions,next_state,reward,terminal)
 
-        state = next_state
-        print()
+            state = next_state
+            print()
+        print(f'==END EPISODE {ep}==')
+
+        agent.update_policy(ep)
         
