@@ -193,7 +193,7 @@ def step(state, agent_actions, block_seq_index):
 
     if (not no_block_conflict(actions)):
         block_conflict_penalty = -100000
-        return state, block_conflict_penalty, False
+        return state, block_conflict_penalty, False, block_seq_index
     
     print(f'Agent places {block_type} block at {grid_position}')
     state = add_block(actions, state)
@@ -218,5 +218,8 @@ if __name__ == "__main__":
 
     while not terminal:
         agent_actions = agent.select_actions(state)
-        state, reward, terminal, block_seq_index = step(state, agent_actions, block_seq_index)
+
+        env_actions = list(agent_actions.cpu().numpy())
+        state, reward, terminal, block_seq_index = step(state, env_actions, block_seq_index)
+        print()
         
