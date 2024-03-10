@@ -53,6 +53,8 @@ BLOCK_DEFINITIONS = {
 }
 BLOCK_TYPES = len(BLOCK_DEFINITIONS.keys())
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 # ShapeNetID as integer
 ShapeNetID = int('02843684')
 
@@ -70,7 +72,7 @@ s = scale_down_factor
 x = 0
 vx = 0
 
-target_vox_tensor = torch.zeros((int(max_x/s),int(max_y/s),int(max_z/s)))
+target_vox_tensor = torch.zeros((int(max_x/s),int(max_y/s),int(max_z/s)), device=device)
 
 while (x<max_x):
     y = 0
@@ -107,14 +109,14 @@ print(f'Filled Percent = {filled*100/(NUM_X*NUM_Y*NUM_Z):.2f}%')
 # print(unfilled)
 
 grid_sizes = (NUM_X, NUM_Y, NUM_Z)
-grid_tensor = torch.zeros((NUM_X,NUM_Y,NUM_Z), dtype=torch.long) # just tracks which cells are occupied
+grid_tensor = torch.zeros((NUM_X,NUM_Y,NUM_Z), dtype=torch.long, device=device) # just tracks which cells are occupied
 
 block_seq_index = 0
 
 def reset():
     # Initialize design_tensor
 
-    design_tensor = torch.ones((BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long) * -1
+    design_tensor = torch.ones((BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long, device=device) * -1
     # design_tensor = torch.randint(low=-1, high=40, size=(BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long)
 
     design_tensor[0,:,:,:] = ShapeNetID
@@ -144,7 +146,7 @@ def add_block(actions, design_tensor):
     for i in range(n_cells):
         x,y,z = list(occupied_cells[i])
         design_tensor[:,x,y,z] = torch.tensor([ShapeNetID, actions["block_type_i"], pos_x, pos_y, pos_z,
-                                               actions['orientation'], block_seq_index], dtype=torch.long)
+                                               actions['orientation'], block_seq_index], dtype=torch.long, device=device)
         grid_tensor[x,y,z] = 1
     return design_tensor
 
@@ -174,12 +176,14 @@ def calc_reward(diff_tensor):
 def determine_terminal(diff_tensor, block_seq_index):
     if torch.all(diff_tensor == 0):
         return True
-    if block_seq_index*2 > filled:
+    # if block_seq_index*2 > filled:
+    if block_seq_index > 5:
         return True
     return False
 
 def step(state, agent_actions, block_seq_index):
-    block_type_i, orientation, grid_x, grid_y, grid_z = agent_actions
+    env_actions = list(agent_actions.cpu().squeeze().numpy())
+    block_type_i, orientation, grid_x, grid_y, grid_z = env_actions
     block_type = list(BLOCK_DEFINITIONS.keys())[block_type_i]
 
     if orientation == 0:
@@ -202,10 +206,11 @@ def step(state, agent_actions, block_seq_index):
         return state, block_conflict_penalty, False, block_seq_index
     
     print(f'Agent places {block_type} block at {grid_position}, orientation={orientation}')
-    state = add_block(actions, state)
-    block_seq_index += 1
-    diff_tensor = target_vox_tensor - grid_tensor
+    next_state = add_block(actions, state)
 
+    block_seq_index += 1
+
+    diff_tensor = target_vox_tensor - grid_tensor
     reward, perc_complete = calc_reward(diff_tensor)
     print(f'Reward = {reward}')
     print(f'Percent complete = {perc_complete*100:.2f}%')
@@ -213,7 +218,7 @@ def step(state, agent_actions, block_seq_index):
     terminal = determine_terminal(diff_tensor, block_seq_index)
     print(terminal)
 
-    return state, reward, terminal, block_seq_index
+    return next_state, reward, terminal, block_seq_index
     
     
 
@@ -225,8 +230,8 @@ if __name__ == "__main__":
     while not terminal:
         agent_actions = agent.select_actions(state)
 
-        env_actions = list(agent_actions.cpu().numpy())
-        next_state, reward, terminal, block_seq_index = step(state, env_actions, block_seq_index)
+        next_state, reward, terminal, block_seq_index = step(state, agent_actions, block_seq_index)
+
         agent.update_experience(state,agent_actions,next_state,reward,terminal)
 
         state = next_state
