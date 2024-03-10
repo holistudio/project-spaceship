@@ -126,6 +126,12 @@ def no_block_conflict(actions):
     n_cells, _ = check_cells.shape
     for i in range(n_cells):
         x,y,z = list(check_cells[i])
+        if (x>=grid_sizes[0]) or (y>=grid_sizes[1]) or (z>=grid_sizes[2]):
+            print(f'! Block Out of Bounds at {x,y,z} !')
+            return False
+        if (x<0) or (y<0) or (z<0):
+            print(f'! Block Out of Bounds at {x,y,z} !')
+            return False
         if grid_tensor[x,y,z] == 1:
             print(f'! Block Conflict at {x,y,z} !')
             return False
@@ -195,7 +201,7 @@ def step(state, agent_actions, block_seq_index):
         block_conflict_penalty = -100000
         return state, block_conflict_penalty, False, block_seq_index
     
-    print(f'Agent places {block_type} block at {grid_position}')
+    print(f'Agent places {block_type} block at {grid_position}, orientation={orientation}')
     state = add_block(actions, state)
     block_seq_index += 1
     diff_tensor = target_vox_tensor - grid_tensor
