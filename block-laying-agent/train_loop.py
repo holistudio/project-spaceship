@@ -1,7 +1,8 @@
 import numpy as np
 import CNN_agent as Agent
 import training_env as Env
-NUM_EPISODES = 7
+
+NUM_EPISODES = 10
 
 env = Env.BlockTrainingEnvironment()
 agent = Agent.CNNAgent(grid_sizes=env.grid_sizes, 
@@ -24,6 +25,7 @@ for ep in range(NUM_EPISODES):
         state = next_state
     
     print(f'==END EPISODE {ep}==')
+    print()
     print()
 
     agent.update_policy(ep+1)

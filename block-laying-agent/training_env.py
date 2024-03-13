@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 import binvox_rw
+import datetime
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -210,7 +211,7 @@ class BlockTrainingEnvironment(object):
     def determine_terminal(self, diff_tensor):
         if torch.all(diff_tensor == 0):
             return True
-        if self.block_seq_index > 100:
+        if self.block_seq_index > 200:
         # if self.block_seq_index > self.sum_filled:
             print('! Number of moves exceeded !')
             return True
@@ -242,7 +243,7 @@ class BlockTrainingEnvironment(object):
         else:
             next_state = self.state
 
-        self.block_seq_index += 1
+        
 
         diff_tensor = self.target_vox_tensor - self.grid_tensor
 
@@ -254,7 +255,9 @@ class BlockTrainingEnvironment(object):
         
         # print(f'Reward = {reward}')
         if self.block_seq_index % 100 == 0:
-            print(f'Block {self.block_seq_index}, Percent complete = {perc_complete*100:.2f}%')
+            print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Reward = {self.reward}, Percent complete = {perc_complete*100:.2f}%')
+
+        self.block_seq_index += 1
 
         self.terminal = self.determine_terminal(diff_tensor)
 
