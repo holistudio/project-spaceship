@@ -243,15 +243,17 @@ class BlockTrainingEnvironment(object):
         else:
             next_state = self.state
 
-        
+            block_conflict_penalty = -100000
+            self.block_seq_index += 1
 
+            diff_tensor = self.target_vox_tensor - self.grid_tensor
+            self.terminal = self.determine_terminal(diff_tensor)
+            
+            return next_state, block_conflict_penalty, self.terminal
+        
         diff_tensor = self.target_vox_tensor - self.grid_tensor
 
         self.reward, perc_complete = self.calc_reward(diff_tensor)
-        
-        if (not self.no_block_conflict(actions)):
-            block_conflict_penalty = -100000
-            self.reward = block_conflict_penalty
         
         # print(f'Reward = {reward}')
         if self.block_seq_index % 100 == 0:
