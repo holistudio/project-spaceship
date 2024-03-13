@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 
+import numpy as np
 import random
 import math
 from collections import namedtuple, deque
@@ -76,9 +77,9 @@ class CNNAgent(object):
             math.exp(-1. * self.steps_done / EPS_DECAY)
 
         self.steps_done += 1
-        print(f'Epsilon={eps_threshold}')
+        # print(f'Epsilon={eps_threshold}')
         if sample > eps_threshold:
-            print('Agent EXPLOITS!')
+            # print('Agent EXPLOITS!')
             batch_state = state.unsqueeze(0).float()
             with torch.no_grad():
                 out = self.policy_net(batch_state)
@@ -88,15 +89,16 @@ class CNNAgent(object):
                 max_index = torch.argmax(out)
 
             # Convert the flat index to multidimensional indices
-            indices = []
-            for dim_size in reversed(out.shape):
-                indices.append((max_index % dim_size).item())
-                max_index //= dim_size
+            # indices = []
+            # for dim_size in reversed(out.shape):
+            #     indices.append((max_index % dim_size).item())
+            #     max_index //= dim_size
 
-            # Reverse the list of indices to match the tensor's shape
-            indices.reverse()
+            # # Reverse the list of indices to match the tensor's shape
+            # indices.reverse()
+            indices = np.unravel_index(max_index.item(), out.shape)
         else:
-            print('Agent EXPLORES!')
+            # print('Agent EXPLORES!')
             indices = [random.randint(0,a-1) for a in self.action_space]
         
         agent_actions = torch.tensor([indices], device=device, dtype=torch.long)
@@ -144,13 +146,15 @@ class CNNAgent(object):
                 max_index = torch.argmax(out)
 
                 # Convert the flat index to multidimensional indices
-                indices = []
-                for dim_size in reversed(out.shape):
-                    indices.append((max_index % dim_size).item())
-                    max_index //= dim_size
+                # indices = []
+                # for dim_size in reversed(out.shape):
+                #     indices.append((max_index % dim_size).item())
+                #     max_index //= dim_size
 
                 # Reverse the list of indices to match the tensor's shape
-                indices.reverse()
+                # indices.reverse()
+                indices = np.unravel_index(max_index.item(), out.shape)
+                
                 next_state_values[non_final_mask[i]] = out[indices[0],indices[1],indices[2],indices[3],indices[4]].item()
             # next_state_values[non_final_mask] = self.target_net(non_final_next_states).max(1).values
         
