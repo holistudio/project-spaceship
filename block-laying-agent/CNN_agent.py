@@ -135,8 +135,12 @@ class CNNAgent(object):
         # Compute Q(s_t, a) - the model computes Q(s_t), then we select the
         # columns of actions taken. These are the actions which would've been taken
         # for each batch state according to policy_net
-        action_select = action_batch.cpu().numpy()
-        state_action_values = self.policy_net(state_batch)[:, action_select[:,0], action_select[:,1], action_select[:,2], action_select[:,3], action_select[:,4]][0].reshape((BATCH_SIZE,1))
+        state_action_values = self.policy_net(state_batch)[:, 
+                                                           action_batch[:,0], 
+                                                           action_batch[:,1], 
+                                                           action_batch[:,2], 
+                                                           action_batch[:,3], 
+                                                           action_batch[:,4]][0].reshape((BATCH_SIZE,1))
         # state_action_values = self.policy_net(state_batch).gather(1, action_batch)
 
         print('Compute next state values')
