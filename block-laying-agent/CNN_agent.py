@@ -201,3 +201,4 @@ class CNNAgent(object):
         if episode % UPDATE_TARGET_EP == 0:
             print('Setting target_net to policy_net...')
             self.target_net.load_state_dict(self.policy_net.state_dict())
+            print()

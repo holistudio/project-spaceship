@@ -1,0 +1,29 @@
+import numpy as np
+import CNN_agent as Agent
+import train_env as Env
+NUM_EPISODES = 7
+
+env = Env.BlockLayerTrainEnv()
+agent = Agent.CNNAgent(grid_sizes=env.grid_sizes, 
+                       num_orient=env.num_orient, 
+                       block_info_size=env.block_info_size, 
+                       block_types=env.block_types)
+
+for ep in range(NUM_EPISODES):
+    print(f'==EPISODE {ep}==')
+
+    state, reward, terminal = env.reset()
+
+    while not terminal:
+        agent_actions = agent.select_actions(state)
+
+        next_state, reward, terminal = env.step(agent_actions)
+
+        agent.update_experience(state,agent_actions,next_state,reward,terminal)
+
+        state = next_state
+    
+    print(f'==END EPISODE {ep}==')
+    print()
+
+    agent.update_policy(ep+1)
