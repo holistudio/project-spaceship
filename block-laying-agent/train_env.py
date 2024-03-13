@@ -64,6 +64,7 @@ ShapeNetID = int('02843684')
 vox_file = '../../datasets/shapenet/02843684/1b73f96cf598ef492cba66dc6aeabcd4/models/model_normalized.solid.binvox'
 
 with open(vox_file, 'rb') as f:
+    print('=LOADING VOXEL MODEL=')
     exp_vox = binvox_rw.read_as_3d_array(f) # Expected voxels object
 
 # Scale down the voxel model and generate a target voxel tensor
@@ -107,7 +108,8 @@ for x in range(NUM_X):
                 unfilled += 1
 
 # print(NUM_X*NUM_Y*NUM_Z)
-print(f'Filled Percent = {filled*100/(NUM_X*NUM_Y*NUM_Z):.2f}%')
+print(f'Model Filled Percent = {filled*100/(NUM_X*NUM_Y*NUM_Z):.2f}%')
+print()
 # print(unfilled)
 
 grid_sizes = (NUM_X, NUM_Y, NUM_Z)
@@ -133,13 +135,13 @@ def no_block_conflict(actions):
     for i in range(n_cells):
         x,y,z = list(check_cells[i])
         if (x>=grid_sizes[0]) or (y>=grid_sizes[1]) or (z>=grid_sizes[2]):
-            print(f'! Block Out of Bounds at {x,y,z} !')
+            # print(f'! Block Out of Bounds at {x,y,z} !')
             return False
         if (x<0) or (y<0) or (z<0):
-            print(f'! Block Out of Bounds at {x,y,z} !')
+            # print(f'! Block Out of Bounds at {x,y,z} !')
             return False
         if grid_tensor[x,y,z] == 1:
-            print(f'! Block Conflict at {x,y,z} !')
+            # print(f'! Block Conflict at {x,y,z} !')
             return False
     return True
 
@@ -182,8 +184,9 @@ def calc_reward(diff_tensor):
 def determine_terminal(diff_tensor, block_seq_index):
     if torch.all(diff_tensor == 0):
         return True
-    # if block_seq_index*2 > filled:
-    if block_seq_index > 10:
+    # if block_seq_index > 10:
+    if block_seq_index > filled:
+        print('! Number of moves exceeded !')
         return True
     return False
 
@@ -207,22 +210,27 @@ def step(state, agent_actions, block_seq_index):
         "occupied_cells": occupied_cells
     }
 
-    if (not no_block_conflict(actions)):
-        block_conflict_penalty = -100000
-        return state, block_conflict_penalty, False, block_seq_index
-    
-    print(f'Agent places {block_type} block at {grid_position}, orientation={orientation}')
-    next_state = add_block(actions, state)
+    if (no_block_conflict(actions)):
+        # print(f'Agent places {block_type} block at {grid_position}, orientation={orientation}')
+        next_state = add_block(actions, state)
+    else:
+        next_state = state
 
     block_seq_index += 1
 
     diff_tensor = target_vox_tensor - grid_tensor
+
     reward, perc_complete = calc_reward(diff_tensor)
-    print(f'Reward = {reward}')
-    print(f'Percent complete = {perc_complete*100:.2f}%')
+    
+    if (not no_block_conflict(actions)):
+        block_conflict_penalty = -100000
+        reward = block_conflict_penalty
+    
+    # print(f'Reward = {reward}')
+    if block_seq_index % 100 == 0:
+        print(f'Block {block_seq_index}, Percent complete = {perc_complete*100:.2f}%')
 
     terminal = determine_terminal(diff_tensor, block_seq_index)
-    print(terminal)
 
     return next_state, reward, terminal, block_seq_index
     
@@ -233,6 +241,7 @@ if __name__ == "__main__":
 
     for ep in range(NUM_EPISODES):
         print(f'==EPISODE {ep}==')
+
         state, reward, terminal, block_seq_index = reset()
 
         while not terminal:
@@ -243,7 +252,6 @@ if __name__ == "__main__":
             agent.update_experience(state,agent_actions,next_state,reward,terminal)
 
             state = next_state
-            print()
         print(f'==END EPISODE {ep}==')
 
         agent.update_policy(ep)
