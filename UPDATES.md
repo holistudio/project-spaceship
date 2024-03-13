@@ -18,6 +18,13 @@ A log of project progress and specific lessons learned.
 
 ## Log
 
+### 2024-03-09
+
+Had to carefully think about how blocks rotate and how that affects the cells they occupy in a tensor and the position in Unity.
+
+Rewards should account that there's a lot of blank space 22161 blank vs 39983
+
+Also need to penalize agent when it places a block that overlaps with other existing blocks.
 
 ### 2024-02-25
 
