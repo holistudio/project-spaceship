@@ -8,7 +8,7 @@ from collections import namedtuple, deque
 
 n_h = 64
 
-BATCH_SIZE = 16 #128
+BATCH_SIZE = 128
 LR = 1e-4
 
 EPS_START = 0.9
@@ -109,23 +109,29 @@ class CNNAgent(object):
         if len(self.memory) < BATCH_SIZE:
             return
         
+        print('Sample memory')
         transitions = self.memory.sample(BATCH_SIZE)
 
+        print('Transpose the batch')
         # Transpose the batch (see https://stackoverflow.com/a/19343/3343043 for
         # detailed explanation). This converts batch-array of Transitions
         # to Transition of batch-arrays.
         batch = Transition(*zip(*transitions))
 
+        print('Non-final mask')
         # Compute a mask of non-final states and concatenate the batch elements
         # (a final state would've been the one after which simulation ended)
         non_final_mask = torch.tensor(tuple(map(lambda s: s is not None,
                                             batch.next_state)), device=device, dtype=torch.bool)
         non_final_next_states = torch.cat([s for s in batch.next_state
                                                     if s is not None])
+        
+        print('Make batches')
         state_batch = torch.cat(batch.state)
         action_batch = torch.cat(batch.action)
         reward_batch = torch.cat(batch.reward)
 
+        print('Compute state_action_values')
         # Compute Q(s_t, a) - the model computes Q(s_t), then we select the
         # columns of actions taken. These are the actions which would've been taken
         # for each batch state according to policy_net
@@ -133,6 +139,7 @@ class CNNAgent(object):
         state_action_values = self.policy_net(state_batch)[:, action_select[:,0], action_select[:,1], action_select[:,2], action_select[:,3], action_select[:,4]][0].reshape((BATCH_SIZE,1))
         # state_action_values = self.policy_net(state_batch).gather(1, action_batch)
 
+        print('Compute next state values')
         # Compute V(s_{t+1}) for all next states.
         # Expected values of actions for non_final_next_states are computed based
         # on the "older" target_net; selecting their best reward with max(1).values
@@ -158,21 +165,26 @@ class CNNAgent(object):
                 next_state_values[non_final_mask[i]] = out[indices[0],indices[1],indices[2],indices[3],indices[4]].item()
             # next_state_values[non_final_mask] = self.target_net(non_final_next_states).max(1).values
         
+        print('Compute Q-values')
         # Compute the expected Q values
         expected_state_action_values = (next_state_values * GAMMA) + reward_batch
         expected_state_action_values = expected_state_action_values.unsqueeze(1)
 
+        print('Compute Huber loss')
         # Compute Huber loss
         criterion = nn.SmoothL1Loss()
         loss = criterion(state_action_values, expected_state_action_values)
 
+        print('Backprop')
         # Optimize the model
         self.optimizer.zero_grad()
         loss.backward()
 
+        print('Gradient clipping')
         # In-place gradient clipping
         torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), 100)
 
+        print('Optimizer step')
         self.optimizer.step()
         
     def soft_update(self):
@@ -193,8 +205,13 @@ class CNNAgent(object):
             next_state = next_state.unsqueeze(0).float()
         reward = torch.tensor([reward], device=device)
 
+        # print('AGENT pushes to MEMORY')
         self.memory.push(state, agent_actions, next_state, reward)
+
+        # print('AGENT OPTIMIZES')
         self.optimize_model()
+
+        # print('AGENT soft UPDATES')
         self.soft_update()
 
     def update_policy(self, episode):
