@@ -61,7 +61,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 ShapeNetID = int('02843684')
 
 # Load voxel model
-vox_file = '../../datasets/shapenet/02843684/1b73f96cf598ef492cba66dc6aeabcd4/models/model_normalized.solid.binvox'
+vox_file = 'model_normalized.solid.binvox'
+# vox_file = 'model_normalized.surface.binvox'
 
 with open(vox_file, 'rb') as f:
     print('=LOADING VOXEL MODEL=')
