@@ -1,9 +1,9 @@
 import numpy as np
 import CNN_agent as Agent
-import train_env as Env
+import training_env as Env
 NUM_EPISODES = 7
 
-env = Env.BlockLayerTrainEnv()
+env = Env.BlockTrainingEnvironment()
 agent = Agent.CNNAgent(grid_sizes=env.grid_sizes, 
                        num_orient=env.num_orient, 
                        block_info_size=env.block_info_size, 

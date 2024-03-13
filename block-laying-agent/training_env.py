@@ -63,7 +63,7 @@ ShapeNetIDs = ['02843684']
 vox_files = ['model_normalized.solid.binvox']
 # vox_files = ['model_normalized.surface.binvox']
 
-class BlockLayerTrainEnv(object):
+class BlockTrainingEnvironment(object):
     def __init__(self):
         super().__init__()
         self.grid_sizes=GRID_SIZES
