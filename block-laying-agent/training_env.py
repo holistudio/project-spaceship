@@ -123,20 +123,18 @@ class BlockTrainingEnvironment(object):
             x += scale_down_factor
             vx += 1
 
-        sum_filled = 0
-        sum_unfilled = 0
-        for x in range(NUM_X):
-            for y in range(NUM_Y):
-                for z in range(NUM_Z):
-                    if target_vox_tensor[x,y,z] == 1:
-                        sum_filled += 1
-                    else:
-                        sum_unfilled += 1
+        fill_mask = (target_vox_tensor == 1)
+        sum_filled = torch.sum(fill_mask).item()
+
+        unfill_mask = (target_vox_tensor == 0)
+        sum_unfilled = torch.sum(unfill_mask).item()
 
         # print(NUM_X*NUM_Y*NUM_Z)
+        # print(sum_filled)
+        # print(sum_unfilled)
         print(f'Model Filled Percent = {sum_filled*100/(NUM_X*NUM_Y*NUM_Z):.2f}%')
         print()
-        # print(unfilled)
+        
         return target_vox_tensor, sum_filled, sum_unfilled
 
     def reset(self):
