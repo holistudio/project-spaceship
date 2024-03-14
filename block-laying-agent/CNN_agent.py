@@ -104,7 +104,7 @@ class CNNAgent(object):
             # indices = [random.randint(0,a-1) for a in self.action_space]
             max_index = random.randint(0,self.num_actions-1) 
         
-        self.agent_actions = torch.tensor([[max_index]], device=device, dtype=torch.long)
+        self.agent_actions[0,0] = max_index
 
         return self.agent_actions
     
