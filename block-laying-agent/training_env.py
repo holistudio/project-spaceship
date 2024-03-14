@@ -211,8 +211,8 @@ class BlockTrainingEnvironment(object):
     def determine_terminal(self, diff_tensor):
         if torch.all(diff_tensor == 0):
             return True
-        if self.block_seq_index > 200:
-        # if self.block_seq_index > self.sum_filled:
+        # if self.block_seq_index > 200:
+        if self.block_seq_index > self.sum_filled:
             print('! Number of moves exceeded !')
             return True
         return False
