@@ -61,6 +61,7 @@ class CNN_DQN(nn.Module):
 class CNNAgent(object):
     def __init__(self, grid_sizes, num_orient, block_info_size, block_types):
         self.action_space = [block_types, num_orient, grid_sizes[0],grid_sizes[1],grid_sizes[2]]
+        self.num_actions = block_types*num_orient*grid_sizes[0]*grid_sizes[1]*grid_sizes[2]
 
         self.policy_net = CNN_DQN(grid_sizes, num_orient, block_info_size, block_types, n_hidden=n_h).to(device)
         self.target_net = CNN_DQN(grid_sizes, num_orient, block_info_size, block_types, n_hidden=n_h).to(device)
@@ -88,22 +89,23 @@ class CNNAgent(object):
                 # Find the index of the maximum value
                 max_index = torch.argmax(out)
 
-            # Convert the flat index to multidimensional indices
-            # indices = []
-            # for dim_size in reversed(out.shape):
-            #     indices.append((max_index % dim_size).item())
-            #     max_index //= dim_size
+                # Convert the flat index to multidimensional indices
+                # indices = []
+                # for dim_size in reversed(out.shape):
+                #     indices.append((max_index % dim_size).item())
+                #     max_index //= dim_size
 
-            # # Reverse the list of indices to match the tensor's shape
-            # indices.reverse()
-            indices = np.unravel_index(max_index.item(), out.shape)
+                # # Reverse the list of indices to match the tensor's shape
+                # indices.reverse()
+                # indices = np.unravel_index(max_index.item(), out.shape)
         else:
             # print('Agent EXPLORES!')
-            indices = [random.randint(0,a-1) for a in self.action_space]
+            # indices = [random.randint(0,a-1) for a in self.action_space]
+            max_index = random.randint(0,self.num_actions-1) 
         
-        agent_actions = torch.tensor([indices], device=device, dtype=torch.long)
+        self.agent_actions = torch.tensor([max_index], device=device, dtype=torch.long)
 
-        return agent_actions
+        return self.agent_actions
     
     def optimize_model(self):
         if len(self.memory) < BATCH_SIZE:
