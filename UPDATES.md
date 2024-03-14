@@ -18,13 +18,55 @@ A log of project progress and specific lessons learned.
 
 ## Log
 
-### 2024-03-09
+### 2024-03-14
 
-Had to carefully think about how blocks rotate and how that affects the cells they occupy in a tensor and the position in Unity.
+Got a Deep Q-learning Network to start figuring out how to place blocks to match a shape!
 
-Rewards should account that there's a lot of blank space 22161 blank vs 39983
+First, I had to carefully think about how blocks rotate and how that affects the cells they occupy in a tensor and their position in Unity. I'm assuming each of the 6 types of blocks has only two types of rotations that an agent can choose from. This informs both the action space for the agent/environment and how the environment handles the agent's choice of action.
 
-Also need to penalize agent when it places a block that overlaps with other existing blocks.
+Currently the DQN agent can choose among 6 block types, 2 orientations to place in a 64x64x64 grid. That amounts to over 3 million possible actions. Of course, once the DQN agent places a block on the grid, it cannot place a block in that same location or other nearby blocks that overlap with it. The current environment penalizes the agent when it places a block that overlaps with other existing blocks, and the state of the blocks remains unchanged.
+
+I started by modifying example code in the [PyTorch DQN tutorial](https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html). My thinking was "Well MY DQN agent is picking indices between 0 and 5, then 0 and 1, and then 0 and 63..." such that `agent.select_action()` returns an array of indices (i.e., `[5, 1, 34, 32, 58]`).
+
+But each iteration ended up taking a lot of time. Addressing the computational efficiency, especially in the `optimize_model` function, I ended up basically doing what the tutorial did. With large and high dimensional action spaces, the approach of having the agent compute the indices of each dimension using `unravel_index()` (with torch 2.2 or numpy library) ends up taking a lot of time. Instead, the DQN agent can just use `torch.max(Q-values)` to get the `max_index` instead of a list of indices (i.e., `3024954` instead of `[5, 1, 34, 32, 58]`). This `max_index` specifies the location of the max Q-value if the action space were reshaped into a 1D array. As an added bonus, we can declare a single value inside a the tensor for the action and just update the value instead of declaring a new tensor every time.
+
+```
+# agent_actions = torch.tensor([[max_index]], device=device, dtype=torch.long)
+
+agent_actions[0,0] = max_index # update the value instead
+```
+
+With the DQN agent only returning a single max_index value, the `optimize_model()` function can estimate `Q(s_t, a)` and `V(s_{t+1})` using `view()` and `gather()` functions, without having to unravel the agent's action.
+
+```
+# Q(s_t, a)
+state_action_values = self.policy_net(state_batch).view(BATCH_SIZE,-1).gather(1, action_batch)
+
+# V(s_{t+1})
+self.target_net(non_final_next_states).view(BATCH_SIZE,-1).max(-1).values
+```
+
+During optimization you don't need to calculate the individual indices at each dimension of the action space. You can just reshape the action space to a 1D vector and torch.max() will then tell you where to get the max Q-value.
+
+Of course the `unravel_index()` still needs to be used, but by the environment, not the agent.
+
+```
+"""agent.py"""
+max_index = torch.max(Q_tensor) # Q_tensor.shape = (BLOCK_TYPES,NUM_ORIENTATION,NUM_X,NUM_Y,NUM_Z)
+
+"""environment.py"""
+block_type_i, orientation, grid_x, grid_y, grid_z = np.unravel_index(max_index,(BLOCK_TYPES,NUM_ORIENTATION,NUM_X,NUM_Y,NUM_Z))
+```
+
+Even with these tricks, optimizing model() can take some time because the input size and output size are huge, which means back-prop takes awhile (even with CUDA). So a single agent_action+env_step can take around 15 seconds, just to place one block before repeating the episode loop!
+
+While I'll continue thinking about how to make this process faster from the neural network/ RL agent side of things (maybe PPO?), one thing that's sure to help is to give the surface voxel model as the agent's target, not the solid model. Fewer blocks in the target model should mean less time per episode. 
+
+The rewards for this training environment should also account for the large amount of blank space vs filled space in the target 3D model. Maybe give a positive reward of `(1-fill_fraction)` for every block placed in a correct location and `-(1-fill_fraction)` penalty for incorrect locations...
+
+P.S.
+
+It's surprisingly hard to figure out what the ShapeNet folder numbers mean. https://paperswithcode.com/paper/shapenet-an-information-rich-3d-model/review/ has the complete ShapeNetCore list of object labels.
 
 ### 2024-02-25
 
