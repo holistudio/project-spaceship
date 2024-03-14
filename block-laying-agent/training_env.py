@@ -61,8 +61,8 @@ BLOCK_DEFINITIONS = {
 BLOCK_TYPES = len(BLOCK_DEFINITIONS.keys())
 
 ShapeNetIDs = ['02843684']
-vox_files = ['model_normalized.solid.binvox']
-# vox_files = ['model_normalized.surface.binvox']
+# vox_files = ['model_normalized.solid.binvox']
+vox_files = ['model_normalized.surface.binvox']
 
 class BlockTrainingEnvironment(object):
     def __init__(self):
