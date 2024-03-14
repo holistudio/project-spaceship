@@ -30,7 +30,7 @@ public class ReadWriteJSON : MonoBehaviour
 {
     public GameObject blockSet;
 
-    private string filePath = "design_shapenet_downscale.json";
+    private string filePath = "design_shapenet_solid_downscale.json";
 
     private int designID = -1; // even designIDs are for the architect, odd designIDs are for the agent
 
