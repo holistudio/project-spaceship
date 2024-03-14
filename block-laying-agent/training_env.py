@@ -218,7 +218,8 @@ class BlockTrainingEnvironment(object):
         return False
 
     def step(self, agent_actions):
-        env_actions = list(agent_actions.cpu().squeeze().numpy())
+        max_index = agent_actions.squeeze().item()
+        env_actions = np.unravel_index(max_index,(BLOCK_TYPES,NUM_ORIENTATION,NUM_X,NUM_Y,NUM_Z))
         block_type_i, orientation, grid_x, grid_y, grid_z = env_actions
         block_type = list(BLOCK_DEFINITIONS.keys())[block_type_i]
 
