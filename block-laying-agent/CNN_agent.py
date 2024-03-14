@@ -62,6 +62,7 @@ class CNNAgent(object):
     def __init__(self, grid_sizes, num_orient, block_info_size, block_types):
         self.action_space = [block_types, num_orient, grid_sizes[0],grid_sizes[1],grid_sizes[2]]
         self.num_actions = block_types*num_orient*grid_sizes[0]*grid_sizes[1]*grid_sizes[2]
+        self.agent_actions = torch.tensor([[0]], device=device, dtype=torch.long)
 
         self.policy_net = CNN_DQN(grid_sizes, num_orient, block_info_size, block_types, n_hidden=n_h).to(device)
         self.target_net = CNN_DQN(grid_sizes, num_orient, block_info_size, block_types, n_hidden=n_h).to(device)
@@ -103,7 +104,7 @@ class CNNAgent(object):
             # indices = [random.randint(0,a-1) for a in self.action_space]
             max_index = random.randint(0,self.num_actions-1) 
         
-        self.agent_actions = torch.tensor([max_index], device=device, dtype=torch.long)
+        self.agent_actions = torch.tensor([[max_index]], device=device, dtype=torch.long)
 
         return self.agent_actions
     
@@ -137,12 +138,13 @@ class CNNAgent(object):
         # Compute Q(s_t, a) - the model computes Q(s_t), then we select the
         # columns of actions taken. These are the actions which would've been taken
         # for each batch state according to policy_net
-        state_action_values = self.policy_net(state_batch)[:, 
-                                                           action_batch[:,0], 
-                                                           action_batch[:,1], 
-                                                           action_batch[:,2], 
-                                                           action_batch[:,3], 
-                                                           action_batch[:,4]][0].reshape((BATCH_SIZE,1))
+        # state_action_values = self.policy_net(state_batch)[:, 
+        #                                                    action_batch[:,0], 
+        #                                                    action_batch[:,1], 
+        #                                                    action_batch[:,2], 
+        #                                                    action_batch[:,3], 
+        #                                                    action_batch[:,4]][0].reshape((BATCH_SIZE,1))
+        state_action_values = self.policy_net(state_batch).view(BATCH_SIZE,-1).gather(1, action_batch)
         # state_action_values = self.policy_net(state_batch).gather(1, action_batch)
 
         # print('Compute next state values')
