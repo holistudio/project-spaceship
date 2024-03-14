@@ -4,6 +4,7 @@ import binvox_rw
 import datetime
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f'Device: {device}')
 
 NUM_X = 64
 NUM_Y = 64
