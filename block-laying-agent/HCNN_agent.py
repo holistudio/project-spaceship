@@ -43,20 +43,46 @@ class ReplayMemory(object):
         return len(self.memory)
     
 class HCNN_DQN(nn.Module):
-    def __init__(self, grid_sizes, num_orient, block_info_size, block_types, n_hidden):
+    def __init__(self, grid_sizes, num_orient, block_info_size, block_types, dropout):
         super().__init__()
         self.num_x, self.num_y, self.num_z = grid_sizes
         self.num_orient = num_orient
         self.block_types = block_types
-        self.conv1 = nn.Conv3d(in_channels=block_info_size, out_channels=n_hidden, kernel_size=1)
-        self.conv2 = nn.Conv3d(in_channels=n_hidden, out_channels=block_types*num_orient, kernel_size=1)
+
+        D = self.num_z
+        D_out = 4
+        padding = 0
+        dilation = 1
+        stride = 1
+
+        kernel_size = (((D_out - 1)*stride - D + 1 - 2*padding)/(-dilation)) + 1
+
+        self.conv_high = nn.Conv3d(in_channels=block_info_size, out_channels=1, kernel_size=kernel_size)
+        self.conv_med = nn.Conv3d(in_channels=block_info_size, out_channels=1, kernel_size=kernel_size)
+        self.conv_low = nn.Conv3d(in_channels=block_info_size, out_channels=1, kernel_size=kernel_size)
+        self.fnn_block = nn.Sequential(
+            nn.Linear(D_out*D_out*D_out, 4 * D_out*D_out*D_out),
+            nn.ReLU(),
+            nn.Linear(4 * D_out*D_out*D_out, block_types),
+            nn.Dropout(dropout),
+        )
+        self.fnn_orient = nn.Sequential(
+            nn.Linear(D_out*D_out*D_out, 2 * D_out*D_out*D_out),
+            nn.ReLU(),
+            nn.Linear(2 * D_out*D_out*D_out, num_orient),
+            nn.Dropout(dropout),
+        )
 
     def forward(self, x):
         (N, C, D, H, W) = x.shape
-        x = self.conv1(x)
-        x = self.conv2(x)
-        x = torch.reshape(x, (N, self.block_types, self.num_orient, self.num_x, self.num_y, self.num_z))
-        return x
+        out_high = self.conv_high(x)
+        out_med = self.conv_med(x)
+        out_low = self.conv_low(x)
+
+        out_block = self.fnn_block(out_low.view(N,-1))
+        out_orient = self.fnn_orient(out_low.view(N,-1))
+
+        return [out_block, out_orient, out_high, out_med, out_low]
 
 class CNNAgent(object):
     def __init__(self, grid_sizes, num_orient, block_info_size, block_types):
