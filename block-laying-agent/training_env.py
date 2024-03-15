@@ -90,6 +90,7 @@ class BlockTrainingEnvironment(object):
         self.block_seq_index = 0
 
         self.reward = 0
+        self.perc_complete = 0
         self.terminal = False
 
     def load_vox_model(self, vox_file):
@@ -267,16 +268,17 @@ class BlockTrainingEnvironment(object):
 
             diff_tensor = self.target_vox_tensor - self.grid_tensor
             self.terminal = self.determine_terminal(diff_tensor)
-            
+            if self.block_seq_index % 100 == 0:
+                print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Reward = {self.reward}, Percent complete = {self.perc_complete*100:.2f}%')
             return next_state, block_conflict_penalty, self.terminal
         
         diff_tensor = self.target_vox_tensor - self.grid_tensor
 
-        self.reward, perc_complete = self.calc_reward(diff_tensor)
+        self.reward, self.perc_complete = self.calc_reward(diff_tensor)
         
         # print(f'Reward = {reward}')
         if self.block_seq_index % 100 == 0:
-            print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Reward = {self.reward}, Percent complete = {perc_complete*100:.2f}%')
+            print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Reward = {self.reward}, Percent complete = {self.perc_complete*100:.2f}%')
 
         self.block_seq_index += 1
 
