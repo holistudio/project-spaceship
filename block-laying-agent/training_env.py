@@ -274,13 +274,17 @@ class BlockTrainingEnvironment(object):
         else:
             next_state = self.state
 
-            block_conflict_penalty = -100000
-            self.block_seq_index += 1
-
             diff_tensor = self.target_vox_tensor - self.grid_tensor
-            self.terminal = self.determine_terminal(diff_tensor)
+
+            block_conflict_penalty = -1000*self.incorrect_penalty
+
             if self.block_seq_index % 50 == 0:
                 print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Reward = {self.reward:.2f}, Percent complete = {self.perc_complete*100:.2f}%')
+
+            self.block_seq_index += 1
+            
+            self.terminal = self.determine_terminal(diff_tensor)
+            
             return next_state, block_conflict_penalty, self.terminal
         
         diff_tensor = self.target_vox_tensor - self.grid_tensor
