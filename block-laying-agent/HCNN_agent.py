@@ -6,7 +6,6 @@ import random
 import math
 from collections import namedtuple, deque
 
-n_h = 64
 
 BATCH_SIZE = 128
 LR = 1e-4
