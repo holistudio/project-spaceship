@@ -167,7 +167,15 @@ class CNNAgent(object):
         #                                                    action_batch[:,2], 
         #                                                    action_batch[:,3], 
         #                                                    action_batch[:,4]][0].reshape((BATCH_SIZE,1))
-        state_action_values = self.policy_net(state_batch).view(BATCH_SIZE,-1).gather(1, action_batch)
+        
+        # state_action_values = self.policy_net(state_batch).view(BATCH_SIZE,-1).gather(1, action_batch)
+        out_block, out_orient, out_high, out_med, out_low = self.policy_net(state_batch)
+        q_block = out_block.view(BATCH_SIZE,-1).gather(1, action_batch[:,0].unsqueeze(1))
+        q_orient = out_orient.view(BATCH_SIZE,-1).gather(1, action_batch[:,1].unsqueeze(1))
+        q_high = out_high.view(BATCH_SIZE,-1).gather(1, action_batch[:,2].unsqueeze(1))
+        q_med = out_med.view(BATCH_SIZE,-1).gather(1, action_batch[:,3].unsqueeze(1))
+        q_low = out_low.view(BATCH_SIZE,-1).gather(1, action_batch[:,4].unsqueeze(1))
+        state_action_values = torch.cat((q_block,q_orient,q_high,q_med,q_low),dim=1)
         # state_action_values = self.policy_net(state_batch).gather(1, action_batch)
 
         # print('Compute next state values')
@@ -176,10 +184,15 @@ class CNNAgent(object):
         # on the "older" target_net; selecting their best reward with max(1).values
         # This is merged based on the mask, such that we'll have either the expected
         # state value or 0 in case the state was final.
-        next_state_values = torch.zeros(BATCH_SIZE, device=device)
+        next_state_values = torch.zeros((BATCH_SIZE,5), device=device)
         with torch.no_grad():
-            batch_values = self.target_net(non_final_next_states)
-            next_state_values[non_final_mask] = torch.max(batch_values.view(BATCH_SIZE,-1),dim=-1).values
+            v_block, v_orient, v_high, v_med, v_low = self.target_net(non_final_next_states)
+            v_block = torch.max(v_block.view(BATCH_SIZE,-1),dim=-1).values.unsqueeze(1)
+            v_orient = torch.max(v_orient.view(BATCH_SIZE,-1),dim=-1).values.unsqueeze(1)
+            v_high = torch.max(v_high.view(BATCH_SIZE,-1),dim=-1).values.unsqueeze(1)
+            v_med = torch.max(v_med.view(BATCH_SIZE,-1),dim=-1).values.unsqueeze(1)
+            v_low = torch.max(v_low.view(BATCH_SIZE,-1),dim=-1).values.unsqueeze(1)
+            next_state_values[non_final_mask] = torch.cat((v_block,v_orient,v_high,v_med,v_low),dim=1)
             # for i in range(len(batch_values)):
                 # out = batch_values[i]
                 # max_index = torch.argmax(out)
@@ -199,8 +212,8 @@ class CNNAgent(object):
         
         # print('Compute Q-values')
         # Compute the expected Q values
-        expected_state_action_values = (next_state_values * GAMMA) + reward_batch
-        expected_state_action_values = expected_state_action_values.unsqueeze(1)
+        expected_state_action_values = (next_state_values * GAMMA) + reward_batch.unsqueeze(1)
+        # expected_state_action_values = expected_state_action_values.unsqueeze(1)
 
         # print('Compute Huber loss')
         # Compute Huber loss
