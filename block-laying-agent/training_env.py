@@ -90,6 +90,10 @@ class BlockTrainingEnvironment(object):
         self.block_seq_index = 0
 
         self.reward = 0
+        self.correct_score = 1
+        self.blank_score = 0.1*self.correct_score
+        self.incorrect_penalty = self.correct_score
+
         self.perc_complete = 0
         self.terminal = False
 
@@ -133,11 +137,9 @@ class BlockTrainingEnvironment(object):
         sum_unfilled = torch.sum(unfill_mask).item()
 
         # print(NUM_X*NUM_Y*NUM_Z)
-        # print(sum_filled)
+        print(f'Total Filled Cells = {sum_filled}')
         # print(sum_unfilled)
         print(f'Model Filled Percent = {sum_filled*100/(NUM_X*NUM_Y*NUM_Z):.2f}%')
-        print()
-        
         return target_vox_tensor, sum_filled, sum_unfilled
 
     def reset(self):
@@ -154,6 +156,15 @@ class BlockTrainingEnvironment(object):
         self.state = torch.ones((BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long, device=device) * -1
         # state = torch.randint(low=-1, high=40, size=(BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long)
         self.state[0,:,:,:] = self.ShapeNetID
+
+        self.correct_score = 1/self.sum_filled
+        self.blank_score = 0.1*self.correct_score
+        self.incorrect_penalty = 10*self.correct_score
+        self.perc_complete = 0
+        self.terminal = False
+        max_reward = (self.correct_score * self.sum_filled) + self.blank_score * self.sum_unfilled
+        print(f'Max Reward = {max_reward:.2f}')
+        print()
 
         print('=PLACING BLOCKS=')
         return self.state, self.reward, self.terminal
@@ -194,18 +205,18 @@ class BlockTrainingEnvironment(object):
         fill_mask = (target_values == 1)
         n_fill = torch.sum(fill_mask).item()
         n_empty = len(zero_indices) - n_fill
-        rew += n_fill
-        rew += n_empty * 0.1
+        rew += n_fill * self.correct_score
+        rew += n_empty * self.blank_score
 
         # value of -1 means false positive (block placed by agent but should be blank)
         neg_1_mask = (diff_tensor == -1)
         n_fp = torch.sum(neg_1_mask).item()
-        rew -= n_fp
+        rew -= n_fp * self.incorrect_penalty
 
         # value of +1 means false negative (should block but none placed by agent)
         pos_1_mask = (diff_tensor == 1)
         n_fn = torch.sum(pos_1_mask).item()
-        rew -= n_fn
+        rew -= n_fn * self.incorrect_penalty
 
         perc_complete = n_fill/self.sum_filled
         return rew, perc_complete
@@ -268,8 +279,8 @@ class BlockTrainingEnvironment(object):
 
             diff_tensor = self.target_vox_tensor - self.grid_tensor
             self.terminal = self.determine_terminal(diff_tensor)
-            if self.block_seq_index % 100 == 0:
-                print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Reward = {self.reward}, Percent complete = {self.perc_complete*100:.2f}%')
+            if self.block_seq_index % 50 == 0:
+                print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Reward = {self.reward:.2f}, Percent complete = {self.perc_complete*100:.2f}%')
             return next_state, block_conflict_penalty, self.terminal
         
         diff_tensor = self.target_vox_tensor - self.grid_tensor
@@ -277,8 +288,8 @@ class BlockTrainingEnvironment(object):
         self.reward, self.perc_complete = self.calc_reward(diff_tensor)
         
         # print(f'Reward = {reward}')
-        if self.block_seq_index % 100 == 0:
-            print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Reward = {self.reward}, Percent complete = {self.perc_complete*100:.2f}%')
+        if self.block_seq_index % 50 == 0:
+            print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Reward = {self.reward:.2f}, Percent complete = {self.perc_complete*100:.2f}%')
 
         self.block_seq_index += 1
 
