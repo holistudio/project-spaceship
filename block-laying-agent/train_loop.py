@@ -1,5 +1,5 @@
 import numpy as np
-import CNN_agent as Agent
+import HCNN_agent as Agent
 import training_env as Env
 
 NUM_EPISODES = 10
