@@ -42,7 +42,7 @@ class ReplayMemory(object):
     def __len__(self):
         return len(self.memory)
     
-class CNN_DQN(nn.Module):
+class HCNN_DQN(nn.Module):
     def __init__(self, grid_sizes, num_orient, block_info_size, block_types, n_hidden):
         super().__init__()
         self.num_x, self.num_y, self.num_z = grid_sizes
@@ -64,8 +64,8 @@ class CNNAgent(object):
         self.num_actions = block_types*num_orient*grid_sizes[0]*grid_sizes[1]*grid_sizes[2]
         self.agent_actions = torch.tensor([[0]], device=device, dtype=torch.long)
 
-        self.policy_net = CNN_DQN(grid_sizes, num_orient, block_info_size, block_types, n_hidden=n_h).to(device)
-        self.target_net = CNN_DQN(grid_sizes, num_orient, block_info_size, block_types, n_hidden=n_h).to(device)
+        self.policy_net = HCNN_DQN(grid_sizes, num_orient, block_info_size, block_types, n_hidden=n_h).to(device)
+        self.target_net = HCNN_DQN(grid_sizes, num_orient, block_info_size, block_types, n_hidden=n_h).to(device)
         self.target_net.load_state_dict(self.policy_net.state_dict())
 
         self.steps_done = 0
