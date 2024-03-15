@@ -55,7 +55,7 @@ class HCNN_DQN(nn.Module):
         dilation = 1
         stride = 1
 
-        kernel_size = (((D_out - 1)*stride - D + 1 - 2*padding)/(-dilation)) + 1
+        kernel_size = int((((D_out - 1)*stride - D + 1 - 2*padding)/(-dilation)) + 1)
 
         self.conv_high = nn.Conv3d(in_channels=block_info_size, out_channels=1, kernel_size=kernel_size)
         self.conv_med = nn.Conv3d(in_channels=block_info_size, out_channels=1, kernel_size=kernel_size)
@@ -82,16 +82,16 @@ class HCNN_DQN(nn.Module):
         out_block = self.fnn_block(out_low.view(N,-1))
         out_orient = self.fnn_orient(out_low.view(N,-1))
 
-        return [out_block, out_orient, out_high, out_med, out_low]
+        return out_block, out_orient, out_high, out_med, out_low
 
 class CNNAgent(object):
     def __init__(self, grid_sizes, num_orient, block_info_size, block_types):
         self.action_space = [block_types, num_orient, grid_sizes[0],grid_sizes[1],grid_sizes[2]]
         self.num_actions = block_types*num_orient*grid_sizes[0]*grid_sizes[1]*grid_sizes[2]
-        self.agent_actions = torch.tensor([[0]], device=device, dtype=torch.long)
+        self.agent_actions = torch.zeros(5, device=device, dtype=torch.long).unsqueeze(0)
 
-        self.policy_net = HCNN_DQN(grid_sizes, num_orient, block_info_size, block_types, n_hidden=n_h).to(device)
-        self.target_net = HCNN_DQN(grid_sizes, num_orient, block_info_size, block_types, n_hidden=n_h).to(device)
+        self.policy_net = HCNN_DQN(grid_sizes, num_orient, block_info_size, block_types, dropout=0.2).to(device)
+        self.target_net = HCNN_DQN(grid_sizes, num_orient, block_info_size, block_types, dropout=0.2).to(device)
         self.target_net.load_state_dict(self.policy_net.state_dict())
 
         self.steps_done = 0
@@ -103,34 +103,31 @@ class CNNAgent(object):
         sample = random.random()
         eps_threshold = EPS_END + (EPS_START - EPS_END) * \
             math.exp(-1. * self.steps_done / EPS_DECAY)
-
+        eps_threshold = 0
         self.steps_done += 1
         # print(f'Epsilon={eps_threshold}')
         if sample > eps_threshold:
             # print('Agent EXPLOITS!')
             batch_state = state.unsqueeze(0).float()
             with torch.no_grad():
-                out = self.policy_net(batch_state)
-                out = out.squeeze()
+                out_block, out_orient, out_high, out_med, out_low = self.policy_net(batch_state)
 
                 # Find the index of the maximum value
-                max_index = torch.argmax(out)
+                self.agent_actions[0,0] = torch.argmax(out_block).item()
+                self.agent_actions[0,1] = torch.argmax(out_orient).item()
 
-                # Convert the flat index to multidimensional indices
-                # indices = []
-                # for dim_size in reversed(out.shape):
-                #     indices.append((max_index % dim_size).item())
-                #     max_index //= dim_size
-
-                # # Reverse the list of indices to match the tensor's shape
-                # indices.reverse()
-                # indices = np.unravel_index(max_index.item(), out.shape)
+                self.agent_actions[0,2] = torch.argmax(out_high).item()
+                self.agent_actions[0,3] = torch.argmax(out_med).item()
+                self.agent_actions[0,4] = torch.argmax(out_low).item()
         else:
             # print('Agent EXPLORES!')
             # indices = [random.randint(0,a-1) for a in self.action_space]
-            max_index = random.randint(0,self.num_actions-1) 
-        
-        self.agent_actions[0,0] = max_index
+            self.agent_actions[0,0] = torch.randint(0,self.action_space[0],(1,)).item()
+            self.agent_actions[0,1] = torch.randint(0,self.action_space[1],(1,)).item()
+
+            self.agent_actions[0,2] = torch.randint(0,4*4*4,(1,)).item()
+            self.agent_actions[0,3] = torch.randint(0,4*4*4,(1,)).item()
+            self.agent_actions[0,4] = torch.randint(0,4*4*4,(1,)).item()
 
         return self.agent_actions
     
