@@ -8,7 +8,7 @@ from collections import namedtuple, deque
 
 
 BATCH_SIZE = 128
-LR = 1e-4
+LR = 1e-3 # 3e-4
 
 EPS_START = 0.9
 EPS_END = 0.05
