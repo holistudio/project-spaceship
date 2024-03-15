@@ -217,11 +217,15 @@ class BlockTrainingEnvironment(object):
             print('! Number of moves exceeded !')
             return True
         return False
-
-    def step(self, agent_actions):
+    
+    def interpret_agent_actions(self, agent_actions):
         max_index = agent_actions.squeeze().item()
         env_actions = np.unravel_index(max_index,(BLOCK_TYPES,NUM_ORIENTATION,NUM_X,NUM_Y,NUM_Z))
         block_type_i, orientation, grid_x, grid_y, grid_z = env_actions
+        return block_type_i, orientation, grid_x, grid_y, grid_z
+
+    def step(self, agent_actions):
+        block_type_i, orientation, grid_x, grid_y, grid_z = self.interpret_agent_actions(self, agent_actions)
         block_type = list(BLOCK_DEFINITIONS.keys())[block_type_i]
 
         if orientation == 0:
