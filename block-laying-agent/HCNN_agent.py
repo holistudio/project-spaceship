@@ -100,10 +100,13 @@ class CNNAgent(object):
 
     def select_actions(self, state):
         sample = random.random()
+
         eps_threshold = EPS_END + (EPS_START - EPS_END) * \
             math.exp(-1. * self.steps_done / EPS_DECAY)
-        eps_threshold = 0
+        # eps_threshold = 0
+
         self.steps_done += 1
+        
         # print(f'Epsilon={eps_threshold}')
         if sample > eps_threshold:
             # print('Agent EXPLOITS!')
