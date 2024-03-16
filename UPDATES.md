@@ -18,6 +18,31 @@ A log of project progress and specific lessons learned.
 
 ## Log
 
+### 2024-03-16
+
+```
+# Compute V(s_{t+1}) for all next states.
+# Expected values of actions for non_final_next_states are computed based
+# on the "older" target_net; selecting their best reward with max(1).values
+# This is merged based on the mask, such that we'll have either the expected
+# state value or 0 in case the state was final.
+next_state_values = torch.zeros((BATCH_SIZE,5), device=device)
+```
+
+At first I thought "Are terminal states associated with reward = 0? If so, shouldn't it be whatever the final reward was?"
+
+Then I saw how next state was used
+
+```
+# Compute the expected Q values
+expected_state_action_values = (next_state_values * GAMMA) + reward_batch.unsqueeze(1)
+```
+
+It's not that we're assuming the reward is 0 for next state. We're assuming that the value of next state beyond a terminated episode is 0. the expected Q values therefore only get updated with the actual reward at the end of the episode, not a reward=0.
+
+
+
+
 ### 2024-03-14
 
 Got a Deep Q-learning Network to start figuring out how to place blocks to match a shape!
