@@ -3,7 +3,7 @@ import json
 
 import numpy as np
 import HCNN_agent as Agent
-import training_env as Env
+import env4training as Env
 
 NUM_EPISODES = 10
 DIR = os.path.join('results', 'HCNN')

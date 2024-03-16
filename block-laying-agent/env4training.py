@@ -157,8 +157,8 @@ class BlockTrainingEnvironment(object):
         # state = torch.randint(low=-1, high=40, size=(BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long)
         self.state[0,:,:,:] = self.ShapeNetID
 
-        self.correct_score = 1/self.sum_filled
-        self.blank_score = 0.1*self.correct_score
+        self.correct_score = 10/self.sum_filled
+        self.blank_score = 0.01*self.correct_score
         self.incorrect_penalty = 10*self.correct_score
         self.perc_complete = 0
         self.terminal = False
