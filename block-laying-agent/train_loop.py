@@ -6,6 +6,7 @@ import HCNN_agent as Agent
 import training_env as Env
 
 NUM_EPISODES = 10
+DIR = os.path.join('results', 'HCNN')
 
 env = Env.BlockTrainingEnvironment()
 agent = Agent.CNNAgent(grid_sizes=env.grid_sizes, 
@@ -51,7 +52,7 @@ for ep in range(NUM_EPISODES):
 
     agent.update_policy(ep+1)
 
-    log_file = os.path.join('results',f'episode_{ep}_log.json')
+    log_file = os.path.join(DIR,f'episode_{ep}_log.json')
 
     with open(log_file, 'w') as f:
         print("Saving log...")
