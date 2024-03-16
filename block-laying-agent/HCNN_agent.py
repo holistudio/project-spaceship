@@ -102,9 +102,6 @@ class CNNAgent(object):
             "actions": [0,0,0,0,0],
             "explore_exploit": "explore",
             "epsilon": 0.0,
-            "eps_start": EPS_START,
-            "eps_end": EPS_END,
-            "eps_decay": EPS_DECAY,
             "eps_steps": 0
         }
 
