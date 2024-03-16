@@ -175,6 +175,7 @@ class CNNAgent(object):
                                             batch.next_state)), device=device, dtype=torch.bool)
         non_final_next_states = torch.cat([s for s in batch.next_state
                                                     if s is not None])
+        non_final_batches = non_final_next_states.shape[0]
         
         # print('Make batches')
         state_batch = torch.cat(batch.state)
@@ -211,11 +212,11 @@ class CNNAgent(object):
         next_state_values = torch.zeros((BATCH_SIZE,5), device=device)
         with torch.no_grad():
             v_block, v_orient, v_high, v_med, v_low = self.target_net(non_final_next_states)
-            v_block = torch.max(v_block.view(BATCH_SIZE,-1),dim=-1).values.unsqueeze(1)
-            v_orient = torch.max(v_orient.view(BATCH_SIZE,-1),dim=-1).values.unsqueeze(1)
-            v_high = torch.max(v_high.view(BATCH_SIZE,-1),dim=-1).values.unsqueeze(1)
-            v_med = torch.max(v_med.view(BATCH_SIZE,-1),dim=-1).values.unsqueeze(1)
-            v_low = torch.max(v_low.view(BATCH_SIZE,-1),dim=-1).values.unsqueeze(1)
+            v_block = torch.max(v_block.view(non_final_batches,-1),dim=-1).values.unsqueeze(1)
+            v_orient = torch.max(v_orient.view(non_final_batches,-1),dim=-1).values.unsqueeze(1)
+            v_high = torch.max(v_high.view(non_final_batches,-1),dim=-1).values.unsqueeze(1)
+            v_med = torch.max(v_med.view(non_final_batches,-1),dim=-1).values.unsqueeze(1)
+            v_low = torch.max(v_low.view(non_final_batches,-1),dim=-1).values.unsqueeze(1)
             next_state_values[non_final_mask] = torch.cat((v_block,v_orient,v_high,v_med,v_low),dim=1)
             # for i in range(len(batch_values)):
                 # out = batch_values[i]
