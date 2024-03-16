@@ -73,6 +73,13 @@ class CNNAgent(object):
         self.memory = ReplayMemory(capacity=10000)
         self.optimizer = torch.optim.AdamW(self.policy_net.parameters(), lr=LR, amsgrad=True)
 
+        self.log = {
+            "actions": [0,0,0,0,0],
+            "explore_exploit": "explore",
+            "epsilon": 0.0,
+            "eps_steps": 0
+        }
+
     def select_actions(self, state):
         sample = random.random()
         eps_threshold = EPS_END + (EPS_START - EPS_END) * \
@@ -82,6 +89,8 @@ class CNNAgent(object):
         # print(f'Epsilon={eps_threshold}')
         if sample > eps_threshold:
             # print('Agent EXPLOITS!')
+            mode = "exploit"
+            
             batch_state = state.unsqueeze(0).float()
             with torch.no_grad():
                 out = self.policy_net(batch_state)
@@ -101,10 +110,22 @@ class CNNAgent(object):
                 # indices = np.unravel_index(max_index.item(), out.shape)
         else:
             # print('Agent EXPLORES!')
+            mode = "explore"
+
             # indices = [random.randint(0,a-1) for a in self.action_space]
             max_index = random.randint(0,self.num_actions-1) 
         
         self.agent_actions[0,0] = max_index
+
+        self.log = {
+            "actions": [int(max_index)],
+            "explore_exploit": mode,
+            "epsilon": eps_threshold,
+            "eps_start": EPS_START,
+            "eps_end": EPS_END,
+            "eps_decay": EPS_DECAY,
+            "eps_steps": self.steps_done
+        }
 
         return self.agent_actions
     
@@ -128,6 +149,7 @@ class CNNAgent(object):
                                             batch.next_state)), device=device, dtype=torch.bool)
         non_final_next_states = torch.cat([s for s in batch.next_state
                                                     if s is not None])
+        non_final_batches = non_final_next_states.shape[0]
         
         # print('Make batches')
         state_batch = torch.cat(batch.state)
@@ -156,7 +178,7 @@ class CNNAgent(object):
         next_state_values = torch.zeros(BATCH_SIZE, device=device)
         with torch.no_grad():
             batch_values = self.target_net(non_final_next_states)
-            next_state_values[non_final_mask] = torch.max(batch_values.view(BATCH_SIZE,-1),dim=-1).values
+            next_state_values[non_final_mask] = torch.max(batch_values.view(non_final_batches,-1),dim=-1).values
             # for i in range(len(batch_values)):
                 # out = batch_values[i]
                 # max_index = torch.argmax(out)
