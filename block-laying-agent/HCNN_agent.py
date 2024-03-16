@@ -98,18 +98,31 @@ class CNNAgent(object):
         self.memory = ReplayMemory(capacity=10000)
         self.optimizer = torch.optim.AdamW(self.policy_net.parameters(), lr=LR, amsgrad=True)
 
+        self.log = {
+            "actions": [0,0,0,0,0],
+            "explore_exploit": "explore",
+            "epsilon": 0.0,
+            "eps_start": EPS_START,
+            "eps_end": EPS_END,
+            "eps_decay": EPS_DECAY,
+            "eps_steps": 0
+        }
+
     def select_actions(self, state):
         sample = random.random()
+        mode = ""
 
         eps_threshold = EPS_END + (EPS_START - EPS_END) * \
             math.exp(-1. * self.steps_done / EPS_DECAY)
         # eps_threshold = 0
 
         self.steps_done += 1
-        
+
         # print(f'Epsilon={eps_threshold}')
         if sample > eps_threshold:
             # print('Agent EXPLOITS!')
+            mode = "exploit"
+
             batch_state = state.unsqueeze(0).float()
             with torch.no_grad():
                 out_block, out_orient, out_high, out_med, out_low = self.policy_net(batch_state)
@@ -123,6 +136,8 @@ class CNNAgent(object):
                 self.agent_actions[0,4] = torch.argmax(out_low).item()
         else:
             # print('Agent EXPLORES!')
+            mode = "explore"
+
             # indices = [random.randint(0,a-1) for a in self.action_space]
             self.agent_actions[0,0] = torch.randint(0,self.action_space[0],(1,)).item()
             self.agent_actions[0,1] = torch.randint(0,self.action_space[1],(1,)).item()
@@ -130,6 +145,16 @@ class CNNAgent(object):
             self.agent_actions[0,2] = torch.randint(0,4*4*4,(1,)).item()
             self.agent_actions[0,3] = torch.randint(0,4*4*4,(1,)).item()
             self.agent_actions[0,4] = torch.randint(0,4*4*4,(1,)).item()
+
+        self.log = {
+            "actions": list(map(int, self.agent_actions.clone().squeeze().numpy(force=True))),
+            "explore_exploit": mode,
+            "epsilon": eps_threshold,
+            "eps_start": EPS_START,
+            "eps_end": EPS_END,
+            "eps_decay": EPS_DECAY,
+            "eps_steps": self.steps_done
+        }
 
         return self.agent_actions
     
