@@ -6,6 +6,7 @@ import numpy as np
 import os
 import random
 import math
+import copy
 from collections import namedtuple, deque
 
 DIR = os.path.join('results', 'HCNN')
@@ -302,6 +303,7 @@ class CNNAgent(object):
             'policy_state_dict': self.policy_net.state_dict(),
             'target_state_dict': self.target_net.state_dict(),
             'optimizer_state_dict': self.optimizer.state_dict(),
+            'replay_memory': copy.deepcopy(self.memory),
             'loss': loss,
             'batch_size': BATCH_SIZE,
             'eps_start': EPS_START,
@@ -323,5 +325,8 @@ class CNNAgent(object):
         self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
 
         self.steps_done = checkpoint['eps_steps']
+
+        for mem in checkpoint['replay_memory'].memory:
+            self.memory.push(mem[0], mem[1], mem[2], mem[3])
         return
     
