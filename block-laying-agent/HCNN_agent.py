@@ -97,6 +97,7 @@ class CNNAgent(object):
         self.target_net = HCNN_DQN(grid_sizes, num_orient, block_info_size, block_types, dropout=0.2).to(device)
         self.target_net.load_state_dict(self.policy_net.state_dict())
 
+        self.episode = 0
         self.steps_done = 0
 
         self.memory = ReplayMemory(capacity=10000)
@@ -268,23 +269,6 @@ class CNNAgent(object):
             target_net_state_dict[key] = policy_net_state_dict[key]*TAU + target_net_state_dict[key]*(1-TAU)
         self.target_net.load_state_dict(target_net_state_dict)
     
-    def save_checkpoint(self, episode, loss):
-        torch.save({
-            'episode': episode,
-            'policy_state_dict': self.policy_net.state_dict(),
-            'target_state_dict': self.target_net.state_dict(),
-            'optimizer_state_dict': self.optimizer.state_dict(),
-            'loss': loss,
-            'batch_size': BATCH_SIZE,
-            'eps_start': EPS_START,
-            'eps_end': EPS_END,
-            'eps_decay': EPS_DECAY,
-            'eps_steps': self.steps_done,
-            'gamma': GAMMA,
-            'tau': TAU,
-            }, PATH)
-        return
-    
     def update_experience(self, state,agent_actions,next_state,reward,terminal):
         state = state.unsqueeze(0).float()
 
@@ -306,7 +290,26 @@ class CNNAgent(object):
         return loss
 
     def update_policy(self, episode):
-        if episode % UPDATE_TARGET_EP == 0:
+        self.episode = episode
+        if self.episode % UPDATE_TARGET_EP == 0:
             print('Setting target_net to policy_net...')
             self.target_net.load_state_dict(self.policy_net.state_dict())
             print()
+
+    def save_checkpoint(self, loss):
+        torch.save({
+            'episode': self.episode,
+            'policy_state_dict': self.policy_net.state_dict(),
+            'target_state_dict': self.target_net.state_dict(),
+            'optimizer_state_dict': self.optimizer.state_dict(),
+            'loss': loss,
+            'batch_size': BATCH_SIZE,
+            'eps_start': EPS_START,
+            'eps_end': EPS_END,
+            'eps_decay': EPS_DECAY,
+            'eps_steps': self.steps_done,
+            'gamma': GAMMA,
+            'tau': TAU,
+            }, PATH)
+        return
+    
