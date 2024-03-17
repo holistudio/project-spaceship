@@ -47,6 +47,10 @@ for ep in range(NUM_EPISODES):
         loss = agent.update_experience(state,agent_actions,next_state,reward,terminal)
 
         log_everything(ep, env.block_seq_index-1, env.log, agent.log, loss, reward, terminal)
+
+        if (env.block_seq_index-1) % 50 == 0:
+            agent.save_checkpoint(ep,loss)
+        
         state = next_state
     
     print(f'==END EPISODE {ep}==')

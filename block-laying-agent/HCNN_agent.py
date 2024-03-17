@@ -2,10 +2,14 @@ import torch
 import torch.nn as nn
 
 import numpy as np
+
+import os
 import random
 import math
 from collections import namedtuple, deque
 
+DIR = os.path.join('results', 'HCNN')
+PATH = os.path.join(DIR, 'HCNN_checkpoint.tar')
 
 BATCH_SIZE = 128
 LR = 1e-3 # 3e-4
@@ -264,7 +268,24 @@ class CNNAgent(object):
             target_net_state_dict[key] = policy_net_state_dict[key]*TAU + target_net_state_dict[key]*(1-TAU)
         self.target_net.load_state_dict(target_net_state_dict)
     
-    def update_experience(self,state,agent_actions,next_state,reward,terminal):
+    def save_checkpoint(self, episode, loss):
+        torch.save({
+            'episode': episode,
+            'policy_state_dict': self.policy_net.state_dict(),
+            'target_state_dict': self.target_net.state_dict(),
+            'optimizer_state_dict': self.optimizer.state_dict(),
+            'loss': loss,
+            'batch_size': BATCH_SIZE,
+            'eps_start': EPS_START,
+            'eps_end': EPS_END,
+            'eps_decay': EPS_DECAY,
+            'eps_steps': self.steps_done,
+            'gamma': GAMMA,
+            'tau': TAU,
+            }, PATH)
+        return
+    
+    def update_experience(self, state,agent_actions,next_state,reward,terminal):
         state = state.unsqueeze(0).float()
 
         if terminal:
