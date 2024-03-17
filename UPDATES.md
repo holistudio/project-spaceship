@@ -4,7 +4,7 @@ A log of project progress and specific lessons learned.
 
 ## Milestones
 
-- [ ] **Mercury**: A 3D block environment within Unity's GUI that can read a JSON file to display an arrangement of blocks of predefined sizes.
+- [ ] **Mercury** &#9791;&#xFE0F;: A 3D block environment within Unity's GUI that can read a JSON file to display an arrangement of blocks of predefined sizes.
   - [X] Define block types
   - [X] Read JSON file to display blocks
   - [X] Write a JSON file based on block modifications in Unity
