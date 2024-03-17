@@ -12,14 +12,14 @@ from collections import namedtuple, deque
 DIR = os.path.join('results', 'CNN')
 PATH = os.path.join(DIR, 'CNN_checkpoint.tar')
 
-n_h = 64
+n_h = 32
 
 BATCH_SIZE = 128
 LR = 1e-4
 
 EPS_START = 0.9
 EPS_END = 0.05
-EPS_DECAY = 1000
+EPS_DECAY = 93944
 
 GAMMA = 0.99
 
@@ -49,17 +49,24 @@ class ReplayMemory(object):
         return len(self.memory)
     
 class CNN_DQN(nn.Module):
-    def __init__(self, grid_sizes, num_orient, block_info_size, block_types, n_hidden):
+    def __init__(self, grid_sizes, num_orient, block_info_size, block_types, n_hidden, dropout):
         super().__init__()
         self.num_x, self.num_y, self.num_z = grid_sizes
         self.num_orient = num_orient
         self.block_types = block_types
+        self.n_hidden = n_hidden
         self.conv1 = nn.Conv3d(in_channels=block_info_size, out_channels=n_hidden, kernel_size=1)
+        self.fnn = nn.Sequential(nn.Linear(n_hidden, n_hidden * 2),
+                                 nn.ReLU(),
+                                 nn.Linear(n_hidden * 2, n_hidden),
+                                 nn.Dropout(dropout))
         self.conv2 = nn.Conv3d(in_channels=n_hidden, out_channels=block_types*num_orient, kernel_size=1)
 
     def forward(self, x):
         (N, C, D, H, W) = x.shape
         x = self.conv1(x)
+        x = self.fnn(x.view(N*D*H*W, self.n_hidden))
+        x = torch.reshape(x, (N, self.n_hidden, D, H, W))
         x = self.conv2(x)
         x = torch.reshape(x, (N, self.block_types, self.num_orient, self.num_x, self.num_y, self.num_z))
         return x
@@ -70,8 +77,8 @@ class CNNAgent(object):
         self.num_actions = block_types*num_orient*grid_sizes[0]*grid_sizes[1]*grid_sizes[2]
         self.agent_actions = torch.tensor([[0]], device=device, dtype=torch.long)
 
-        self.policy_net = CNN_DQN(grid_sizes, num_orient, block_info_size, block_types, n_hidden=n_h).to(device)
-        self.target_net = CNN_DQN(grid_sizes, num_orient, block_info_size, block_types, n_hidden=n_h).to(device)
+        self.policy_net = CNN_DQN(grid_sizes, num_orient, block_info_size, block_types, n_hidden=n_h, dropout=0.2).to(device)
+        self.target_net = CNN_DQN(grid_sizes, num_orient, block_info_size, block_types, n_hidden=n_h, dropout=0.2).to(device)
         self.target_net.load_state_dict(self.policy_net.state_dict())
 
         self.episode = 0
