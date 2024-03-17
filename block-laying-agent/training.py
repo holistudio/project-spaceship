@@ -2,13 +2,13 @@ import os
 import json
 import copy
 
-import CNN_agent as Agent
+import HCNN_agent as Agent
 import env4training as Env
 
 NUM_EPISODES = 1
-DIR = os.path.join('results', 'CNN')
+DIR = os.path.join('results', 'HCNN')
 
-LOAD_CHECKPOINT = True
+LOAD_CHECKPOINT = False
 
 env = Env.BlockTrainingEnvironment()
 agent = Agent.CNNAgent(grid_sizes=env.grid_sizes, 
@@ -47,10 +47,10 @@ for ep in range(NUM_EPISODES):
 
     while not terminal:
         # print('AGENT selects ACTION')
-        agent_actions = agent.select_actions(state)
+        agent_actions, env_actions = agent.select_actions(state)
 
         # print('ENV makes STEP')
-        next_state, reward, terminal = env.step(agent_actions)
+        next_state, reward, terminal = env.step(env_actions)
 
         # print('AGENT updates EXP')
         loss = agent.update_experience(state,agent_actions,next_state,reward,terminal)

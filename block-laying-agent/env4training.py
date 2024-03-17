@@ -255,21 +255,9 @@ class BlockTrainingEnvironment(object):
     #     block_type_i, orientation, grid_x, grid_y, grid_z = env_actions
     #     return block_type_i, orientation, grid_x, grid_y, grid_z
     
-    def interpret_agent_actions(self, agent_actions):
-        max_indices = agent_actions.squeeze()
 
-        block_type_i = max_indices[0].item()
-        orientation = max_indices[1].item()
-
-        high_i = np.array(np.unravel_index(max_indices[2].item(),(4,4,4)))
-        med_i = np.array(np.unravel_index(max_indices[3].item(),(4,4,4)))
-        low_i = np.array(np.unravel_index(max_indices[4].item(),(4,4,4)))
-        grid_x, grid_y, grid_z = high_i*int(NUM_Z/4) + med_i*int(NUM_Z/(4*4)) + low_i
-
-        return block_type_i, orientation, grid_x, grid_y, grid_z
-
-    def step(self, agent_actions):
-        block_type_i, orientation, grid_x, grid_y, grid_z = self.interpret_agent_actions(agent_actions)
+    def step(self, env_actions):
+        block_type_i, orientation, grid_x, grid_y, grid_z = env_actions
         block_type = list(BLOCK_DEFINITIONS.keys())[block_type_i]
 
         if orientation == 0:

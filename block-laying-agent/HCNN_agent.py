@@ -111,6 +111,19 @@ class CNNAgent(object):
             "eps_steps": 0
         }
 
+    def interpret_agent_actions(self, agent_actions):
+        max_indices = agent_actions.squeeze()
+
+        block_type_i = max_indices[0].item()
+        orientation = max_indices[1].item()
+
+        high_i = np.array(np.unravel_index(max_indices[2].item(),(4,4,4)))
+        med_i = np.array(np.unravel_index(max_indices[3].item(),(4,4,4)))
+        low_i = np.array(np.unravel_index(max_indices[4].item(),(4,4,4)))
+        grid_x, grid_y, grid_z = high_i*int(self.action_space[4]/4) + med_i*int(self.action_space[4]/(4*4)) + low_i
+
+        return block_type_i, orientation, grid_x, grid_y, grid_z
+    
     def select_actions(self, state):
         sample = random.random()
         mode = ""
@@ -156,7 +169,9 @@ class CNNAgent(object):
             "eps_steps": self.steps_done
         }
 
-        return self.agent_actions
+        block_type_i, orientation, grid_x, grid_y, grid_z = self.interpret_agent_actions(self.agent_actions)
+
+        return self.agent_actions, (block_type_i, orientation, grid_x, grid_y, grid_z)
     
     def optimize_model(self):
         if len(self.memory) < BATCH_SIZE:
