@@ -121,9 +121,6 @@ class CNNAgent(object):
             "actions": [int(max_index)],
             "explore_exploit": mode,
             "epsilon": eps_threshold,
-            "eps_start": EPS_START,
-            "eps_end": EPS_END,
-            "eps_decay": EPS_DECAY,
             "eps_steps": self.steps_done
         }
 
@@ -131,7 +128,7 @@ class CNNAgent(object):
     
     def optimize_model(self):
         if len(self.memory) < BATCH_SIZE:
-            return
+            return -1
         
         # print('Sample memory')
         transitions = self.memory.sample(BATCH_SIZE)
@@ -217,6 +214,8 @@ class CNNAgent(object):
 
         # print('Optimizer step')
         self.optimizer.step()
+
+        return loss
         
     def soft_update(self):
         # Soft update of the target network's weights
@@ -240,10 +239,12 @@ class CNNAgent(object):
         self.memory.push(state, agent_actions, next_state, reward)
 
         # print('AGENT OPTIMIZES')
-        self.optimize_model()
+        loss = self.optimize_model()
 
         # print('AGENT soft UPDATES')
         self.soft_update()
+
+        return loss
 
     def update_policy(self, episode):
         if episode % UPDATE_TARGET_EP == 0:
