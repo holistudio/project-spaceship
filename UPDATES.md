@@ -20,7 +20,10 @@ A log of project progress and specific lessons learned.
 
 ### 2024-03-16
 
+PyTorch DQN tutorial assumes that the next state's value = 0 when the episode/environment terminates:
+
 ```
+"""agent.py"""
 # Compute V(s_{t+1}) for all next states.
 # Expected values of actions for non_final_next_states are computed based
 # on the "older" target_net; selecting their best reward with max(1).values
@@ -29,23 +32,27 @@ A log of project progress and specific lessons learned.
 next_state_values = torch.zeros((BATCH_SIZE,5), device=device)
 ```
 
-At first I thought "Are terminal states associated with reward = 0? If so, shouldn't it be whatever the final reward was?"
+At first I read that and thought, "Are terminal states associated with reward = 0? If so, shouldn't it be whatever the final reward was?"
 
-Then I saw how next state was used
+Then I saw how next state was used:
 
 ```
 # Compute the expected Q values
 expected_state_action_values = (next_state_values * GAMMA) + reward_batch.unsqueeze(1)
 ```
 
-It's not that we're assuming the reward is 0 for next state. We're assuming that the value of next state beyond a terminated episode is 0. the expected Q values therefore only get updated with the actual reward at the end of the episode, not a reward=0.
+It's not that we're assuming the reward is 0 for next state. We're assuming that the value of next state beyond a terminated episode is 0. When the next state value=0, the expected Q-values therefore only get updated with the actual reward at the end of the episode, not a reward=0.
+
+Another major update: The environment state reflects both what cells are unfilled and what cells need to be filled based on the target object's voxel model.
+
+So the state is initialized with values of -1 to represent empty cell, but substracts further at cells where there's supposed to be something filled.
 
 ```
 """environment.py"""
-self.state[2:5,:,:,:] = self.state[2:5,:,:,:] - 9 * self.target_vox_tensor`
+self.state[2:5,:,:,:] = self.state[2:5,:,:,:] - 9 * self.target_vox_tensor` # x,y,z values only
 ```
 
-So at a grid cell where there's supposed to be a block it will look like
+So at a grid cell where there's supposed to be a block, the initial state will look like
 
 ```
 tensor([2843684,      -1,     -10,     -10,     -10,      -1,      -1])

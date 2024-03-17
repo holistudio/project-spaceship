@@ -163,7 +163,7 @@ class BlockTrainingEnvironment(object):
         self.state[0,:,:,:] = self.ShapeNetID
 
         # Account for target tensor in state as "extra-important missing cells"
-        self.state[2:5,:,:,:] = self.state[2:5,:,:,:] - 9*self.target_vox_tensor
+        self.state[2:5,:,:,:] = self.state[2:5,:,:,:] - 9*self.target_vox_tensor # x,y,z values only
 
         self.correct_score = 10/self.sum_filled
         self.blank_score = 0.01*self.correct_score
