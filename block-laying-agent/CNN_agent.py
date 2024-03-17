@@ -55,19 +55,20 @@ class CNN_DQN(nn.Module):
         self.num_orient = num_orient
         self.block_types = block_types
         self.n_hidden = n_hidden
-        self.conv1 = nn.Conv3d(in_channels=block_info_size, out_channels=n_hidden, kernel_size=1)
-        self.fnn = nn.Sequential(nn.Linear(n_hidden, n_hidden * 2),
-                                 nn.ReLU(),
-                                 nn.Linear(n_hidden * 2, n_hidden),
-                                 nn.Dropout(dropout))
-        self.conv2 = nn.Conv3d(in_channels=n_hidden, out_channels=block_types*num_orient, kernel_size=1)
+        self.conv1 = nn.Conv3d(in_channels=block_info_size, out_channels=block_types*num_orient, kernel_size=1)
+        # self.conv1 = nn.Conv3d(in_channels=block_info_size, out_channels=n_hidden, kernel_size=1)
+        # self.fnn = nn.Sequential(nn.Linear(n_hidden, n_hidden),
+        #                          nn.ReLU(),
+        #                          nn.Linear(n_hidden, n_hidden),
+        #                          nn.Dropout(dropout))
+        # self.conv2 = nn.Conv3d(in_channels=n_hidden, out_channels=block_types*num_orient, kernel_size=1)
 
     def forward(self, x):
         (N, C, D, H, W) = x.shape
         x = self.conv1(x)
-        x = self.fnn(x.view(N*D*H*W, self.n_hidden))
-        x = torch.reshape(x, (N, self.n_hidden, D, H, W))
-        x = self.conv2(x)
+        # x = self.fnn(x.view(N*D*H*W, self.n_hidden))
+        # x = torch.reshape(x, (N, self.n_hidden, D, H, W))
+        # x = self.conv2(x)
         x = torch.reshape(x, (N, self.block_types, self.num_orient, self.num_x, self.num_y, self.num_z))
         return x
 
