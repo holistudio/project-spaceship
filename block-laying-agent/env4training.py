@@ -78,7 +78,7 @@ class BlockTrainingEnvironment(object):
         self.vox_file = ''
         
         # Load voxel model
-        self.target_vox_tensor, self.sum_filled, self.sum_unfilled = torch.zeros((NUM_X,NUM_Y,NUM_Z), device=device), 0, 0
+        self.target_vox_tensor, self.sum_filled, self.sum_unfilled = torch.zeros((NUM_X,NUM_Y,NUM_Z), dtype=torch.long, device=device), 0, 0
 
         # Initialize state
         self.state = torch.ones((BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long, device=device) * -1
@@ -110,7 +110,7 @@ class BlockTrainingEnvironment(object):
         x = 0
         vx = 0
 
-        target_vox_tensor = torch.zeros((int(max_x/s),int(max_y/s),int(max_z/s)), device=device)
+        target_vox_tensor = torch.zeros((int(max_x/s),int(max_y/s),int(max_z/s)), dtype=torch.long, device=device)
 
         while (x<max_x):
             y = 0
@@ -156,6 +156,9 @@ class BlockTrainingEnvironment(object):
         self.state = torch.ones((BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long, device=device) * -1
         # state = torch.randint(low=-1, high=40, size=(BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long)
         self.state[0,:,:,:] = self.ShapeNetID
+
+        # Account for target tensor in state as "extra-important missing cells"
+        self.state[2:5,:,:,:] = self.state[2:5,:,:,:] - 9*self.target_vox_tensor
 
         self.correct_score = 10/self.sum_filled
         self.blank_score = 0.01*self.correct_score
