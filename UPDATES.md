@@ -5,13 +5,27 @@ A log of project progress and specific lessons learned.
 ## Milestones
 
 - [ ] **Mercury**: A 3D block environment within Unity's GUI that can read a JSON file to display an arrangement of blocks of predefined sizes.
+  - [X] Define block types
+  - [X] Read JSON file to display blocks
+  - [X] Write a JSON file based on block modifications in Unity
+  - [ ] Visualize RL training results
 - [ ] **Venus**: A labeled dataset of 3D models of object that are built with blocks of predefined sizes
   - [X] Look into ShapeNet (got access on HuggingFace!)
+  - [ ] Generate single 3D object using ShapeNet and a DQN RL Block Laying Agent
+  - [ ] Compare different DQN architectures
+  - [ ] Explore other RL and neural network architectures
+  - [ ] Generate for multiple object classes
 - [ ] **Earth**: A trained Block Laying Agent
+  - [ ] Continue training Block Laying Agent with changing object model targets every episode
 - [ ] **Moon**: Revisit overall approach. Is RL a necessary part of this approach?
+  - [ ] Consider supervised learning approaches that generate blocks of predefined sizes to match a given object voxel model in a single shot. 
 - [ ] **Mars**: Build a standalone 3D block environment app
+  - [ ] UX Wireframe
+  - [ ] User Interaction Functions
+  - [ ] Build and user tests
 - [ ] **Jupiter**: Use trained Block Laying Agent to pre-train Object Recognition RL Agent
 - [ ] **Saturn**: Connect AI Agents to 3D block app
+  - [ ] Convert JSON file to a format for the machine learning models to use
 - [ ] **Uranus**: Local user testing
 - [ ] **Neptune**: Deploy the 3D block app to the web
 - [ ] **Pluto**: Build a spaceship and explore the universe
