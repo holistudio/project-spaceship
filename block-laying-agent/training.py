@@ -7,10 +7,10 @@ import numpy as np
 import HCNN_agent as Agent
 import env4training as Env
 
-NUM_EPISODES = 10
+NUM_EPISODES = 1
 DIR = os.path.join('results', 'HCNN')
 
-LOAD_CHECKPOINT = False
+LOAD_CHECKPOINT = True
 
 env = Env.BlockTrainingEnvironment()
 agent = Agent.CNNAgent(grid_sizes=env.grid_sizes, 
