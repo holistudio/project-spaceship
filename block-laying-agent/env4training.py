@@ -97,6 +97,11 @@ class BlockTrainingEnvironment(object):
         self.perc_complete = 0
         self.terminal = False
 
+        self.log = {
+            "latest_block": {},
+            "block_conflict": False,
+        }
+
     def load_vox_model(self, vox_file):
         with open(vox_file, 'rb') as f:
             print('=LOADING VOXEL MODEL=')
@@ -170,6 +175,17 @@ class BlockTrainingEnvironment(object):
         print()
 
         print('=PLACING BLOCKS=')
+
+        self.log = {
+            "latest_block": {
+                "block_type": "None",
+                "x": -1,
+                "y": -1,
+                "z": -1,
+                "orientation": -1,
+            },
+            "block_conflict": False,
+        }
         return self.state, self.reward, self.terminal
 
     def no_block_conflict(self, actions):
@@ -271,6 +287,15 @@ class BlockTrainingEnvironment(object):
             "occupied_cells": occupied_cells
         }
 
+        self.log["latest_block"] = {
+            "block_type": block_type,
+            "x": int(grid_x),
+            "y": int(grid_y),
+            "z": int(grid_z),
+            "orientation": int(orientation),
+        }
+    
+
         if (self.no_block_conflict(actions)):
             # print(f'Agent places {block_type} block at {grid_position}, orientation={orientation}')
             next_state = self.add_block(actions)
@@ -280,6 +305,8 @@ class BlockTrainingEnvironment(object):
             diff_tensor = self.target_vox_tensor - self.grid_tensor
 
             block_conflict_penalty = -1000*self.incorrect_penalty
+
+            self.log["block_conflict"] = True
 
             if self.block_seq_index % 50 == 0:
                 print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Reward = {self.reward:.2f}, Percent complete = {self.perc_complete*100:.2f}%')
@@ -293,6 +320,8 @@ class BlockTrainingEnvironment(object):
         diff_tensor = self.target_vox_tensor - self.grid_tensor
 
         self.reward, self.perc_complete = self.calc_reward(diff_tensor)
+        
+        self.log["block_conflict"] = False
         
         # print(f'Reward = {reward}')
         if self.block_seq_index % 50 == 0:
