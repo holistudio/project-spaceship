@@ -1,5 +1,6 @@
 import os
 import json
+import copy
 
 import numpy as np
 import HCNN_agent as Agent
@@ -18,11 +19,13 @@ log = {
 }
 
 
-def log_everything(e, block, agent_log, reward, terminal):
+def log_everything(e, block, env_log, agent_log, loss, reward, terminal):
     event = {
         "episode": int(e),
         "block": int(block),
-        "agent": agent_log,
+        "env": copy.deepcopy(env_log),
+        "agent": copy.deepcopy(agent_log),
+        "loss": float(loss),
         "reward": float(reward),
         "terminal": bool(terminal)
     }
@@ -41,9 +44,9 @@ for ep in range(NUM_EPISODES):
         next_state, reward, terminal = env.step(agent_actions)
 
         # print('AGENT updates EXP')
-        agent.update_experience(state,agent_actions,next_state,reward,terminal)
+        loss = agent.update_experience(state,agent_actions,next_state,reward,terminal)
 
-        log_everything(ep, env.block_seq_index, agent.log, reward, terminal)
+        log_everything(ep, env.block_seq_index-1, env.log, agent.log, loss, reward, terminal)
         state = next_state
     
     print(f'==END EPISODE {ep}==')
