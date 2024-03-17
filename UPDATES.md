@@ -4,19 +4,76 @@ A log of project progress and specific lessons learned.
 
 ## Milestones
 
-- [ ] **Mercury**: A 3D block environment within Unity's GUI that can read a JSON file to display an arrangement of blocks of predefined sizes.
-- [ ] **Venus**: A labeled dataset of 3D models of object that are built with blocks of predefined sizes
+- [ ] **Mercury** ⚪: A 3D block environment within Unity's GUI that can read a JSON file to display an arrangement of blocks of predefined sizes.
+  - [X] Define block types
+  - [X] Read JSON file to display blocks
+  - [X] Write a JSON file based on block modifications in Unity
+  - [ ] Visualize RL training results
+- [ ] **Venus** 🟠: A labeled dataset of 3D models of object that are built with blocks of predefined sizes
   - [X] Look into ShapeNet (got access on HuggingFace!)
-- [ ] **Earth**: A trained Block Laying Agent
-- [ ] **Moon**: Revisit overall approach. Is RL a necessary part of this approach?
-- [ ] **Mars**: Build a standalone 3D block environment app
-- [ ] **Jupiter**: Use trained Block Laying Agent to pre-train Object Recognition RL Agent
-- [ ] **Saturn**: Connect AI Agents to 3D block app
-- [ ] **Uranus**: Local user testing
-- [ ] **Neptune**: Deploy the 3D block app to the web
-- [ ] **Pluto**: Build a spaceship and explore the universe
+  - [ ] Generate single 3D object using ShapeNet and a DQN RL Block Laying Agent
+  - [ ] Compare different DQN architectures
+  - [ ] Explore other RL and neural network architectures
+  - [ ] Generate for multiple object classes
+- [ ] **Earth** 🌍: A trained Block Laying Agent
+  - [ ] Continue training Block Laying Agent with changing object model targets every episode
+- [ ] **Moon** 🌕: Revisit overall approach. Is RL a necessary part of this approach?
+  - [ ] Consider supervised learning approaches that generate blocks of predefined sizes to match a given object voxel model in a single shot. 
+- [ ] **Mars** 🔴: Build a standalone 3D block environment app
+  - [ ] UX Wireframe
+  - [ ] User Interaction Functions
+  - [ ] Build and user tests
+- [ ] **Jupiter** 🔴: Use trained Block Laying Agent to pre-train Object Recognition RL Agent
+- [ ] **Saturn** 🪐: Connect AI Agents to 3D block app
+  - [ ] Convert JSON file to a format for the machine learning models to use
+- [ ] **Uranus** 🔵: Local user testing
+- [ ] **Neptune** 🔵: Deploy the 3D block app to the web
+- [ ] **Pluto** 🪨: Build a spaceship and explore the universe
 
 ## Log
+
+### 2024-03-16
+
+PyTorch DQN tutorial assumes that the next state's value = 0 when the episode/environment terminates:
+
+```
+"""agent.py"""
+# Compute V(s_{t+1}) for all next states.
+# Expected values of actions for non_final_next_states are computed based
+# on the "older" target_net; selecting their best reward with max(1).values
+# This is merged based on the mask, such that we'll have either the expected
+# state value or 0 in case the state was final.
+next_state_values = torch.zeros((BATCH_SIZE,5), device=device)
+```
+
+At first I read that and thought, "Are terminal states associated with reward = 0? If so, shouldn't it be whatever the final reward was?"
+
+Then I saw how next state was used:
+
+```
+# Compute the expected Q values
+expected_state_action_values = (next_state_values * GAMMA) + reward_batch.unsqueeze(1)
+```
+
+It's not that we're assuming the reward is 0 for next state. We're assuming that the value of next state beyond a terminated episode is 0. When the next state value=0, the expected Q-values therefore only get updated with the actual reward at the end of the episode, not a reward=0.
+
+Another major update: The environment state reflects both what cells are unfilled and what cells need to be filled based on the target object's voxel model.
+
+So the state is initialized with values of -1 to represent empty cell, but substracts further at cells where there's supposed to be something filled.
+
+```
+"""environment.py"""
+self.state[2:5,:,:,:] = self.state[2:5,:,:,:] - 9 * self.target_vox_tensor` # x,y,z values only
+```
+
+So at a grid cell where there's supposed to be a block, the initial state will look like
+
+```
+tensor([2843684,      -1,     -10,     -10,     -10,      -1,      -1])
+
+# Instead of:
+# tensor([2843684,      -1,      -1,      -1,      -1,      -1,      -1])
+```
 
 ### 2024-03-14
 
