@@ -313,3 +313,15 @@ class CNNAgent(object):
             }, PATH)
         return
     
+    def load_checkpoint(self):
+        checkpoint = torch.load(PATH)
+        self.episode = checkpoint['episode']
+
+        self.policy_net.load_state_dict(checkpoint['policy_state_dict'])
+        self.target_net.load_state_dict(checkpoint['target_state_dict'])
+
+        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+
+        self.steps_done = checkpoint['eps_steps']
+        return
+    
