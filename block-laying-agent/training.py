@@ -2,13 +2,11 @@ import os
 import json
 import copy
 
-import numpy as np
-
-import HCNN_agent as Agent
+import CNN_agent as Agent
 import env4training as Env
 
 NUM_EPISODES = 1
-DIR = os.path.join('results', 'HCNN')
+DIR = os.path.join('results', 'CNN')
 
 LOAD_CHECKPOINT = True
 

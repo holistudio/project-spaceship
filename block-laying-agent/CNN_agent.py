@@ -1,10 +1,14 @@
 import torch
 import torch.nn as nn
 
-import numpy as np
+import os
 import random
 import math
+import copy
 from collections import namedtuple, deque
+
+DIR = os.path.join('results', 'CNN')
+PATH = os.path.join(DIR, 'CNN_checkpoint.tar')
 
 n_h = 64
 
@@ -68,6 +72,7 @@ class CNNAgent(object):
         self.target_net = CNN_DQN(grid_sizes, num_orient, block_info_size, block_types, n_hidden=n_h).to(device)
         self.target_net.load_state_dict(self.policy_net.state_dict())
 
+        self.episode = 0
         self.steps_done = 0
 
         self.memory = ReplayMemory(capacity=10000)
@@ -251,3 +256,36 @@ class CNNAgent(object):
             print('Setting target_net to policy_net...')
             self.target_net.load_state_dict(self.policy_net.state_dict())
             print()
+
+    def save_checkpoint(self, loss):
+        torch.save({
+            'episode': self.episode,
+            'policy_state_dict': self.policy_net.state_dict(),
+            'target_state_dict': self.target_net.state_dict(),
+            'optimizer_state_dict': self.optimizer.state_dict(),
+            'replay_memory': copy.deepcopy(self.memory),
+            'loss': loss,
+            'batch_size': BATCH_SIZE,
+            'eps_start': EPS_START,
+            'eps_end': EPS_END,
+            'eps_decay': EPS_DECAY,
+            'eps_steps': self.steps_done,
+            'gamma': GAMMA,
+            'tau': TAU,
+            }, PATH)
+        return
+    
+    def load_checkpoint(self):
+        checkpoint = torch.load(PATH)
+        self.episode = checkpoint['episode']
+
+        self.policy_net.load_state_dict(checkpoint['policy_state_dict'])
+        self.target_net.load_state_dict(checkpoint['target_state_dict'])
+
+        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+
+        self.steps_done = checkpoint['eps_steps']
+
+        for mem in checkpoint['replay_memory'].memory:
+            self.memory.push(mem[0], mem[1], mem[2], mem[3])
+        return
