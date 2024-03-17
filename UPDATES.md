@@ -40,8 +40,19 @@ expected_state_action_values = (next_state_values * GAMMA) + reward_batch.unsque
 
 It's not that we're assuming the reward is 0 for next state. We're assuming that the value of next state beyond a terminated episode is 0. the expected Q values therefore only get updated with the actual reward at the end of the episode, not a reward=0.
 
+```
+"""environment.py"""
+self.state[2:5,:,:,:] = self.state[2:5,:,:,:] - 9 * self.target_vox_tensor`
+```
 
+So at a grid cell where there's supposed to be a block it will look like
 
+```
+tensor([2843684,      -1,     -10,     -10,     -10,      -1,      -1])
+
+# Instead of:
+# tensor([2843684,      -1,      -1,      -1,      -1,      -1,      -1])
+```
 
 ### 2024-03-14
 
