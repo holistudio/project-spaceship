@@ -57,7 +57,7 @@ for ep in range(NUM_EPISODES):
 
         log_everything(episode, env.block_seq_index-1, env.log, agent.log, loss, reward, terminal)
 
-        if (env.block_seq_index-1) % 50 == 0:
+        if ((env.block_seq_index-1) % 50 == 0) or terminal:
             agent.save_checkpoint(loss)
         
         state = next_state
