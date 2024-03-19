@@ -32,9 +32,22 @@ A log of project progress and specific lessons learned.
 
 ## Log
 
+
 ### 2024-03-16
 
-PyTorch DQN tutorial assumes that the next state's value = 0 when the episode/environment terminates:
+Who would've known CUDA could run out of memory?
+
+The [PyTorch DQN tutorial](https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html) code moves `(state, action, next_state, reward)` to the CUDA device before pushing to ReplayMemory.
+
+This seems like a major mistake. States can be quite huge to begin with, and they pushing the states to ReplayMemory mean they will accumulate on the CUDA device. One can at least move those tensors to cpu and detach+clone them on ReplayMemory. Only a batch of those tensors sampled from ReplayMemory need to be moved to CUDA device during the `optimize_model()` step.
+
+Eventually, I may also need to lower the ReplayMemory capacity from 10000 to 1000 or even lower. Right now I ran training for 1000 blocks in a single episode. Storing that ReplayMemory as a part of my checkpoint file, I end up with a compressed tar file of **14GB**. I'm betting much of that is due to the ReplayMemory storing all those Transitions.
+
+This does seem like the most important tradeoff to investigate in DRL - memory vs learning performance.
+
+### 2024-03-16
+
+[PyTorch DQN tutorial](https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html) assumes that the next state's value = 0 when the episode/environment terminates:
 
 ```
 """agent.py"""
