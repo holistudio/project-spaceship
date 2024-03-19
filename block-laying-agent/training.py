@@ -34,6 +34,7 @@ def log_everything(e, block, env_log, agent_log, loss, reward, terminal):
     log["record"].append(event)
 
 episode = 0
+block = 0
 
 if LOAD_CHECKPOINT:
     agent.load_checkpoint()
@@ -59,24 +60,25 @@ for ep in range(NUM_EPISODES):
 
         if ((env.block_seq_index-1) % 50 == 0) or terminal:
             agent.save_checkpoint(loss)
-        
+            if (env.block_seq_index-1) != 0:
+                log_file = os.path.join(DIR,f'episode_{episode}_blocks_{block}-{block+50}_log.json')
+                block += 50
+
+                with open(log_file, 'w') as f:
+                    # print("Saving log...")
+                    # print()
+                    # print()
+                    json.dump(log, f)
+
+                # Clear log
+                log = {
+                    "record":[]
+                }
+            
         state = next_state
     
     print(f'==END EPISODE {episode}==')
     print()
     print()
 
-    agent.update_policy(episode+1)
-
-    log_file = os.path.join(DIR,f'episode_{episode}_log.json')
-
-    with open(log_file, 'w') as f:
-        print("Saving log...")
-        print()
-        print()
-        json.dump(log, f)
-
-    # Clear log
-    log = {
-        "record":[]
-    }
+    agent.update_policy(episode+1)   
