@@ -192,13 +192,13 @@ class CNNAgent(object):
         non_final_mask = torch.tensor(tuple(map(lambda s: s is not None,
                                             batch.next_state)), device=device, dtype=torch.bool)
         non_final_next_states = torch.cat([s for s in batch.next_state
-                                                    if s is not None])
+                                                    if s is not None]).to(device)
         non_final_batches = non_final_next_states.shape[0]
         
         # print('Make batches')
-        state_batch = torch.cat(batch.state)
-        action_batch = torch.cat(batch.action)
-        reward_batch = torch.cat(batch.reward)
+        state_batch = torch.cat(batch.state).to(device)
+        action_batch = torch.cat(batch.action).to(device)
+        reward_batch = torch.cat(batch.reward).to(device)
 
         # print('Compute state_action_values')
         # Compute Q(s_t, a) - the model computes Q(s_t), then we select the
@@ -285,17 +285,17 @@ class CNNAgent(object):
             target_net_state_dict[key] = policy_net_state_dict[key]*TAU + target_net_state_dict[key]*(1-TAU)
         self.target_net.load_state_dict(target_net_state_dict)
     
-    def update_experience(self, state,agent_actions,next_state,reward,terminal):
-        state = state.unsqueeze(0).float()
+    def update_experience(self, state, agent_actions, next_state, reward, terminal):
+        state = state.unsqueeze(0).float().cpu().detach().clone()
 
         if terminal:
             next_state = None
         else:
-            next_state = next_state.unsqueeze(0).float()
-        reward = torch.tensor([reward], device=device)
+            next_state = next_state.unsqueeze(0).float().cpu().detach().clone()
+        reward = torch.tensor([reward]).cpu()
 
         # print('AGENT pushes to MEMORY')
-        self.memory.push(state, agent_actions, next_state, reward)
+        self.memory.push(state, agent_actions.cpu().detach().clone(), next_state, reward)
 
         # print('AGENT OPTIMIZES')
         loss = self.optimize_model()
