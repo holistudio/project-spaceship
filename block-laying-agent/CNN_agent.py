@@ -6,7 +6,6 @@ import numpy as np
 import os
 import random
 import math
-import copy
 from collections import namedtuple, deque
 
 DIR = os.path.join('results', 'CNN')
@@ -281,7 +280,7 @@ class CNNAgent(object):
             'policy_state_dict': self.policy_net.state_dict(),
             'target_state_dict': self.target_net.state_dict(),
             'optimizer_state_dict': self.optimizer.state_dict(),
-            'replay_memory': copy.deepcopy(self.memory),
+            'replay_memory': self.memory,
             'loss': loss,
             'batch_size': BATCH_SIZE,
             'eps_start': EPS_START,
