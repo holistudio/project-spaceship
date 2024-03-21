@@ -6,7 +6,6 @@ import numpy as np
 import os
 import random
 import math
-import copy
 from collections import namedtuple, deque
 
 DIR = os.path.join('results', 'HCNN')
