@@ -85,7 +85,7 @@ class CNNAgent(object):
         self.episode = 0
         self.steps_done = 0
 
-        self.memory = ReplayMemory(capacity=10000)
+        self.memory = ReplayMemory(capacity=1000)
         self.optimizer = torch.optim.AdamW(self.policy_net.parameters(), lr=LR, amsgrad=True)
 
         self.log = {
