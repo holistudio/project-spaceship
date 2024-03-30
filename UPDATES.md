@@ -33,6 +33,29 @@ A log of project progress and specific lessons learned.
 ## Log
 
 
+### 2024-03-21
+
+A few thoughts has occurred to me that started with the question, "Wait, why am I training the RL Agent to figure out a sequence of blocks if I just keep telling the Agent the structure of blocks is still mostly incomplete?"
+
+If I don't have a good answer for why, then that means the target model of blocks is basically stationary, and there's no need for RL to figure out a sequence; an AI can just figure out a full structure of blocks in one shot.
+
+Unless...the environment includes another agent that simulates how a person would stack blocks to make a given object. A couple things I'll need to incorporate:
+
+ - The environment should add a block in a correct location and orientation based on the given shape.
+ - The environment can also delete a block if it's not in a correct location.
+ - The reward function should really reflect whether the Agent's block was accepted or deleted by the environment.
+ - The ShapeNetID should NOT be a part of the state given to the agent. It never knows the name of what's actually being built.
+
+Some scattered thoughts:
+
+ - A real human doesn't make a perfect structure of blocks to perfectly match an object in their mind. So while it's OK to simulate a "Perfect Block Laying Agent" eventually I'll have to introduce noise.
+ - How do people build stuff with blocks? Is it always starting at some corner? Or some other approaches?
+ - Furthermore, I need to think more carefully about why RL is needed for the block laying agent. Essentially, the Agent has to learn through interactions with another agent.
+ - Right now I keep things simple. Agent lays one block, Environment either lays a block OR deletes the block. But eventually I need the Agent to lay a sequence of blocks and the Environment to respond with a sequence of additional blocks and deletions.
+ - I think a latent variable model can be useful here, where the latent variable can represent the Agent's guess at what object is being built and inform the rest of its predictions on what blocks to place next.
+ - Another thought on how the neural network should be structured: One part (i.e., "block sequencer") takes in a sequence of blocks already laid out and deleted, and outputs a new sequence of blocks. Another part (i.e., "3D processor") takes in the current grid of cells and unoccupied cells and encodes it to condition the predictions of the "block sequencer" (i.e. like the cross attention part of a transformer).
+
+
 ### 2024-03-16
 
 Who would've known CUDA could run out of memory?
