@@ -1,0 +1,182 @@
+{
+  "main": {
+    "id": "e49b8d2d9da8be4b",
+    "type": "split",
+    "children": [
+      {
+        "id": "daa572b881b32ef0",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1343c7739d9708eb",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "source/Beyond Heuristics - A Novel Design Space Model for Generative Space Planning in Architecture.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "fbf839bd298cbb59",
+    "type": "split",
+    "children": [
+      {
+        "id": "c89f18902a7d7d49",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b8fecd085a0b89b7",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "591df4eb7c0869fb",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "31f713cc1f5d596e",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "87f566a292701b0c",
+    "type": "split",
+    "children": [
+      {
+        "id": "96ba759d7295ae83",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "aae5ccf4a0f2614c",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "source/Beyond Heuristics - A Novel Design Space Model for Generative Space Planning in Architecture.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "ed131bc91742c843",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "source/Beyond Heuristics - A Novel Design Space Model for Generative Space Planning in Architecture.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "5ffd447b99faf85a",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "c37a801c7f47d174",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "source/Beyond Heuristics - A Novel Design Space Model for Generative Space Planning in Architecture.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "b8fecd085a0b89b7",
+  "lastOpenFiles": [
+    "source/_to-read.md",
+    "source/DALL-E.md",
+    "source/CLIP-Forge - Towards Zero-Shot Text-to-Shape Generation.md",
+    "source/Hypar with OpenAI API.md",
+    "authors/OpenAI.md",
+    "source/Melete.md",
+    "authors/Heumann, Andrew.md",
+    "source/Design Process is a Reinforcement Learning Problem.md",
+    "meta-heuristics-help-generative-design.md",
+    "source/_notes-template.md",
+    "source/Beyond Heuristics - A Novel Design Space Model for Generative Space Planning in Architecture.md",
+    "source/Sequence of Spaces Quote.md",
+    "source/files/Architect_ONET.md",
+    "source/files/101_sequence_of_spaces.png",
+    "source/files/Architect_ONET.xlsx",
+    "source/files",
+    "source/Harnessing Game-Inspired Content Creation for Intuitive Generative Design and Optimization.md",
+    "authors/Gaier, Adam.md",
+    "authors/Stoddart, James.md",
+    "James Stoddart.md",
+    "design-space-model-needs-to-be-well-defined.md",
+    "generative-design-advantages.md",
+    "design-heuristics-limit-creativity.md",
+    "authors/Zhao, Dale.md",
+    "authors/Benjamin, David.md",
+    "authors/Villagi, Lorenzo.md",
+    "authors/Nagy, Danil.md",
+    "authors",
+    "Welcome.md",
+    "source"
+  ]
+}
