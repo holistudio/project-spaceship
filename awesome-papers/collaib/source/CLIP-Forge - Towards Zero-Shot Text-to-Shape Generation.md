@@ -1,24 +1,34 @@
-# Basic Info
 
-Title: CLIP-Forge: Towards Zero-Shot Text-to-Shape Generation
+**Link:** https://arxiv.org/pdf/2110.02624.pdf
 
-Link: https://arxiv.org/pdf/2110.02624.pdf
+**Authors**: ...
 
-# Look Into
+## Look Into
  - normalizing flow network
  - image-text joint embedding models
- - avoiding the expensive inference time optimizations as employed in existing 2D approaches [18, 57].
+ - avoiding the expensive inference time optimizations as employed in existing 2D approaches (citations 18, 57)
 
-# Problem
+## Problem
 
 Generating 3D shape from text input is needed in design, animation, and manufacturing domains.
 
-## Specific Challenges
+### Specific Challenges
 
  - scarcity of text-3D shape dataset
  - expensive inference time optimization
 
-# Method
+## Related Works
+
+ - ...
+ - ...
+## Approach
+
+**Dataset:** ShapeNet v2
+- 13 rigid object classes
+- Rendered images
+- Voxel grids
+- Query points
+- Occupancy
 
 **Training**
 1. Render 3D shapes into images
@@ -31,14 +41,19 @@ Generating 3D shape from text input is needed in design, animation, and manufact
 2. Generate shape embedding using normalizing flow network.
 3. Generate 3D shape by inputing shape embedding into trained autoencoder (i.e. decode shape embedding)
 
-# Experiments
+## Key Findings
 
-**Dataset:**
+ - ...
+ - ...
+ - ...
 
-ShapeNet v2:
-- 13 rigid object classes
-- Rendered images
-- Voxel grids
-- Query points
-- Occupancy
+## Takeaways
+
+ - ...
+ - ...
+ - ..
+
+
+
+
 
