@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "source/World Model Definition.md",
+                "file": "source/_to-read.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "source/World Model Definition.md",
+                "file": "source/_to-read.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "source/World Model Definition.md",
+                "file": "source/_to-read.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "source/World Model Definition.md"
+                "file": "source/_to-read.md"
               }
             }
           }
@@ -148,8 +148,9 @@
   },
   "active": "498dce88f07d843f",
   "lastOpenFiles": [
-    "LeCun, Yann.md",
+    "design-heuristics-limit-creativity.md",
     "source/World Model Definition.md",
+    "LeCun, Yann.md",
     "source/Beyond Heuristics - A Novel Design Space Model for Generative Space Planning in Architecture.md",
     "source/_to-read.md",
     "source/DALL-E.md",
@@ -172,7 +173,6 @@
     "James Stoddart.md",
     "design-space-model-needs-to-be-well-defined.md",
     "generative-design-advantages.md",
-    "design-heuristics-limit-creativity.md",
     "authors/Zhao, Dale.md",
     "authors/Benjamin, David.md",
     "authors/Villagi, Lorenzo.md",
