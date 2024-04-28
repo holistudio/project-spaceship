@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "authors/LeCun, Yann.md",
+                "file": "source/Deep learning, reinforcement learning, and world models.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "authors/LeCun, Yann.md",
+                "file": "source/Deep learning, reinforcement learning, and world models.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "authors/LeCun, Yann.md",
+                "file": "source/Deep learning, reinforcement learning, and world models.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "authors/LeCun, Yann.md"
+                "file": "source/Deep learning, reinforcement learning, and world models.md"
               }
             }
           }
@@ -146,12 +146,16 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "b8fecd085a0b89b7",
+  "active": "498dce88f07d843f",
   "lastOpenFiles": [
+    "authors/Silver, David.md",
+    "source/Deep learning, reinforcement learning, and world models.md",
+    "source/_notes-template.md",
     "source/_to-read.md",
+    "source/Sequence of Spaces Quote.md",
+    "authors/LeCun, Yann.md",
     "design-heuristics-limit-creativity.md",
     "source/World Model Definition.md",
-    "authors/LeCun, Yann.md",
     "source/Beyond Heuristics - A Novel Design Space Model for Generative Space Planning in Architecture.md",
     "source/DALL-E.md",
     "source/CLIP-Forge - Towards Zero-Shot Text-to-Shape Generation.md",
@@ -161,8 +165,6 @@
     "authors/Heumann, Andrew.md",
     "source/Design Process is a Reinforcement Learning Problem.md",
     "meta-heuristics-help-generative-design.md",
-    "source/_notes-template.md",
-    "source/Sequence of Spaces Quote.md",
     "source/files/Architect_ONET.md",
     "source/files/101_sequence_of_spaces.png",
     "source/files/Architect_ONET.xlsx",
@@ -175,8 +177,6 @@
     "generative-design-advantages.md",
     "authors/Zhao, Dale.md",
     "authors/Benjamin, David.md",
-    "authors/Villagi, Lorenzo.md",
-    "authors/Nagy, Danil.md",
     "authors",
     "source"
   ]
