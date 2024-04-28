@@ -2,7 +2,10 @@
 - [[Hypar with OpenAI API]]
 - [[Melete]]
 - [[DALL-E]]
+- [[Sequence of Spaces Quote]]
+- [[World Model Definition]]
 ## In progress
+ - [[Deep learning, reinforcement learning, and world models]] 
  - [[CLIP-Forge - Towards Zero-Shot Text-to-Shape Generation]]
  - [[Design Process is a Reinforcement Learning Problem]]
  - [[Beyond Heuristics - A Novel Design Space Model for Generative Space Planning in Architecture]]
