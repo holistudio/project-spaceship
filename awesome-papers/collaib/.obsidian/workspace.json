@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "source/_to-read.md",
+                "file": "authors/LeCun, Yann.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "source/_to-read.md",
+                "file": "authors/LeCun, Yann.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "source/_to-read.md",
+                "file": "authors/LeCun, Yann.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "source/_to-read.md"
+                "file": "authors/LeCun, Yann.md"
               }
             }
           }
@@ -146,13 +146,13 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "498dce88f07d843f",
+  "active": "b8fecd085a0b89b7",
   "lastOpenFiles": [
+    "source/_to-read.md",
     "design-heuristics-limit-creativity.md",
     "source/World Model Definition.md",
-    "LeCun, Yann.md",
+    "authors/LeCun, Yann.md",
     "source/Beyond Heuristics - A Novel Design Space Model for Generative Space Planning in Architecture.md",
-    "source/_to-read.md",
     "source/DALL-E.md",
     "source/CLIP-Forge - Towards Zero-Shot Text-to-Shape Generation.md",
     "source/Hypar with OpenAI API.md",
