@@ -214,6 +214,66 @@ class BlockTrainingEnvironment(object):
                                                 actions['orientation'], self.block_seq_index], dtype=torch.long, device=device)
             self.grid_tensor[x,y,z] = 1
         return self.state
+    
+    def env_add_block(self):
+        # print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Environment attempts to add another block...')
+        valid_action = False
+
+        while (not valid_action):
+            # select a random block type
+            block_type_i = np.random.randint(0, BLOCK_TYPES)
+            block_type = list(BLOCK_DEFINITIONS.keys())[block_type_i]
+
+            # select a random orientation
+            orientation = np.random.randint(0, 2)
+
+            # select a random location based on target_vox_tensor
+            # Create a mask tensor to identify cells containing the value 1
+            mask = (self.target_vox_tensor == 1)
+            # Find indices where the mask is True
+            indices = torch.nonzero(mask)
+            # Randomly select one index from the list of indices
+            selected_location = indices[torch.randint(0, indices.size(0), (1,))]
+            grid_x, grid_y, grid_z = selected_location[0][0].item(), selected_location[0][1].item(), selected_location[0][2].item()
+
+            if orientation == 0:
+                grid_position = np.array([grid_x,grid_y,grid_z])
+                occupied_cells = grid_position + BLOCK_DEFINITIONS[block_type]['o0_cells']
+            if orientation == 1:
+                grid_position = np.array([grid_x,grid_y,grid_z])
+                occupied_cells = grid_position + BLOCK_DEFINITIONS[block_type]['o1_cells']
+
+            # check if block is valid
+            env_actions = {
+                "block_type": block_type,
+                "block_type_i": block_type_i,
+                "grid_position": grid_position,
+                "orientation": orientation,
+                "occupied_cells": occupied_cells
+            }
+
+            grid_tensor_copy = self.grid_tensor.clone().cpu()
+            target_vox_tensor_copy = self.target_vox_tensor.clone().cpu()
+
+            diff_tensor_before = target_vox_tensor_copy - grid_tensor_copy
+
+            reward_before, _ = self.calc_reward(diff_tensor_before)
+
+            # a valid block added by environment should:
+            # - not conflict with existing blocks
+            # - result in an improvement in reward
+            if (self.no_block_conflict(env_actions)):
+                n_cells, _ = occupied_cells.shape
+                for i in range(n_cells):
+                    x,y,z = list(occupied_cells[i])
+                    grid_tensor_copy[x,y,z] = 1
+                diff_tensor_after = target_vox_tensor_copy - grid_tensor_copy
+                reward_after, _ = self.calc_reward(diff_tensor_after)
+                if reward_after > reward_before:
+                    valid_action = True
+                    self.block_seq_index += 1
+                    # print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Environment added correct block!')
+                    return self.add_block(env_actions)
 
     def calc_reward(self, diff_tensor):
         rew = 0
@@ -298,6 +358,8 @@ class BlockTrainingEnvironment(object):
             
             return next_state, block_conflict_penalty, self.terminal
         
+        next_state = self.env_add_block()
+
         diff_tensor = self.target_vox_tensor - self.grid_tensor
 
         self.reward, self.perc_complete = self.calc_reward(diff_tensor)
