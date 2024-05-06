@@ -249,8 +249,8 @@ class BlockTrainingEnvironment(object):
             return True
         return False
 
-    def step(self, env_actions):
-        block_type_i, orientation, grid_x, grid_y, grid_z = env_actions
+    def step(self, agent_actions):
+        block_type_i, orientation, grid_x, grid_y, grid_z = agent_actions
         block_type = list(BLOCK_DEFINITIONS.keys())[block_type_i]
 
         if orientation == 0:
