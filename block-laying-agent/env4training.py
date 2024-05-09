@@ -271,9 +271,7 @@ class BlockTrainingEnvironment(object):
                 reward_after, _ = self.calc_reward(diff_tensor_after)
                 if reward_after > reward_before:
                     valid_action = True
-                    self.block_seq_index += 1
-                    # print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Environment added correct block!')
-                    return self.add_block(env_actions)
+        return self.add_block(env_actions)
 
     def calc_reward(self, diff_tensor):
         rew = 0
@@ -342,6 +340,7 @@ class BlockTrainingEnvironment(object):
         if (self.no_block_conflict(actions)):
             # print(f'Agent places {block_type} block at {grid_position}, orientation={orientation}')
             next_state = self.add_block(actions)
+            self.block_seq_index += 1
         else:
             next_state = self.state
 
@@ -351,29 +350,22 @@ class BlockTrainingEnvironment(object):
 
             self.log["block_conflict"] = True
 
-            if self.block_seq_index % 50 == 0:
-                print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Reward = {self.reward:.2f}, Percent complete = {self.perc_complete*100:.2f}%')
-
+            self.terminal = self.determine_terminal(diff_tensor, self.perc_complete)
+            
             self.block_seq_index += 1
-            
-            self.terminal = self.determine_terminal(diff_tensor)
-            
             return next_state, block_conflict_penalty, self.terminal
         
         next_state = self.env_add_block()
+        self.block_seq_index += 1
 
         diff_tensor = self.target_vox_tensor - self.grid_tensor
 
         self.reward, self.perc_complete = self.calc_reward(diff_tensor)
         
         self.log["block_conflict"] = False
-        
-        self.block_seq_index += 1
 
         self.terminal = self.determine_terminal(diff_tensor, self.perc_complete)
 
         # print(f'Reward = {reward}')
-        if (self.block_seq_index % 50 == 0) or self.terminal:
-            print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Reward = {self.reward:.2f}, Percent complete = {self.perc_complete*100:.2f}%')
 
         return next_state, self.reward, self.terminal
