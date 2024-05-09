@@ -63,6 +63,17 @@ class CNN_DQN(nn.Module):
         #                          nn.Linear(n_hidden, n_hidden),
         #                          nn.Dropout(dropout))
         # self.conv2 = nn.Conv3d(in_channels=n_hidden, out_channels=block_types*num_orient, kernel_size=1)
+        self.apply(self._init_weights)
+    
+    def _init_weights(self, module):
+        if isinstance(module, nn.Linear):
+            torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
+            if module.bias is not None:
+                torch.nn.init.zeros_(module.bias)
+        elif isinstance(module, torch.nn.Conv3d):
+            torch.nn.init.xavier_uniform_(module.weight)
+            if module.bias is not None:
+                torch.nn.init.constant_(module.bias, 0)
 
     def forward(self, x):
         (N, C, D, H, W) = x.shape
