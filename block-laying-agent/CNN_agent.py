@@ -26,6 +26,8 @@ TAU = 0.005
 
 UPDATE_TARGET_EP = 5
 
+torch.manual_seed(1337)
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 Transition = namedtuple('Transition',
