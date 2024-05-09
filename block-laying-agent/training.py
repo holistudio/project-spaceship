@@ -42,6 +42,8 @@ if LOAD_CHECKPOINT:
     agent.load_checkpoint()
     episode = agent.episode + 1
 
+start_time = datetime.datetime.now()
+
 for ep in range(NUM_EPISODES):
     episode = episode + ep
     print(f'==EPISODE {episode}==')
@@ -83,6 +85,7 @@ for ep in range(NUM_EPISODES):
         state = next_state
     
     print(f'==END EPISODE {episode}==')
+    print(f'TIME ELAPSED: {datetime.datetime.now() - start_time}')
     print()
     print()
 
