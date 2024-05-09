@@ -368,12 +368,12 @@ class BlockTrainingEnvironment(object):
         
         self.log["block_conflict"] = False
         
-        # print(f'Reward = {reward}')
-        if self.block_seq_index % 50 == 0:
-            print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Reward = {self.reward:.2f}, Percent complete = {self.perc_complete*100:.2f}%')
-
         self.block_seq_index += 1
 
         self.terminal = self.determine_terminal(diff_tensor, self.perc_complete)
+
+        # print(f'Reward = {reward}')
+        if (self.block_seq_index % 50 == 0) or self.terminal:
+            print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Reward = {self.reward:.2f}, Percent complete = {self.perc_complete*100:.2f}%')
 
         return next_state, self.reward, self.terminal
