@@ -300,7 +300,9 @@ class BlockTrainingEnvironment(object):
         perc_complete = n_fill/self.sum_filled
         return rew, perc_complete
 
-    def determine_terminal(self, diff_tensor):
+    def determine_terminal(self, diff_tensor, perc_complete):
+        if perc_complete >= 1.0:
+            return True
         if torch.all(diff_tensor == 0):
             return True
         # if self.block_seq_index > 1000:
@@ -372,6 +374,6 @@ class BlockTrainingEnvironment(object):
 
         self.block_seq_index += 1
 
-        self.terminal = self.determine_terminal(diff_tensor)
+        self.terminal = self.determine_terminal(diff_tensor, self.perc_complete)
 
         return next_state, self.reward, self.terminal
