@@ -43,8 +43,10 @@ Unless...the environment includes another agent that simulates how a person woul
 
  - The environment should add a block in a correct location and orientation based on the given shape.
  - The environment can also delete a block if it's not in a correct location.
+    - 2024-05-08: On second thought this isn't a strict requirement for training something right now. Maybe eventually we can train the block laying agent with human feedback, where a human chooses to delete some blocks and causes a penalty. For now, it's not clear how an environment should automatically delete a block to simulate how a human would delete blocks in response. The current penalties for incorrect blocks may be enough to signal to the block laying agent which blocks are incorrect.
  - The reward function should really reflect whether the Agent's block was accepted or deleted by the environment.
  - The ShapeNetID should NOT be a part of the state given to the agent. It never knows the name of what's actually being built.
+   - 2024-05-08: On second thought this isn't a strict requirement for training. It may help if a network assumes a target name of what it's trying to build.
 
 Some scattered thoughts:
 
