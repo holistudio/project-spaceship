@@ -65,16 +65,19 @@ public class VizResults : MonoBehaviour
             // Deserialize the JSON data to a Root object
             Root rootData = JsonUtility.FromJson<Root>(File.ReadAllText(filePath));
 
+            Step step = rootData.record[0];
+
+            Debug.Log(step.loss);
             // Output the data to the console for verification
-            foreach (Step step in rootData.record)
-            {
-                Debug.Log("Episode: " + step.episode);
-                Debug.Log("Block: " + step.block);
-                Debug.Log("Latest Block Type: " + step.env.latest_block.block_type);
-                Debug.Log("Agent Actions: " + string.Join(", ", step.agent.actions));
-                Debug.Log("Reward: " + step.reward);
-                Debug.Log("Terminal: " + step.terminal);
-            }
+            // foreach (Step step in rootData.record)
+            // {
+            //     Debug.Log("Episode: " + step.episode);
+            //     Debug.Log("Block: " + step.block);
+            //     Debug.Log("Latest Block Type: " + step.env.latest_block.block_type);
+            //     Debug.Log("Agent Actions: " + string.Join(", ", step.agent.actions));
+            //     Debug.Log("Reward: " + step.reward);
+            //     Debug.Log("Terminal: " + step.terminal);
+            // }
         }
     }
 
