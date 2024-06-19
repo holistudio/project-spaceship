@@ -35,7 +35,7 @@ public class Agent
 }
 
 [System.Serializable]
-public class Record
+public class Step
 {
     public int episode;
     public int block;
@@ -49,7 +49,7 @@ public class Record
 [System.Serializable]
 public class Root
 {
-    public Record[] record;
+    public Step[] record;
 }
 
 public class VizResults : MonoBehaviour
@@ -66,14 +66,14 @@ public class VizResults : MonoBehaviour
             Root rootData = JsonUtility.FromJson<Root>(File.ReadAllText(filePath));
 
             // Output the data to the console for verification
-            foreach (Record record in rootData.record)
+            foreach (Step step in rootData.record)
             {
-                Debug.Log("Episode: " + record.episode);
-                Debug.Log("Block: " + record.block);
-                Debug.Log("Latest Block Type: " + record.env.latest_block.block_type);
-                Debug.Log("Agent Actions: " + string.Join(", ", record.agent.actions));
-                Debug.Log("Reward: " + record.reward);
-                Debug.Log("Terminal: " + record.terminal);
+                Debug.Log("Episode: " + step.episode);
+                Debug.Log("Block: " + step.block);
+                Debug.Log("Latest Block Type: " + step.env.latest_block.block_type);
+                Debug.Log("Agent Actions: " + string.Join(", ", step.agent.actions));
+                Debug.Log("Reward: " + step.reward);
+                Debug.Log("Terminal: " + step.terminal);
             }
         }
     }
