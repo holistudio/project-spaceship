@@ -60,6 +60,91 @@ public class VizResults : MonoBehaviour
     Vector3 convertToUnityPosition(LatestBlock latestBlockData)
     {
         Vector3 unityPosition = new Vector3(0.0f, 0.0f, 0.0f);
+        string blockType = latestBlockData.block_type;
+        Vector3 gridPosition = new Vector3(latestBlockData.x,latestBlockData.y,latestBlockData.z);
+        int orient = latestBlockData.orientation;
+
+        if (blockType.Equals("2x1"))
+        {
+            if(orient == 0)
+            {
+                unityPosition.x = gridPosition.x + 1;
+                unityPosition.y = gridPosition.y + 0.5f;
+                unityPosition.z = gridPosition.z - 0.5f;
+            }
+            else
+            {
+                unityPosition.x = gridPosition.x + 0.5f;
+                unityPosition.y = gridPosition.y + 0.5f;
+                unityPosition.z = gridPosition.z + 1;
+            }
+        }
+        else if (blockType.Equals("3x1"))
+        {
+            if(orient == 0)
+            {
+                unityPosition.x = gridPosition.x + 1.5f;
+                unityPosition.y = gridPosition.y + 0.5f;
+                unityPosition.z = gridPosition.z + 0.5f;
+            }
+            else
+            {
+                unityPosition.x = gridPosition.x + 0.5f;
+                unityPosition.y = gridPosition.y + 0.5f;
+                unityPosition.z = gridPosition.z + 1.5f;
+            }
+        }
+        else if (blockType.Equals("4x1"))
+        {
+            if(orient == 0)
+            {
+                unityPosition.x = gridPosition.x + 2;
+                unityPosition.y = gridPosition.y + 0.5f;
+                unityPosition.z = gridPosition.z + 0.5f;
+            }
+            else
+            {
+                unityPosition.x = gridPosition.x + 0.5f;
+                unityPosition.y = gridPosition.y + 0.5f;
+                unityPosition.z = gridPosition.z + 2;
+            }
+        }
+        else if (blockType.Equals("2x2"))
+        {
+            unityPosition.x = gridPosition.x + 1;
+            unityPosition.y = gridPosition.y + 0.5f;
+            unityPosition.z = gridPosition.z + 1;
+        }
+        else if (blockType.Equals("3x2"))
+        {
+            if(orient == 0)
+            {
+                unityPosition.x = gridPosition.x + 1.5f;
+                unityPosition.y = gridPosition.y + 0.5f;
+                unityPosition.z = gridPosition.z;
+            }
+            else
+            {
+                unityPosition.x = gridPosition.x + 1;
+                unityPosition.y = gridPosition.y + 0.5f;
+                unityPosition.z = gridPosition.z + 0.5f;
+            }
+        }
+        else if (blockType.Equals("4x2"))
+        {
+            if(orient == 0)
+            {
+                unityPosition.x = gridPosition.x + 2;
+                unityPosition.y = gridPosition.y + 0.5f;
+                unityPosition.z = gridPosition.z;
+            }
+            else
+            {
+                unityPosition.x = gridPosition.x + 1;
+                unityPosition.y = gridPosition.y + 0.5f;
+                unityPosition.z = gridPosition.z + 1;
+            }
+        }
         return  unityPosition;
     }
     // Start is called before the first frame update
@@ -102,7 +187,7 @@ public class VizResults : MonoBehaviour
                 Vector3 unityPosition = convertToUnityPosition(listBlockData);
                 blockCopy.transform.SetLocalPositionAndRotation(unityPosition, blockRotation);
             }
-            
+
             Debug.Log(step.loss);
             // Output the data to the console for verification
             // foreach (Step step in rootData.record)
