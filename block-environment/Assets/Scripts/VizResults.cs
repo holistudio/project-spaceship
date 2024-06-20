@@ -176,13 +176,6 @@ public class VizResults : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Check if the left arrow key is pressed
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            stepIndex--;
-            upToDate = false;
-        }
-
         // Check if the right arrow key is pressed
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
