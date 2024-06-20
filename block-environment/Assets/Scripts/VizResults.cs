@@ -170,6 +170,45 @@ public class VizResults : MonoBehaviour
             //     Debug.Log("Reward: " + step.reward);
             //     Debug.Log("Terminal: " + step.terminal);
             // }
+            for (int i = 0; i < stepIndex+1; i++)
+            {
+                addBlock(i);
+            }
+        }
+    }
+
+    void addBlock(int i)
+    {
+        Step step = rootData.record[i];
+
+        LatestBlock listBlockData = step.env.latest_block;
+
+        Transform childTransform = blockSet.transform.Find(listBlockData.block_type);
+        
+        if (childTransform != null)
+        {
+            GameObject blockType = childTransform.gameObject;
+            // Instantiate a copy of the original GameObject
+            GameObject blockCopy = Instantiate(blockType);
+
+            blockCopy.name = listBlockData.block_type;
+
+            // Set the copy's parent to this game object
+            blockCopy.transform.SetParent(transform);
+
+            Quaternion blockRotation;
+
+            if(listBlockData.orientation == 0)
+            {
+                blockRotation = Quaternion.Euler(0, 0, 0);
+            }
+            else
+            {
+                blockRotation = Quaternion.Euler(0, 90, 0);
+            }
+
+            Vector3 unityPosition = convertToUnityPosition(listBlockData);
+            blockCopy.transform.SetLocalPositionAndRotation(unityPosition, blockRotation);
         }
     }
 
@@ -185,37 +224,7 @@ public class VizResults : MonoBehaviour
 
         if (!upToDate)
         {
-            Step step = rootData.record[stepIndex];
-
-            LatestBlock listBlockData = step.env.latest_block;
-
-            Transform childTransform = blockSet.transform.Find(listBlockData.block_type);
-            
-            if (childTransform != null)
-            {
-                GameObject blockType = childTransform.gameObject;
-                // Instantiate a copy of the original GameObject
-                GameObject blockCopy = Instantiate(blockType);
-
-                blockCopy.name = listBlockData.block_type;
-
-                // Set the copy's parent to this game object
-                blockCopy.transform.SetParent(transform);
-
-                Quaternion blockRotation;
-
-                if(listBlockData.orientation == 0)
-                {
-                    blockRotation = Quaternion.Euler(0, 0, 0);
-                }
-                else
-                {
-                    blockRotation = Quaternion.Euler(0, 90, 0);
-                }
-
-                Vector3 unityPosition = convertToUnityPosition(listBlockData);
-                blockCopy.transform.SetLocalPositionAndRotation(unityPosition, blockRotation);
-            }
+            addBlock(stepIndex);
             upToDate = true;
         }
         
