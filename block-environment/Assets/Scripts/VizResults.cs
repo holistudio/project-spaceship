@@ -55,7 +55,10 @@ public class Root
 public class VizResults : MonoBehaviour
 {
     public GameObject blockSet;
+    public int stepIndex = 0;
     private string filePath = "../../results/2024-03-21_HCNN/episode_0_blocks_0-50_log.json";
+
+    private Root rootData;
 
     Vector3 convertToUnityPosition(LatestBlock latestBlockData)
     {
@@ -154,41 +157,8 @@ public class VizResults : MonoBehaviour
         if (File.Exists(filePath))
         {
             // Deserialize the JSON data to a Root object
-            Root rootData = JsonUtility.FromJson<Root>(File.ReadAllText(filePath));
-
-            Step step = rootData.record[0];
-
-            LatestBlock listBlockData = step.env.latest_block;
-
-            Transform childTransform = blockSet.transform.Find(listBlockData.block_type);
-            
-            if (childTransform != null)
-            {
-                GameObject blockType = childTransform.gameObject;
-                // Instantiate a copy of the original GameObject
-                GameObject blockCopy = Instantiate(blockType);
-
-                blockCopy.name = listBlockData.block_type;
-
-                // Set the copy's parent to this game object
-                blockCopy.transform.SetParent(transform);
-
-                Quaternion blockRotation;
-
-                if(listBlockData.orientation == 0)
-                {
-                    blockRotation = Quaternion.Euler(0, 0, 0);
-                }
-                else
-                {
-                    blockRotation = Quaternion.Euler(0, 90, 0);
-                }
-
-                Vector3 unityPosition = convertToUnityPosition(listBlockData);
-                blockCopy.transform.SetLocalPositionAndRotation(unityPosition, blockRotation);
-            }
-
-            Debug.Log(step.loss);
+            rootData = JsonUtility.FromJson<Root>(File.ReadAllText(filePath));
+            // Debug.Log(step.loss);
             // Output the data to the console for verification
             // foreach (Step step in rootData.record)
             // {
@@ -205,6 +175,36 @@ public class VizResults : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Step step = rootData.record[stepIndex];
+
+        LatestBlock listBlockData = step.env.latest_block;
+
+        Transform childTransform = blockSet.transform.Find(listBlockData.block_type);
         
+        if (childTransform != null)
+        {
+            GameObject blockType = childTransform.gameObject;
+            // Instantiate a copy of the original GameObject
+            GameObject blockCopy = Instantiate(blockType);
+
+            blockCopy.name = listBlockData.block_type;
+
+            // Set the copy's parent to this game object
+            blockCopy.transform.SetParent(transform);
+
+            Quaternion blockRotation;
+
+            if(listBlockData.orientation == 0)
+            {
+                blockRotation = Quaternion.Euler(0, 0, 0);
+            }
+            else
+            {
+                blockRotation = Quaternion.Euler(0, 90, 0);
+            }
+
+            Vector3 unityPosition = convertToUnityPosition(listBlockData);
+            blockCopy.transform.SetLocalPositionAndRotation(unityPosition, blockRotation);
+        }
     }
 }
