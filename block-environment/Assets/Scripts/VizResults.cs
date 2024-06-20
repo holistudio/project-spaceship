@@ -60,6 +60,7 @@ public class VizResults : MonoBehaviour
 
     private Root rootData;
 
+    private bool upToDate = false;
     Vector3 convertToUnityPosition(LatestBlock latestBlockData)
     {
         Vector3 unityPosition = new Vector3(0.0f, 0.0f, 0.0f);
@@ -178,45 +179,52 @@ public class VizResults : MonoBehaviour
         // Check if the left arrow key is pressed
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            stepIndex++;
+            stepIndex--;
+            upToDate = false;
         }
 
         // Check if the right arrow key is pressed
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            stepIndex--;
+            stepIndex++;
+            upToDate = false;
         }
 
-        Step step = rootData.record[stepIndex];
-
-        LatestBlock listBlockData = step.env.latest_block;
-
-        Transform childTransform = blockSet.transform.Find(listBlockData.block_type);
-        
-        if (childTransform != null)
+        if (!upToDate)
         {
-            GameObject blockType = childTransform.gameObject;
-            // Instantiate a copy of the original GameObject
-            GameObject blockCopy = Instantiate(blockType);
+            Step step = rootData.record[stepIndex];
 
-            blockCopy.name = listBlockData.block_type;
+            LatestBlock listBlockData = step.env.latest_block;
 
-            // Set the copy's parent to this game object
-            blockCopy.transform.SetParent(transform);
-
-            Quaternion blockRotation;
-
-            if(listBlockData.orientation == 0)
+            Transform childTransform = blockSet.transform.Find(listBlockData.block_type);
+            
+            if (childTransform != null)
             {
-                blockRotation = Quaternion.Euler(0, 0, 0);
-            }
-            else
-            {
-                blockRotation = Quaternion.Euler(0, 90, 0);
-            }
+                GameObject blockType = childTransform.gameObject;
+                // Instantiate a copy of the original GameObject
+                GameObject blockCopy = Instantiate(blockType);
 
-            Vector3 unityPosition = convertToUnityPosition(listBlockData);
-            blockCopy.transform.SetLocalPositionAndRotation(unityPosition, blockRotation);
+                blockCopy.name = listBlockData.block_type;
+
+                // Set the copy's parent to this game object
+                blockCopy.transform.SetParent(transform);
+
+                Quaternion blockRotation;
+
+                if(listBlockData.orientation == 0)
+                {
+                    blockRotation = Quaternion.Euler(0, 0, 0);
+                }
+                else
+                {
+                    blockRotation = Quaternion.Euler(0, 90, 0);
+                }
+
+                Vector3 unityPosition = convertToUnityPosition(listBlockData);
+                blockCopy.transform.SetLocalPositionAndRotation(unityPosition, blockRotation);
+            }
+            upToDate = true;
         }
+        
     }
 }
