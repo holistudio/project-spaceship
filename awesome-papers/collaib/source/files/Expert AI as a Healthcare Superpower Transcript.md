@@ -10,601 +10,91 @@ VP: I'm the founding General partner of the a16z bio and health fund
 
 MA: and I'm Mark Andreessen the co-founder of a16z 
 
-VP: mark thank you so much for joining us
-it's great to be here so
-you famously wrote about software eating
-the world and that was basically what 10
-plus years ago and actually that
-very much seems to have come to fruition
-if you look at all these other
-industries that software really wasn't a
-part of software's actually become a
-dominant part but actually this year's
-been kind of an amazing year for another
-type of software for AI and I'm curious
-to sort of talk about the Arc of what we
-think is going to happen in the future
-based on what we've seen in the past and
-and really how this new technology is
-going to change everything much like
-we've seen software change the last 10
-years I'm curious what you think for
-just like this year it's been kind of an
-amazing year it always seem like not
-much happens in any given year but 2022
-seems to have been an amazing year for
-AI right
-also Vladimir Lenin once said
-there are decades in which nothing
-happens
-and then there are weeks in which
-decades happen
-and let's not hope that happens
-politically anymore
-but it does happen in
-science and technology it does happen
-there are sort of moments where things
-kind of hit critical mass
-and this the sort of AI
-machine learning Revolution seems it
-seems like that's what's happening right
-now it's been interesting to
-watch it's sort of like it
-feels to me at least it was like there
-was like a breakthrough moment in 2012
-right that had to do with images
-and then there was a lot of work you
-know subsequently valid to
-things like the creation of self-driving
-cars based on that and then
-there was some it feels like some
-natural language breakthrough maybe
-three years ago
-and now that's really catalyzed into
-this kind of whole thing that
-we see happening around GPT and
-text generation
-and then even other
-other applications transcription you
-know is getting much better all of a
-sudden speech synthesis is getting much
-better
-and then now you've got this artistic
-Revolution happening with image
-image creation and now video
-creation is right next
-coming up now really fast
-and so it seems like one of those
-catalytic moments and then it it's
-it's it's like every week now
-there's like fun it seems like there's
-like fundamental breakthroughs there's
-research papers there's product releases
-coming out so it seems like a cascading
-thing the way I think about it as a
-software person sort of
-lifelong programmer
-is that they're basically in
-the fullness of time it will appear I
-think that there were kind of two
-different ways to write software there
-was the sort of the old way to write
-software which is sort of the classic
-Von Neumann machine
-deterministic way and the whole
-problem with writing software in the old
-model is like computers are hyper
-literal right and so they do exactly
-what you tell them traditionally right
-every time they do something wrong it's
-because you have instructed them in
-properly and it's your very humbling
-experience to learn as a young
-programmer that everything is your
-fault
-and the Machine will just sit and
-wait for you to fix the problem like
-it's not it's not gonna it's not going
-to do that on its own and then
-there's this new there's this other way
-to write software and this has to do
-with having these
-these AI systems and then having
-training data training the systems
-tweaking the systems
-and the sort of capability
-that the way I described it to
-kind of normies is though that
-sort of unlocks the ability for
-computers to more and more interact with
-the real world and with the
-messiness of the real world right and
-the probabilistic nature of the real
-world well it seems almost less
-like writing software almost like
-training something that's right when I
-think about machine learning and image
-recognition you talked about it felt
-like it was almost like training a dog
-right like reinforcement learning is
-like we'll give treats as it gets better
-but there's something different now it
-feels like I don't know we've gone from
-like training a dog to recognize a bird
-versus like a hot dog or hot dog or not
-hot dog or so on to actually something
-where it feels closer like training a
-person or I don't know how you feel like
-when we talk about learning and training
-and data like what are we training
-what is where do you think we are in
-that Arc of getting to like eventually
-HAL 9000 and so on well so I while
-this has been happening if you
-have kids like I have a young
-young child so I have a seven-year-old
-now so as this stuff has all been
-popping I've been simultaneously
-training and training now the seven year
-old any anybody who's
-had who's had kids will recognize what
-kind of what I'm about to say
-but it is really interesting
-watching little kids the way I think
-about they're at least at least at least
-the little kid I have who's great
-it's like it's like everything
-for the first for the first few years
-it's like every single thing he did was
-like a little applied physics experiment
-which is like let's see what happens if
-I drop this let's see what happens if I
-eat this let's see what happens if I do
-this to Daddy right and see what the
-response is and they just run experiment
-and you can see it you can see it very
-clearly when they're like learning how
-to walk because they're like running all
-these experiments about how to stand up
-and what to hold on to and they keep
-falling over and then at some point like
-good it's a little neural network
-like actually figures it out it does
-learn off in a way they go right
-and so clearly it's like
-it's kind of it's a little bit
-Eerie like you can see that a similar
-kind of thing happening look
-having said that like the you
-know the human brain just like you
-developing and then It
-ultimately it clearly has
-Consciousness achieves higher
-levels of consciousness achieves higher
-levels of sort of self-knowledge you
-know reaches the Descartes kind
-of stage where it sort of has
-self-awareness clearly is
-very creative from an early age I'm a
-little less convinced that the tech
-software Technologies we have now are
-like on some linear path towards just
-like quote-unquote AGI or just quote
-unquote like Consciousness like us it's
-hard for me to believe that conscious
-Consciousness is just simply like
-emergent from like higher scale neural
-networks like I that to me seems
-like a hand wave now having said
-that I have a lot of smart friends who
-are pretty sure that that's what's going
-to happen so actually I feel that
-way as well so I want to get to AGI in a
-bit I mean and also we can debate where
-the Consciousness is an illusion as it
-is but where we are now is kind
-of amazing like can people can take like
-gpt3 you can give it SAT exams it can do
-okay like actually it can do quite well
-I can do scores it like the so
-the one I saw that scored it like with
-1200 something like that
-so it's not bad right I can do homework
-I actually gave it like acid
-questions like to explain the
-derivation for the source trial radius
-the black hole radius to write
-a code for let's say eight by eight
-tic-tac-toe like random things that you
-should never be able to do because it's
-not just memorizing it it's generalizing
-right and it's getting that but then
-also it actually seems to have some sort
-of rear weird hiccups and that
-actually one thing that really does not
-seem to get is humor right
-so I'm kind of curious where you
-think it's going to go because before we
-get to AGI there are things that an
-average human can do pretty well that
-GPT 3 can't but then there's also what
-experts can do and what I'm very
-curious about is actually we may get to
-some of the expert stuff first before
-it can do even something like humor the
-irony is that something like humor that
-we take for granted might actually be
-really hard and other areas might be
-easier right well the ultimate example
-of the things that can't do like it
-can't my pecker suitcase like
-there's no robot that will pack your
-suitcase it will and if you try to
-get her like make an omelette like
-it'll shred your clothes they're not
-so it could drive your car
-but it can't pack your suitcase so
-you can't do your laundry
-so there are there are these
-interesting kind of kind of twists I
-so I would describe a little bit as
-followed us which is I think the
-this generation of AI that we have as
-impressive it is it is a little bit of a
-sleight of hand which we'll maybe
-talk about and then but I also think
-actually to your point human
-consciousness or human intelligence is
-also a little bit of hand
-maybe slightly different slides of hands
-so the sleight of hand that you see
-when you're using GPT or one of
-these image generation things is it's
-not literally creating new information
-like what it's doing is it is it
-doesn't have like it has no opinion
-it has no like point of view it has
-no like it's not sitting there
-like thinking on its own coming up with
-some new thing what it's doing is
-it's basically training ideally
-what it's doing this is training on the
-subtotal of all existing human knowledge
-so for text generation it's
-training on all existing human texts
-right and so it plays back at you
-basically projections from the sort of
-assembled composite of all
-when you ask it to do the eight by eight
-like so probably somebody on the
-internet at some point wrote some paper
-about it I thought it's a little more
-than that because it because I asked
-like 56 by 56 or 101 by 101 it has
-some sense of generalization but
-but I'll bet we can check this I'll bet
-if we Google long enough I'll bet we
-could find a paper that described a
-general purpose algorithm for
-multi oh that may be right
+VP: mark thank you so much for joining us it's great to be here so you famously wrote about software eating the world and that was basically what 10 plus years ago and actually that very much seems to have come to fruition if you look at all these other industries that software really wasn't a part of software's actually become a dominant part but actually this year's been kind of an amazing year for another type of software for AI and I'm curious to sort of talk about the Arc of what we think is going to happen in the future based on what we've seen in the past and and really how this new technology is going to change everything much like we've seen software change the last 10 years I'm curious what you think for just like this year 
+
+MA: it's been kind of an amazing year it always seem like not much happens in any given year but 2022 seems to have been an amazing year for AI right also Vladimir Lenin once said there are decades in which nothing happens and then there are weeks in which decades happen and let's not hope that happens politically anymore but it does happen in science and technology it does happen there are sort of moments where things kind of hit critical mass and this the sort of AI machine learning Revolution seems it seems like that's what's happening right now it's been interesting to watch it's sort of like it feels to me at least it was like there was like a breakthrough moment in 2012 that had to do with images and then there was a lot of work you know subsequently valid to things like the creation of self-driving cars based on that and then there was some it feels like some natural language breakthrough maybe three years ago and now that's really catalyzed into this kind of whole thing that we see happening around GPT and text generation and then even other other applications transcription you know is getting much better all of a sudden speech synthesis is getting much better and then now you've got this artistic Revolution happening with image image creation and now video creation is right next coming up now really fast and so it seems like one of those catalytic moments and then it it's it's it's like every week now there's like fun it seems like there's like fundamental breakthroughs there's research papers there's product releases coming out so it seems like a cascading thing 
+
+the way I think about it as a software person sort of lifelong programmer is that they're basically in the fullness of time it will appear I think that there were kind of two different ways to write software there was the sort of the old way to write software which is sort of the classic Von Neumann machine deterministic way and the whole problem with writing software in the old model is like computers are hyper literal and so they do exactly what you tell them traditionally every time they do something wrong it's because you have instructed them improperly and it's your very humbling experience to learn as a young programmer that everything is your fault and the machine will just sit and wait for you to fix the problem like it's not it's not gonna it's not going to do that on its own and then there's this new there's this other way to write software and this has to do with having these these AI systems and then having training data training the systems tweaking the systems and the sort of capability that the way I described it to kind of normies is though that sort of unlocks the ability for computers to more and more interact with the real world and with the messiness of the real world and the probabilistic nature of the real world well it seems almost less like writing software almost like training something that's when I think about machine learning and image recognition you talked about it felt like it was almost like training a dog like reinforcement learning is like we'll give treats as it gets better but there's something different now it feels like I don't know we've gone from like training a dog to recognize a bird versus like a hot dog or hot dog or not hot dog or so on to actually something where it feels closer like training a person or I don't know how you feel like when we talk about learning and training and data like what are we training what is where do you think we are in that arc of getting to like eventually HAL 9000 and so on 
+
+well so I while this has been happening if you have kids like I have a young young child so I have a seven-year-old now so as this stuff has all been popping I've been simultaneously training and training now the seven year old any anybody who's had who's had kids will recognize what kind of what I'm about to say but it is really interesting watching little kids the way I think about they're at least at least at least the little kid I have who's great it's like it's like everything for the first for the first few years it's like every single thing he did was like a little applied physics experiment which is like let's see what happens if I drop this let's see what happens if I eat this let's see what happens if I do this to Daddy right and see what the response is and they just run experiment and you can see it you can see it very clearly when they're like learning how to walk because they're like running all these experiments about how to stand up and what to hold on to and they keep falling over and then at some point like good it's a little neural network like actually figures it out it does learn off in a way they go right and so clearly it's like it's kind of it's a little bit eerie like you can see that a similar kind of thing happening. look having said that like the you
+know the human brain just like you developing and then it ultimately it clearly has consciousness achieves higher levels of consciousness achieves higher levels of sort of self-knowledge you know reaches the Descartes kind of stage where it sort of has
+self-awareness clearly is very creative from an early age 
+
+I'm a little less convinced that the tech software technologies we have now are like on some linear path towards just like quote-unquote AGI or just quote unquote like consciousness like us it's hard for me to believe that conscious consciousness is just simply like emergent from like higher scale neural networks like I that to me seems like a hand wave. now having said that I have a lot of smart friends who are pretty sure that that's what's going to happen so actually I feel that way as well so I want to get to AGI in a bit I mean and also we can debate where the Consciousness is an illusion as it is but where we are now is kind of amazing like can people can take like gpt3 you can give it SAT exams it can do okay like actually it can do quite well I can do scores it like the so the one I saw that scored it like with 1200 something like that so it's not bad right I can do homework I actually gave it like acid questions like to explain the derivation for the source trial radius the black hole radius to write a code for let's say eight by eight tic-tac-toe like random things that you should never be able to do because it's not just memorizing it it's generalizing right and it's getting that but then also it actually seems to have some sort of really weird hiccups and that
+actually one thing that really does not seem to get is humor right 
+
+so I'm kind of curious where you think it's going to go because before we get to AGI there are things that an average human can do pretty well that GPT 3 can't but then there's also what experts can do and what I'm very curious about is actually we may get to some of the expert stuff first before it can do even something like humor the irony is that something like humor that we take for granted might actually be really hard and other areas might be easier 
+
+right well the ultimate example of the things that can't do like it can't my pack suitcase like there's no robot that will pack your suitcase it will and if you try to get her like make an omelette like it'll shred your clothes they're not so it could drive your car but it can't pack your suitcase so you can't do your laundry so there are there are these interesting kind of kind of twists I so I would describe a little bit as followed us which is I think the this generation of AI that we have as impressive it is it is a little bit of a sleight of hand which we'll maybe talk about and then but I also think actually to your point human consciousness or human intelligence is also a little bit of hand maybe slightly different slides of hands so the sleight of hand that you see when you're using GPT or one of these image generation things is it's not literally creating new information. like what it's doing is it is it doesn't have like it has no opinion it has no like point of view it has no like it's not sitting there like thinking on its own coming up with some new thing. what it's doing is it's basically training. ideally what it's doing this is training on the subtotal of all existing human knowledge so for text generation it's training on all existing human texts and so it plays back at you basically projections from the sort of assembled composite of all. when you ask it to do the eight by eight like so probably somebody on the internet at some point wrote some paper about it I thought it's a little more than that because it because I asked like 56 by 56 or 101 by 101 it has some sense of generalization but but I'll bet we can check this I'll bet if we Google long enough I'll bet we could find a paper that described a general purpose algorithm formulti 
+
+oh that may be right
+
 it's like somebody did that
-I've done the same humor experiment I
-like have it right Seinfeld scripts and
-sometimes they're really funny and
-sometimes they're just like it
-makes no sense I went for curb but
-it's the same idea exactly but
-like look there are a lot of jokes on
-the internet right and so you'd have to
-kind of you could kind of go back and
-kind of say okay it probably like pluck
-these jokes or by the way maybe there
-was a paper somewhere where they
-articulated a general theory of humor
-right because this has been humor's been
-studied as a as a thing and maybe
-there's like a general thing of like
-humors like the unexpected or whatever
-and so it generalizes well it could
-be too like all sitcoms might be the
-same sitcom at some level right well
-so here would be an example so Matt
-I also how to do like dramatic
-screenplays we've got a dramatic
-customers it's quite good if it was like
-three you could say like write a
-three-act screenplay it will do it
-and it will have the proper like setup
-and resolution and so forth but
-there are systems for like screenwriting
-in Hollywood where they have like three
-acts and then they have it's all
-Rocky or It's All Star Wars well so
-so actually it's really interesting that
-maybe what we think is magical when
-humans do it isn't actually all that
-magical either so that's what I was
-going to say so then the human
-sleight of hand is like is
-there actually free will is there is
-there actually creativity happening
-upstairs by the way if there is
-is it everybody is there really a
-thousand types of movies or is there
-like one latent space of the monomyth
-and basically what's happening I think
-the theory just I'm kind
-of making this up but I think the theory
-would be the hero with a thousand faces
-or the the idea of the Union hero's
-journey which is sort of the
-basis for all of these plots in Star
-Wars and Harry Potter and everything
-else
-a somebody with your
-background might say that basically it's
-sort of algorithm for surfing human
-neurochemistry right and
-generating different like sort
-of neuron chemical responses to
-like fear and anxiety and you
-know love and all these other all these
-other things
-I've always been fascinated there's
-this thing in Psychology called core
-affect Theory wow that one I don't know
-oh this is great so okay so what
-do humans have all these love and
-despair like we have all these different
-emotions to celebrate core ethic Theory
-says no we don't oh or no
-good bad good or bad and then
-Higher Love
-and so we either have like a positive
-like we either have like a positive
-a neural response or a negative
-neural response and then it's either
-high intensity or low intensity and then
-you just basically and so it's like
-wistfulness is like just
-slightly negative but like
-despair is like extremely negative
-and then so it's all too
-by two it's a two by two and it's
-and we're more basic organisms than we
-think and then we just we retro
-as and we're very one of the things
-that's great known is humans are very
-good at creating a story to justify
-whatever happened right
-and so we create these stories these
-scripts around this idea of an emotion
-but it's basically just justifying the
-neural response and so the
-cynical view would be like having an ice
-cream cone on a hot Bay and like falling
-in love are like the same thing well
-maybe nor chemically neurochemically
-maybe they are well this comes into play
-in like drug abuse right which
-is things that generate
-an opioid response like some people
-get an opioid response from alcohol
-right and they're former prone
-to alcoholism a lot of people don't get
-that response and so it's literally a
-neurochemical thing so look
-maybe we're maybe we're bundles of
-neurochemistry to a much deeper extent
-than or a much simpler extent than we
-want to believe having said that
-again oh and then that
-that takes me the other thing on AI
-which is I do one of the ways
-that people are testing AI is with the
-so-called Turing test right and the
-simplified form of the Turing test is
-you're chatting with somebody that
-maybe a human or maybe a bot and you
-chat for 20 minutes and can you guess
-better than random history human
-robot that my take on that
-is to turn Alan Turing was a
-genius but the Turing test is malformed
-humans are too easy to trip
-but that's too low of a
-bar because tricking a person is not
-that hard and does not prove anything
-other than you've tricked the person
-like like I think and this is
-relevant because I think things
-like GPT are about to pass the Turing
-test
-exactly
-and so I think it's going to turn out
-that was too lightweight of a test
-well here's my favorite
-example for why I know GPT is not
-self-aware if you ask it if it's
-self-aware and you ask it to
-elaborate on how it became self-aware it
-will happily tell you and by the way
-if you ask it if how it's going to feel
-if you if you turn it off it's going to
-tell you please don't
-if you ask it to explain to you why
-it's not self-aware it will very
-happily do that too it does not have a
-differential opinion about those two
-outcomes whereas every living
-every conscious not ever even
-even no consciously any living
-organism has a very different response
-to those two scenarios it's been amazing
-because in some ways I feel like it's as
-much been interesting to study the AI as
-the AIS reflected for us to study
-ourselves and I think we are
-sort of seeing that the magician has
-certain tricks whether it's the AI
-magician or the human magician and
-it's going through this education
-process I'm curious though like it feels
-like so like GPT can get
-into a high school or get into college
-let's say but like what would it take
-for it to get its PhD and
-like we're I think that's where
-the sort of dramatic stuff is to come
-well so again it's exactly your
-point it's not stress I would ask the
-question the other way which is like
-well okay what does it take to get a PhD
-what does it take for Humanity like
-how are the universities doing
-how are they doing
-on quality control of their own programs
-how many people are getting phds
-today that we would say are like
-actually valid like
-whatever actual accomplishments
-by the way
-people who got professors
-have years ago like how would they score
-the phds that are being granted today
-when they say wow would they say the bar
-is lower I think they would say it
-bars dramatically lower right
-and so the answer might be
-we haven't lowered the bar but same
-thing for college admissions like you
-know what does it take to get into
-college but what does it take to finish
-college and the education
-system well this is coming up a lot
-right now because it's like okay GPT can
-Auto generate like essays right
-and so student essays and so it's
-like okay the great the grading method
-of assign an essay and grade the result
-like is probably not going to work
-anymore but it's like okay was that
-ever actually like just because we
-thought that was education was that
-actually education like what was that
-actually teaching anybody anything like
-actually I'm sure someone's going to
-take that to apply to colleges oh
-absolutely challenge
-applications are basically done at
-least at least to the extent that you
-believe that college applications were a
-legitimate way to evaluate anybody in
-the first place no it's dark
-it's done I'd be more skeptical that
-they were ever useful in the first one
-too right
-well so in the PC let's talk
-about like at least in that old school
-mentality of a PhD of some Advan
-Advanced learning where you become an
-expert in something right I
-think that's the thing where what do you
-mean by expert let's say the ability
-to be in the top point one percent of
-humanity of let's say designing a drug
-or interesting doing something oh
-is that what that is that
-what they teach me well that's
-that's presentation universities that is
-my goal I wasn't aware of I wasn't aware
-that was part of the curriculum I think
-it is
-or at least that's what you have to do
-eventually when you get out right
-and that you have to apply it I
-think it's where I think it is one of
-the things about being an expert in my
-mind is that something that is the
-difference between bad good and great
-can be really close like I could
-probably write a piece of music but no
-one would think it's all that great you
-know and then you could have someone
-who's a good musician but not a great
-one then you have like a genius like a
-Mozart or a Led Zeppelin or whatever
-particular genre and I think
-we're we aren't there yet is that when
-the difference between good and great is
-so close right or like from spinal tap
-there's a fine line between brilliant
-and stupid right I think that
-is where I think it hasn't really hit
-yet right in that if you look at the
-jokes the jokes are just kind of okay
-the screenplays it makes are not like
-brilliant screenplays right I think it
-could get into college but could it win
-best screenplay okay and so
-that's this part where I think we're
-we're gonna we're not there yet okay you
-know but then I think we're getting
-there so name a great music composer
-generated by a music PhD program
 
-name one I'm thinking more in the
-the scientific side of things but I
-don't think probably the PHD programs in
-that space is probably not intended to
-generate music okay made one
-greatest screenplay written by a PhD in
-drama
-so that's an interesting point
-but I think what I'm getting at is
-still like the ability to do something
-and so and the education part we can
-talk about how they learn because I
-think in the case of the screenplay or
-the music you're talking about they
-they still have to learn something right
-they or do you think they just
-innately sort of knew how to write a
-screenplay I don't know I assume
-there's a process where they write a
-screenplay it's kind of mediocre oh
-and then and then they get
-critiqued or they critique themselves
-and then and then it improves and
-improves and improves well the
-screenplay okay so the divorce
-in the education
-[Music]
-question number one for screenplay is
-does it sell to the studio will they
-usually buy it and then that's
-number two is when the movie comes out
-and the TV show comes out does anybody
-watch it people like it finish
-it one of the fun things that
-Netflix will now tell people who make
-film and TV is they actually tell them
-for the first time whether anybody's
-actually finishing their movie
+I've done the same humor experiment I like have it write Seinfeld scripts and sometimes they're really funny and sometimes they're just like it makes no sense I went for curb but it's the same idea exactly but like look there are a lot of jokes on the internet and so you'd have to kind of you could kind of go back and kind of say okay it probably like pluck these jokes or by the way maybe there was a paper somewhere where they articulated a general theory of humor because this has been humor's been studied as a as a thing and maybe there's like a general thing of like humors like the unexpected or whatever and so it generalizes well it could be too like all sitcoms might be the same sitcom at some level. 
 
-just all those stats are kind of
-mind-blogging right a lot of
-movies like and people go to
-the theater and they feel
-invested in and they don't want to leave
-in the middle but like it's very
-easy to punch out it turns out a
-lot of screenplays this is
-something that's professional
-screenwriters will tell you like it
-can't ever sag just as
-one example because people will
-stop watching so so
+well so here would be an example so Matt I also how to do like dramatic screenplays we've got a dramatic customers it's quite good if it was like three you could say like write a three-act screenplay it will do it and it will have the proper like setup and resolution and so forth but there are systems for like screenwriting in Hollywood where they have like three acts and then they have it's all Rocky or It's All Star Wars well so so actually it's really interesting that maybe what we think is magical when humans do it isn't actually all that magical either 
+
+so that's what I was going to say so then the human sleight of hand is like is there actually free will is there is there actually creativity happening upstairs 
+
+by the way if there is, is it everybody is there really a thousand types of movies or is there like one latent space of the monomyth
+and basically 
+
+what's happening I think the theory just I'm kind of making this up but I think the theory would be the hero with a thousand faces or the the idea of the Union hero's journey which is sort of the basis for all of these plots in Star Wars and Harry Potter and everything else a somebody with your background might say that basically it's sort of algorithm for surfing human neurochemistry and generating different like sort of neuron chemical responses to like fear and anxiety and you know love and all these other all these other things 
+
+I've always been fascinated there's this thing in Psychology called core affect Theory 
+
+wow that one I don't know
+
+oh this is great so okay so what do humans have all these love and despair like we have all these different emotions to celebrate core ethic Theory says no we don't oh or no good bad good or bad and then Higher Love. and so we either have like a positive like we either have like a positive a neural response or a negative neural response and then it's either high intensity or low intensity and then you just basically and so it's like wistfulness is like just slightly negative but like despair is like extremely negative and then so it's all too by two it's a two by two and it's and we're more basic organisms than we think and then we just we retro as and we're very one of the things 
+
+that's great known is humans are very good at creating a story to justify whatever happened and so we create these stories these scripts around this idea of an emotion but it's basically just justifying the neural response and so the cynical view would be like having an ice cream cone on a hot day and like falling in love are like the same thing well maybe nor chemically neurochemically maybe they are well. this comes into play in like drug abuse which is things that generate an opioid response like some people get an opioid response from alcohol and they're former prone to alcoholism a lot of people don't get that response and so it's literally a neurochemical thing 
+
+so look maybe we're maybe we're bundles of neurochemistry to a much deeper extent than or a much simpler extent than we want to believe having said that again oh and then that that takes me the other thing on AI which is I do one of the ways that people are testing AI is with the so-called Turing test and the simplified form of the Turing test is you're chatting with somebody that
+maybe a human or maybe a bot and you chat for 20 minutes and can you guess better than random history human robot
+
+that my take on that is to turn Alan Turing was a genius but the Turing test is malformed. humans are too easy to trip but that's too low of a bar because tricking a person is not that hard and does not prove anything other than you've tricked the person.
+
+like like I think and this is relevant because I think things like GPT are about to pass the Turing test. and so I think it's going to turn out that was too lightweight of a test
+
+well here's my favorite example for why I know GPT is not self-aware if you ask it if it's self-aware and you ask it to elaborate on how it became self-aware it will happily tell you and by the way if you ask it if how it's going to feel if you if you turn it off it's going to tell you please don't if you ask it to explain to you why it's not self-aware it will very happily do that too it does not have a differential opinion about those two outcomes whereas every living every conscious not ever even even no consciously any living organism has a very different response to those two scenarios 
+
+it's been amazing because in some ways I feel like it's as much been interesting to study the AI as the AIS reflected for us to study ourselves and I think we are sort of seeing that the magician has certain tricks whether it's the AI magician or the human magician and it's going through this education process 
+
+I'm curious though like it feels like so like GPT can get into a high school or get into college let's say but like what would it take for it to get its PhD and like we're I think that's where the sort of dramatic stuff is to come 
+
+well so again it's exactly your point it's not stress I would ask the question the other way which is like well okay what does it take to get a PhD what does it take for Humanity like how are the universities doing how are they doing on quality control of their own programs how many people are getting phds today that we would say are like actually valid like whatever actual accomplishments
+
+by the way people who got professors have years ago like how would they score the phds that are being granted today when they say wow would they say the bar is lower 
+
+I think they would say it bars dramatically lower right
+
+and so the answer might be we haven't lowered the bar but same thing for college admissions like you know what does it take to get into college but what does it take to finish college and the education system 
+
+well this is coming up a lot right now because it's like okay GPT can Auto generate like essays right and so student essays and so it's like okay the great the grading method of assign an essay and grade the result like is probably not going to work anymore but it's like okay was that ever actually like just because we thought that was education was that actually education like what was that actually teaching anybody anything like actually I'm sure someone's going to take that to apply to colleges challenge applications are basically done at least at least to the extent that you believe that college applications were a legitimate way to evaluate anybody in the first place 
+
+no it's dark it's done I'd be more skeptical that they were ever useful in the first one too right
+
+well so in the PC let's talk about like at least in that old school mentality of a PhD of some advanced learning where you become an expert in something. I think that's the thing where what do you mean by expert let's say the ability to be in the top point one percent of humanity of let's say designing a drug or doing something 
+
+oh is that what that is that what they teach me well that's that's presentation universities that is my goal I wasn't aware of I wasn't aware that was part of the curriculum I think it is or at least that's what you have to do eventually when you get out
+and that you have to apply it 
+
+I think it's where I think it is one of the things about being an expert in my mind is that something that is the difference between bad good and great can be really close like I could probably write a piece of music but no one would think it's all that great you know and then you could have someone who's a good musician but not a great one then you have like a genius like a Mozart or a Led Zeppelin or whatever particular genre and I think we're we aren't there yet is that when the difference between good and great is so close or like from spinal tap there's a fine line between brilliant and stupid. I think that is where I think it hasn't really hit yet in that if you look at the jokes the jokes are just kind of okay the screenplays it makes are not like brilliant screenplays. I think it could get into college but could it win best screenplay okay and so that's this part where I think we're we're gonna we're not there yet okay you know but then I think we're getting there so name a great music composer generated by a music PhD program
+
+name one 
+
+I'm thinking more in the the scientific side of things but I don't think probably the PHD programs in that space is probably not intended to generate music okay made one greatest screenplay written by a PhD in drama 
+
+so that's an interesting point but I think what I'm getting at is still like the ability to do something and so and the education part we can talk about how they learn because I think in the case of the screenplay or the music you're talking about they they still have to learn something
+
+they or do you think they just innately sort of knew how to write a screenplay 
+
+I don't know I assume there's a process where they write a screenplay it's kind of mediocre oh and then and then they get critiqued or they critique themselves and then and then it improves and improves and improves well the screenplay okay 
+
+so the divorce in the education question number one for screenplay is does it sell to the studio will they usually buy it and then that's, number two is when the movie comes out and the TV show comes out does anybody watch it people like it finish it one of the fun things that Netflix will now tell people who make film and TV is they actually tell them for the first time whether anybody's actually finishing their movie just all those stats are kind of mind-blogging. a lot of movies like and people go to the theater and they feel invested in and they don't want to leave in the middle but like it's very easy to punch out. it turns out a lot of screenplays this is something that's professional screenwriters will tell you like it can't ever sag just as one example because people will stop watching so 
+
+so
 screenwriting is subject to Market
 test popular music required test but
 it's classical music which I'm a huge
