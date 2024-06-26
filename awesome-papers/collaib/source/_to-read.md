@@ -1,6 +1,6 @@
 ## To process
 
-- [[World Model Definition]]
+- ...
 ## In progress
  - [[Deep learning, reinforcement learning, and world models]] 
  - [[CLIP-Forge - Towards Zero-Shot Text-to-Shape Generation]]
@@ -23,4 +23,5 @@
 - [[Hypar with OpenAI API]]
 - [[Melete]]
 - [[Sequence of Spaces Quote]]
+-  [[LeCun World Model Definition]]
 - [[DALL-E]]

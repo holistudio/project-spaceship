@@ -11,30 +11,8 @@
             "id": "74003c0537d49315",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "source/World Model Definition.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          }
-        ]
-      },
-      {
-        "id": "55562762cdd2e79f",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "e40271a0478a9768",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "evaluate-design-based-on-occupant-experience.md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "graph",
+              "state": {}
             }
           }
         ]
@@ -103,7 +81,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "source/World Model Definition.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -120,7 +97,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "source/World Model Definition.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -142,9 +118,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "source/World Model Definition.md"
-              }
+              "state": {}
             }
           }
         ]
@@ -166,7 +140,12 @@
   },
   "active": "74003c0537d49315",
   "lastOpenFiles": [
+    "world-model-represents-and-predicts.md",
     "source/_to-read.md",
+    "source/LeCun World Model Definition.md",
+    "world-model-encompasses-DL-RL.md",
+    "encoder-collapse-is-a-problem.md",
+    "latent-variables-help-fill-data-gaps.md",
     "source/Sequence of Spaces Quote.md",
     "occupant-experience-influenced-by-sequence-of-spaces-qualities.md",
     "evaluate-design-based-on-occupant-experience.md",
@@ -187,11 +166,6 @@
     "design-heuristics-limit-creativity.md",
     "source/Harnessing Game-Inspired Content Creation for Intuitive Generative Design and Optimization.md",
     "source/Deep learning, reinforcement learning, and world models.md",
-    "source/_notes-template.md",
-    "source/Design Process is a Reinforcement Learning Problem.md",
-    "authors/Silver, David.md",
-    "authors/LeCun, Yann.md",
-    "source/World Model Definition.md",
     "source/files/101_sequence_of_spaces.png",
     "source/files/Architect_ONET.xlsx",
     "source/files",
