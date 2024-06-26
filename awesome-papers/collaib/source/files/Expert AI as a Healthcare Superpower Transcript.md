@@ -137,24 +137,30 @@ great start is like from a from a
 mediocre one as taste right exactly
 and like there's certain signals like
 there's certain methods and certain
-signals but it's not necessarily
+signals 
+
+but it's not necessarily
 reducible to an algorithm it's more of
 like a composite it's sort of a
 foundational knowledge combined with
 some scope of experience combined with
 some kind of ineffable
-characteristic of judgments well we
+characteristic of judgments 
+
+well we
 associate an aesthetic with it but I
 wonder whether that's also just our
 emotional connection to it right you
 know because I think we have this good
 right or wrong or more right or more
-wrong right like a gradient like
-that's the right direction right and but
+wrong like a gradient like
+that's the right direction
+
+ and but
 a lot of us also whether something is
-elegant versus like just a hack right
+elegant versus like just a hack
 you can tell whether these great things
-are just simple and Powerful rather than
+are just simple and powerful rather than
 like some complicated machine to do
 something that there's
 gonna eventually fall apart or that
@@ -162,13 +168,15 @@ you think about that's true in
 physics or in the go to market or in
 or in music it has all that both that
 sort of complexity and a simplicity at
-the same time right
+the same time
+
 but so but I'm curious like so
 when AI gets that point which I think
 that's a win not an if okay
 or so why would you say why
 wouldn't it get there because like do we
 even understand how it works in people
+
 maybe we don't have to well maybe we
 don't have to so this is where I
 describe this is like the AGI
@@ -182,15 +190,18 @@ maybe one way of looking at
 that is that is just what's going to
 happen that's not even Consciousness
 like that's obviously what's going to
-happen the other impression that is it's
+happen. the other impression that is it's
 just a massive it's a hand wave it's a
 hand wave and it's what the kids would
 call it cope and the cope would be okay
+
 so here let me ask you a question in
 return what is the sub
 specialty of human biology and
 medicine that best understands the
-nature of human consciousness today oh
+nature of human consciousness today 
+
+oh
 I don't think there's a there is
 one right there is one anesthesiology
 okay which is poorly understood well
@@ -205,13 +216,11 @@ a very long time we have very advanced
 Technologies today functional MRI and
 like all this stuff but that speaks
 there's a field I would love to see
-created which is molecular psychology
-okay where you can start to
-probe this one a little more than on off
-okay and molecular so and this is
+created which is molecular psychology where you can start to
+probe this one a little more than on off and molecular so and this is
 literal or metaphorical
 quite literally like and so play like
-molecular biology but this big thing in
+molecular biology. but this big thing in
 the 80s where we finally can bring like
 chemistry of small molecules to like
 pocket biology or chemical biology as
@@ -223,12 +232,15 @@ little bit because reading is one thing
 but like poking and sort of
 perturbing and then seeing the result is
 usually How We Do any sort of experiment
+
 would you do that is that a
 chemical experimentation would
 that be electrical it could be either
 one it could be any of that but it would
 probably be some combinations like on a
-track in theory so like look we
+track in theory 
+
+so like look we
 just don't okay so here would be the
 counter argument is like we just we
 don't know how human consciousness Works
@@ -239,8 +251,11 @@ what I was going to study in school 30
 years ago but I looked at the field at
 the time and I was like they don't have
 a clue like I'm going to spend my entire
-career so you want to go into
+career 
+
+so you want to go into
 Consciousness
+
 but that was like expert
 systems expert systems well there are
 early neural networks and then a lot
