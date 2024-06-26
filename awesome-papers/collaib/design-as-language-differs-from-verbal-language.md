@@ -1,0 +1,8 @@
+Design as a language may differ from how people regularly verbally communicate with each other.
+- As a consequence [[LLMs-for-design-can-work-in-many-possible-ways]]
+
+[[Hypar with OpenAI API]]
+- "Do you think we'll be interacting with BIM and design applications this way in the future? "Replace all the Aeron chairs on the third floor with the Steelcase Amia" "Rename all the rooms in this wing sequentially following the pattern A101, A102, A103, etc". Greg Schleusner AIA posed a good question on twitter — as a discipline, do we have sufficiently precise language to communicate unambiguously what we would want a system like this to do for us?"
+- "humans abstract ideas with drawings and use it to pass knowledge through generations. Some humans are better at it than others. Architecture is built around this diferenciating ability"
+- "We don't share design ideas with our colleagues by talking to them (exclusively) — mostly we draw, sketch, model, and gesture. So there's no reason to expect text will be sufficient on its own for steering an algorithm towards a desired design outcome."
+- Different communication + design media privilege different aspects, and we'll always want to use the best tool for the job. I think "essay" form will be great for outlining the high-level broad strokes + constraints of a project, but we'll immediately need to dive in and start manipulating results directly.

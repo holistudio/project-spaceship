@@ -36,7 +36,7 @@ Advantages of generative design [[generative-design-advantages]]
 
 **Dataset:** ...
 
-Design space model inspired by urban morphology
+Design space model inspired by urban morphology [[design-principles-apply-across-scale]]
 
 ### Design Space Definition
 
@@ -49,35 +49,29 @@ Design space model inspired by urban morphology
 
 ### Design Space Metrics
 
-Main goal of the exhibit space: "all exhibitor areas are evenly activated without
+Main goal of the exhibit space: "all exhibitor areas are evenly activated without creating undesirable congestion in any particular area" [[evaluate-design-based-on-occupant-experience]]
 
-creating undesirable congestion in any particular area"
-
-- " "buzz," and measures the spatial distribution of high traffic areas in the plan (Figure 4a)...large amount of foot traffic, but distribute this foot traffic evenly throughout the plan."
+- ""buzz," measures the spatial distribution of high traffic areas in the plan (Figure 4a)...large amount of foot traffic, but distribute this foot traffic evenly throughout the plan."
 - "the average foot traffic around each exhibitor booth (Figure 4b). Higher values of exposure represent plans where a large percentage of booths have a high level of traffic surrounding them."
 - "static graph-based simulation method, which is fully described in a related paper" 
 
 ### Design Space Evaluation
+[[understanding-state-space]] before running/optimizing models can be helpful
 
-Bias vs variance
-
-High bias - too simple doesn't capture enough variety of designs
-
-High variance - too many possible designs and more likely to include a lot of invalid designs.
+Bias vs variance [[design-space-model-needs-to-be-well-defined]]
+- High bias - too simple doesn't capture enough variety of designs
+- High variance - too many possible designs and more likely to include a lot of invalid designs.
 
 Complexity vs Continuity
-
-Too little complexity - why use a computer in the first place?
-
-Too little continuity - algorithms have a hard time figuring out trends in the results and how to best modify the design
-
-"complex enough to allow unexpected solutions, yet continuous enough to be searchable."
+- Too little complexity - why use a computer in the first place?
+- Too little continuity - algorithms have a hard time figuring out trends in the results and how to best modify the design
+- "complex enough to allow unexpected solutions, yet continuous enough to be searchable."
 
 Their use of "design model" may be more accurately called the design parameter space
 
-"discretize each \[of the three avenue end points] input into 16 steps, which yields 16 x 16 x 16 = 4,096 designs"
+"discretize each \[of the three avenue end points] input into 16 steps, which yields 16 x 16 x 16 = 4,096 designs" [[grid-size-affects-state-space]]
 
-"To smooth out the effect of the remaining 22 input parameters we also tested each design five times using random values for the other parameters and averaged the values of the output metrics."
+"To smooth out the effect of the remaining 22 input parameters we also tested each design five times using random values for the other parameters and averaged the values of the output metrics." [[random-sampling-addresses-high-dimensionality]]
 
 ## Key Findings
 
@@ -88,8 +82,11 @@ Their use of "design model" may be more accurately called the design parameter s
 
 ## Takeaways
 
+- [[understanding-state-space]] before running/optimizing models can be helpful
 - Design space should be defined such that it has sufficient bias, variance, complexity, and continuity but not too much. This can be checked with a sparse sampling of parameters before optimization
 - Once it's clear that the design space is sufficiently complex, metaheuristics like MOGA can be used with confidence.
+- In the face of high dimensional state spaces, random sampling may suffice rather than sampling every point in the high dimensional space [[random-sampling-addresses-high-dimensionality]]
+
 
 
 
