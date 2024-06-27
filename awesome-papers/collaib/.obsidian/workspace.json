@@ -11,8 +11,12 @@
             "id": "74003c0537d49315",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "source/An Afternoon with Patrik Schumacher.md",
+                "mode": "source",
+                "source": false
+              }
             }
           }
         ]
@@ -81,6 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "source/An Afternoon with Patrik Schumacher.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -97,6 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "source/An Afternoon with Patrik Schumacher.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -118,7 +124,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "source/An Afternoon with Patrik Schumacher.md"
+              }
             }
           }
         ]
@@ -138,8 +146,11 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "74003c0537d49315",
+  "active": "b8fecd085a0b89b7",
   "lastOpenFiles": [
+    "source/_notes-template.md",
+    "source/An Afternoon with Patrik Schumacher.md",
+    "source/files/Expert AI as a Healthcare Superpower Transcript.md",
     "world-model-represents-and-predicts.md",
     "source/_to-read.md",
     "source/LeCun World Model Definition.md",
@@ -163,9 +174,6 @@
     "understanding-state-space.md",
     "design-space-model-needs-to-be-well-defined.md",
     "design-principles-apply-across-scale.md",
-    "design-heuristics-limit-creativity.md",
-    "source/Harnessing Game-Inspired Content Creation for Intuitive Generative Design and Optimization.md",
-    "source/Deep learning, reinforcement learning, and world models.md",
     "source/files/101_sequence_of_spaces.png",
     "source/files/Architect_ONET.xlsx",
     "source/files",
