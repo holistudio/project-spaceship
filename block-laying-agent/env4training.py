@@ -252,16 +252,21 @@ class BlockTrainingEnvironment(object):
     def step(self, agent_env_actions):
         """
         Parameter:
-        agent_env_actions - Agent's actions for placing a block specified in a tuple easy for the BlockEnvironment to easily interpret
+        agent_env_actions - Agent's actions for placing a block specified in a tuple easy for the BlockTrainingEnvironment to easily interpret
 
         Returns: 
         next_state - next state of BlockEnvironment
         reward - Calculated reward
         terminal - if episode should terminate or not
         """
+
+        # Convert agent_env_actions into block type, position and orientation
         block_type_i, orientation, grid_x, grid_y, grid_z = agent_env_actions
+
+        # Get block type as specified in BLOCK_DEFINITIONS dictionary
         block_type = list(BLOCK_DEFINITIONS.keys())[block_type_i]
 
+        # Based on grid position and orientation, determine cells occupied in the grid
         if orientation == 0:
             grid_position = np.array([grid_x,grid_y,grid_z])
             occupied_cells = grid_position + BLOCK_DEFINITIONS[block_type]['o0_cells']
@@ -269,6 +274,7 @@ class BlockTrainingEnvironment(object):
             grid_position = np.array([grid_x,grid_y,grid_z])
             occupied_cells = grid_position + BLOCK_DEFINITIONS[block_type]['o1_cells']
 
+        # Store actions into a dictionary
         actions = {
             "block_type": block_type,
             "block_type_i": block_type_i,
@@ -277,6 +283,7 @@ class BlockTrainingEnvironment(object):
             "occupied_cells": occupied_cells
         }
 
+        # Log lastest block
         self.log["latest_block"] = {
             "block_type": block_type,
             "x": int(grid_x),
@@ -284,41 +291,59 @@ class BlockTrainingEnvironment(object):
             "z": int(grid_z),
             "orientation": int(orientation),
         }
-    
 
+        # Check for conflicts between agent's proposed block and existing blocks in BlockTrainingEnvironment
         if (self.no_block_conflict(actions)):
             # print(f'Agent places {block_type} block at {grid_position}, orientation={orientation}')
+
+            # If there are no conflicts, BlockTrainingEnvironment also adds a block in a valid location
             next_state = self.add_block(actions)
         else:
+            # If there is a conflict with existing blocks
+
+            # Environment state remains unchanged
             next_state = self.state
 
+            # Take difference between target voxel grid cells and current grid cells occupied
             diff_tensor = self.target_vox_tensor - self.grid_tensor
 
+            # Set reward to the block conflict penalty (should be >> typical +reward or -incorrect_penalties)
             block_conflict_penalty = -1000*self.incorrect_penalty
 
+            # Log conflict
             self.log["block_conflict"] = True
 
+            # Print to output every 50 blocks by agent
             if self.block_seq_index % 50 == 0:
                 print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Reward = {self.reward:.2f}, Percent complete = {self.perc_complete*100:.2f}%')
-
+            
+            # Increment block index
             self.block_seq_index += 1
             
+            # Check if episode terminates
             self.terminal = self.determine_terminal(diff_tensor)
             
             return next_state, block_conflict_penalty, self.terminal
         
+        # Take difference between target voxel grid cells and current grid cells occupied
         diff_tensor = self.target_vox_tensor - self.grid_tensor
 
+        # Calculate reward based on how well occupied grid cells match target voxel grid cells.
         self.reward, self.perc_complete = self.calc_reward(diff_tensor)
         
+        # Log no conflict
         self.log["block_conflict"] = False
         
         # print(f'Reward = {reward}')
+
+        # Print to output every 50 blocks by agent
         if self.block_seq_index % 50 == 0:
             print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Reward = {self.reward:.2f}, Percent complete = {self.perc_complete*100:.2f}%')
 
+        # Increment block index
         self.block_seq_index += 1
 
+        # Check if episode terminates
         self.terminal = self.determine_terminal(diff_tensor)
 
         return next_state, self.reward, self.terminal
