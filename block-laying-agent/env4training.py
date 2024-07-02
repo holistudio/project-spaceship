@@ -111,6 +111,17 @@ class BlockTrainingEnvironment(object):
         }
 
     def load_vox_model(self, vox_file):
+        """
+        Parameter:
+        vox_file - Filepath for the voxel model from ShapeNet
+
+        Returns: 
+        target_vox_tensor - Tensor of target voxel model, only specifying whether a grid cell is filled/unfilled
+        sum_filled - Total number of cells in the grid filled in by the target voxel model
+        sum_unfilled - Total number of cellsin the grid unfilled in by the target voxel model
+        """
+
+        # Load voxel model using binvox_rw library
         with open(vox_file, 'rb') as f:
             print('=LOADING VOXEL MODEL=')
             exp_vox = binvox_rw.read_as_3d_array(f) # Expected voxels object
@@ -119,6 +130,7 @@ class BlockTrainingEnvironment(object):
         scale_down_factor = 2
         max_x, max_y, max_z = exp_vox.data.shape
 
+        # Initialize target voxel tensor based on the voxel model and scale_down_factor
         s = scale_down_factor
         x = 0
         vx = 0
@@ -143,12 +155,14 @@ class BlockTrainingEnvironment(object):
             x += scale_down_factor
             vx += 1
 
+        # Calculate how many grid cells are filled/unfilled by voxel model
         fill_mask = (target_vox_tensor == 1)
         sum_filled = torch.sum(fill_mask).item()
 
         unfill_mask = (target_vox_tensor == 0)
         sum_unfilled = torch.sum(unfill_mask).item()
 
+        # Output target model voxel properties
         # print(NUM_X*NUM_Y*NUM_Z)
         print(f'Total Filled Cells = {sum_filled}')
         # print(sum_unfilled)
