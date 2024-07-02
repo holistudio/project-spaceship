@@ -77,10 +77,12 @@ class BlockTrainingEnvironment(object):
         self.ShapeNetID = 0
         self.vox_file = ''
         
+        # TODO: Consider removing __init__() lines if reset() function below takes care of similar things
+
         # Load voxel model
         self.target_vox_tensor, self.sum_filled, self.sum_unfilled = torch.zeros((NUM_X,NUM_Y,NUM_Z), dtype=torch.long, device=device), 0, 0
 
-        # Initialize state
+        # Initialize state with -1s representing blank cells
         self.state = torch.ones((BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long, device=device) * -1
 
         # First dimension across the entire state tensor set to ShapeNetID
@@ -170,28 +172,41 @@ class BlockTrainingEnvironment(object):
         return target_vox_tensor, sum_filled, sum_unfilled
 
     def reset(self):
+        """
+        Reset BlockTrainingEnvironment with new target voxel model from ShapeNet
+        Returns: state, reward, terminal
+        """
+
+        # Re-initialize
         self.__init__()
+
+        # Randomly select a ShapeNetID
         select_ID = np.random.randint(0,len(ShapeNetIDs))
         # ShapeNetID as integer
         self.ShapeNetID = int(ShapeNetIDs[select_ID])
+        # Select corresponding voxel model filepath
         self.vox_file = vox_files[select_ID]
         
         # Load voxel model
         self.target_vox_tensor, self.sum_filled, self.sum_unfilled = self.load_vox_model(self.vox_file)
 
-        # Initialize state
+        # Initialize state with -1s representing blank cells
         self.state = torch.ones((BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long, device=device) * -1
-        # state = torch.randint(low=-1, high=40, size=(BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long)
         self.state[0,:,:,:] = self.ShapeNetID
 
         # Account for target tensor in state as "extra-important missing cells"
         self.state[2:5,:,:,:] = self.state[2:5,:,:,:] - 9*self.target_vox_tensor # x,y,z values only
 
+        # Reward/penalty system
         self.correct_score = 10/self.sum_filled
         self.blank_score = 0.01*self.correct_score
         self.incorrect_penalty = 10*self.correct_score
+
+        # Track percent complete and terminal
         self.perc_complete = 0
         self.terminal = False
+
+        # Calculate max possible reward based on the target voxel model
         max_reward = (self.correct_score * self.sum_filled) + self.blank_score * self.sum_unfilled
         print(f'Max Reward = {max_reward:.2f}')
         print()
