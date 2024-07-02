@@ -82,21 +82,29 @@ class BlockTrainingEnvironment(object):
 
         # Initialize state
         self.state = torch.ones((BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long, device=device) * -1
-        # state = torch.randint(low=-1, high=40, size=(BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long)
+
+        # First dimension across the entire state tensor set to ShapeNetID
         self.state[0,:,:,:] = self.ShapeNetID
 
-        self.grid_tensor = torch.zeros(self.grid_sizes, dtype=torch.long, device=device) # just tracks which cells are occupied
+        # Initialize tensor for tracking which grid cells are occupied
+        self.grid_tensor = torch.zeros(self.grid_sizes, dtype=torch.long, device=device) 
 
+        # Initialize index tracking how many blocks have been attempted by Agent
         self.block_seq_index = 0
 
+        # Initialize reward
         self.reward = 0
+
+        # Reward/penalty system
         self.correct_score = 1
         self.blank_score = 0.1*self.correct_score
         self.incorrect_penalty = self.correct_score
 
+        # Track percent complete and terminal
         self.perc_complete = 0
         self.terminal = False
 
+        # Initialize log
         self.log = {
             "latest_block": {},
             "block_conflict": False,
