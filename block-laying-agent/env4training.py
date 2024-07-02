@@ -249,8 +249,17 @@ class BlockTrainingEnvironment(object):
             return True
         return False
 
-    def step(self, env_actions):
-        block_type_i, orientation, grid_x, grid_y, grid_z = env_actions
+    def step(self, agent_env_actions):
+        """
+        Parameter:
+        agent_env_actions - Agent's actions for placing a block specified in a tuple easy for the BlockEnvironment to easily interpret
+
+        Returns: 
+        next_state - next state of BlockEnvironment
+        reward - Calculated reward
+        terminal - if episode should terminate or not
+        """
+        block_type_i, orientation, grid_x, grid_y, grid_z = agent_env_actions
         block_type = list(BLOCK_DEFINITIONS.keys())[block_type_i]
 
         if orientation == 0:
