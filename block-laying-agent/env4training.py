@@ -288,14 +288,34 @@ class BlockTrainingEnvironment(object):
         return self.state
 
     def calc_reward(self, diff_tensor):
+        """
+        Calculates the reward based on the difference between the target voxel model's grid cells and current grid cells occupied
+
+        Parameters:
+        diff_tensor - tensor of same shape as the 3D grid, containing 0s, 1s, and -1s signifying matches with target voxel model
+
+        Returns:
+        rew - agent reward calculated by environment
+        perc_complete - Percent completion of the model based on number of correctly filled cells / total number of filled cells in target voxel model
+        """
         rew = 0
         
         # value of 0 means either true positive (block where should be a block) or true negative (blank where should be blank)
         zero_indices = torch.nonzero(diff_tensor == 0)
+
+        # Filter the target voxel model tensor to focus only on cells where current grid matches target voxel model grid cells
         target_values = self.target_vox_tensor[zero_indices[:, 0], zero_indices[:, 1], zero_indices[:, 2]]
+
+        # Mask identifying grid cells are supposed to be filled (not blank) based on target voxel model
         fill_mask = (target_values == 1)
+
+        # Tally up correctly filled cells
         n_fill = torch.sum(fill_mask).item()
+
+        # Tally up correct unfilled/blank cells
         n_empty = len(zero_indices) - n_fill
+
+        # Assign rewards based on correctly filled, correctly blank cells
         rew += n_fill * self.correct_score
         rew += n_empty * self.blank_score
 
@@ -309,6 +329,7 @@ class BlockTrainingEnvironment(object):
         n_fn = torch.sum(pos_1_mask).item()
         rew -= n_fn * self.incorrect_penalty
 
+        # Calculate percent complete
         perc_complete = n_fill/self.sum_filled
         return rew, perc_complete
 
