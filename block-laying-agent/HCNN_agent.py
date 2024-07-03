@@ -6,7 +6,6 @@ import numpy as np
 import os
 import random
 import math
-import copy
 from collections import namedtuple, deque
 
 DIR = os.path.join('results', 'HCNN')
@@ -24,6 +23,8 @@ GAMMA = 0.99
 TAU = 0.005
 
 UPDATE_TARGET_EP = 5
+
+torch.manual_seed(1337)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -77,6 +78,18 @@ class HCNN_DQN(nn.Module):
             nn.Dropout(dropout),
         )
 
+        self.apply(self._init_weights)
+    
+    def _init_weights(self, module):
+        if isinstance(module, nn.Linear):
+            torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
+            if module.bias is not None:
+                torch.nn.init.zeros_(module.bias)
+        elif isinstance(module, torch.nn.Conv3d):
+            torch.nn.init.xavier_uniform_(module.weight)
+            if module.bias is not None:
+                torch.nn.init.constant_(module.bias, 0)
+
     def forward(self, x):
         (N, C, D, H, W) = x.shape
         out_high = self.conv_high(x)
@@ -101,7 +114,7 @@ class CNNAgent(object):
         self.episode = 0
         self.steps_done = 0
 
-        self.memory = ReplayMemory(capacity=10000)
+        self.memory = ReplayMemory(capacity=1000)
         self.optimizer = torch.optim.AdamW(self.policy_net.parameters(), lr=LR, amsgrad=True)
 
         self.log = {
@@ -192,13 +205,13 @@ class CNNAgent(object):
         non_final_mask = torch.tensor(tuple(map(lambda s: s is not None,
                                             batch.next_state)), device=device, dtype=torch.bool)
         non_final_next_states = torch.cat([s for s in batch.next_state
-                                                    if s is not None])
+                                                    if s is not None]).to(device)
         non_final_batches = non_final_next_states.shape[0]
         
         # print('Make batches')
-        state_batch = torch.cat(batch.state)
-        action_batch = torch.cat(batch.action)
-        reward_batch = torch.cat(batch.reward)
+        state_batch = torch.cat(batch.state).to(device)
+        action_batch = torch.cat(batch.action).to(device)
+        reward_batch = torch.cat(batch.reward).to(device)
 
         # print('Compute state_action_values')
         # Compute Q(s_t, a) - the model computes Q(s_t), then we select the
@@ -285,17 +298,17 @@ class CNNAgent(object):
             target_net_state_dict[key] = policy_net_state_dict[key]*TAU + target_net_state_dict[key]*(1-TAU)
         self.target_net.load_state_dict(target_net_state_dict)
     
-    def update_experience(self, state,agent_actions,next_state,reward,terminal):
-        state = state.unsqueeze(0).float()
+    def update_experience(self, state, agent_actions, next_state, reward, terminal):
+        state = state.unsqueeze(0).float().cpu().detach().clone()
 
         if terminal:
             next_state = None
         else:
-            next_state = next_state.unsqueeze(0).float()
-        reward = torch.tensor([reward], device=device)
+            next_state = next_state.unsqueeze(0).float().cpu().detach().clone()
+        reward = torch.tensor([reward]).cpu()
 
         # print('AGENT pushes to MEMORY')
-        self.memory.push(state, agent_actions, next_state, reward)
+        self.memory.push(state, agent_actions.cpu().detach().clone(), next_state, reward)
 
         # print('AGENT OPTIMIZES')
         loss = self.optimize_model()
@@ -318,7 +331,7 @@ class CNNAgent(object):
             'policy_state_dict': self.policy_net.state_dict(),
             'target_state_dict': self.target_net.state_dict(),
             'optimizer_state_dict': self.optimizer.state_dict(),
-            'replay_memory': copy.deepcopy(self.memory),
+            'replay_memory': self.memory,
             'loss': loss,
             'batch_size': BATCH_SIZE,
             'eps_start': EPS_START,

@@ -1,12 +1,13 @@
 import os
 import json
 import copy
+import datetime
 
-import HCNN_agent as Agent
+import CNN_agent as Agent
 import env4training as Env
 
 NUM_EPISODES = 1
-DIR = os.path.join('results', 'HCNN')
+DIR = os.path.join('results', 'CNN')
 
 LOAD_CHECKPOINT = False
 
@@ -34,10 +35,14 @@ def log_everything(e, block, env_log, agent_log, loss, reward, terminal):
     log["record"].append(event)
 
 episode = 0
+start_block = 0
+check_block = 50
 
 if LOAD_CHECKPOINT:
     agent.load_checkpoint()
     episode = agent.episode + 1
+
+start_time = datetime.datetime.now()
 
 for ep in range(NUM_EPISODES):
     episode = episode + ep
@@ -56,28 +61,33 @@ for ep in range(NUM_EPISODES):
         # print('AGENT updates EXP')
         loss = agent.update_experience(state,agent_actions,next_state,reward,terminal)
 
-        log_everything(episode, env.block_seq_index-1, env.log, agent.log, loss, reward, terminal)
+        log_everything(episode, env.block_seq_index, env.log, agent.log, loss, reward, terminal)
 
-        if (env.block_seq_index-1) % 50 == 0:
+        # print(env.block_seq_index)
+        if ((env.block_seq_index+1) >= check_block) or terminal:
+            print(f'{datetime.datetime.now()}, Block {env.block_seq_index}, Reward = {reward:.2f}, Percent complete = {env.perc_complete*100:.2f}%')
+            # print('!!!!SAVE!!!!')
             agent.save_checkpoint(loss)
-        
+            log_file = os.path.join(DIR,f'episode_{episode}_blocks_{start_block}-{env.block_seq_index}_log.json')
+            start_block = env.block_seq_index+1
+            check_block += check_block
+
+            with open(log_file, 'w') as f:
+                # print("Saving log...")
+                # print()
+                # print()
+                json.dump(log, f)
+
+            # Clear log
+            log = {
+                "record":[]
+            }
+            
         state = next_state
     
     print(f'==END EPISODE {episode}==')
+    print(f'TIME ELAPSED: {datetime.datetime.now() - start_time}')
     print()
     print()
 
-    agent.update_policy(episode+1)
-
-    log_file = os.path.join(DIR,f'episode_{episode}_log.json')
-
-    with open(log_file, 'w') as f:
-        print("Saving log...")
-        print()
-        print()
-        json.dump(log, f)
-
-    # Clear log
-    log = {
-        "record":[]
-    }
+    agent.update_policy(episode+1)   
