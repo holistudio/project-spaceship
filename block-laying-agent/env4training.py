@@ -1,7 +1,8 @@
 import numpy as np
 import torch
 import binvox_rw
-import datetime
+import random
+import os
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f'Device: {device}')
@@ -61,10 +62,23 @@ BLOCK_DEFINITIONS = {
 }
 BLOCK_TYPES = len(BLOCK_DEFINITIONS.keys())
 
-ShapeNetIDs = ['02843684']
+ShapeNetIDs = ['04099429']
 # vox_files = ['model_normalized.solid.binvox']
 vox_files = ['model_normalized.surface.binvox']
 
+def get_random_folder(base_folder):
+    # List all entries in the base folder
+    entries = os.listdir(base_folder)
+    
+    # Filter out entries that are not directories
+    directories = [entry for entry in entries if os.path.isdir(os.path.join(base_folder, entry))]
+    
+    # Select a random directory
+    if directories:
+        return random.choice(directories)
+    else:
+        return None
+    
 class BlockTrainingEnvironment(object):
     def __init__(self, reset=False):
         super().__init__()
@@ -116,12 +130,14 @@ class BlockTrainingEnvironment(object):
         if reset:
             # Randomly select a ShapeNetID
             select_ID = np.random.randint(0,len(ShapeNetIDs))
-            
+
             # ShapeNetID as integer
             self.ShapeNetID = int(ShapeNetIDs[select_ID])
             
             # Select corresponding voxel model filepath
-            self.vox_file = vox_files[select_ID]
+            shape_dir = os.path.join('target_models',str(ShapeNetIDs[select_ID]))
+            model_dir = os.path.join(shape_dir,get_random_folder(shape_dir))
+            self.vox_file = os.path.join(model_dir,'models','model_normalized.surface.binvox')
             
             # Load voxel model
             self.target_vox_tensor, self.sum_filled, self.sum_unfilled = self.load_vox_model(self.vox_file)
