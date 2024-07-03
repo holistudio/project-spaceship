@@ -66,7 +66,7 @@ ShapeNetIDs = ['02843684']
 vox_files = ['model_normalized.surface.binvox']
 
 class BlockTrainingEnvironment(object):
-    def __init__(self):
+    def __init__(self, reset=False):
         super().__init__()
         self.grid_sizes=GRID_SIZES
         self.num_orient=NUM_ORIENTATION
@@ -77,16 +77,8 @@ class BlockTrainingEnvironment(object):
         self.ShapeNetID = 0
         self.vox_file = ''
         
-        # TODO: Consider removing __init__() lines if reset() function below takes care of similar things
-
-        # Load voxel model
-        self.target_vox_tensor, self.sum_filled, self.sum_unfilled = torch.zeros((NUM_X,NUM_Y,NUM_Z), dtype=torch.long, device=device), 0, 0
-
         # Initialize state with -1s representing blank cells
         self.state = torch.ones((BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long, device=device) * -1
-
-        # First dimension across the entire state tensor set to ShapeNetID
-        self.state[0,:,:,:] = self.ShapeNetID
 
         # Initialize tensor for tracking which grid cells are occupied
         self.grid_tensor = torch.zeros(self.grid_sizes, dtype=torch.long, device=device) 
@@ -96,11 +88,6 @@ class BlockTrainingEnvironment(object):
 
         # Initialize reward
         self.reward = 0
-
-        # Reward/penalty system
-        self.correct_score = 1
-        self.blank_score = 0.1*self.correct_score
-        self.incorrect_penalty = self.correct_score
 
         # Track percent complete and terminal
         self.perc_complete = 0
@@ -125,6 +112,35 @@ class BlockTrainingEnvironment(object):
                 "block_conflict": False,
             },
         }
+
+        if reset:
+            # Randomly select a ShapeNetID
+            select_ID = np.random.randint(0,len(ShapeNetIDs))
+            
+            # ShapeNetID as integer
+            self.ShapeNetID = int(ShapeNetIDs[select_ID])
+            
+            # Select corresponding voxel model filepath
+            self.vox_file = vox_files[select_ID]
+            
+            # Load voxel model
+            self.target_vox_tensor, self.sum_filled, self.sum_unfilled = self.load_vox_model(self.vox_file)
+            
+            # First dimension across the entire state tensor set to ShapeNetID
+            self.state[0,:,:,:] = self.ShapeNetID
+            
+            # Account for target tensor in state as "extra-important missing cells"
+            self.state[2:5,:,:,:] = self.state[2:5,:,:,:] - 9*self.target_vox_tensor # x,y,z values only
+
+            # Reward/penalty system
+            self.correct_score = 10/self.sum_filled
+            self.blank_score = 0.01*self.correct_score
+            self.incorrect_penalty = 10*self.correct_score
+
+            # Calculate max possible reward based on the target voxel model
+            max_reward = (self.correct_score * self.sum_filled) + self.blank_score * self.sum_unfilled
+            print(f'Max Reward = {max_reward:.2f}')
+            print()
 
     def load_vox_model(self, vox_file):
         """
@@ -192,58 +208,8 @@ class BlockTrainingEnvironment(object):
         """
 
         # Re-initialize
-        self.__init__()
-
-        # Randomly select a ShapeNetID
-        select_ID = np.random.randint(0,len(ShapeNetIDs))
-        # ShapeNetID as integer
-        self.ShapeNetID = int(ShapeNetIDs[select_ID])
-        # Select corresponding voxel model filepath
-        self.vox_file = vox_files[select_ID]
+        self.__init__(reset=True)
         
-        # Load voxel model
-        self.target_vox_tensor, self.sum_filled, self.sum_unfilled = self.load_vox_model(self.vox_file)
-
-        # Initialize state with -1s representing blank cells
-        self.state = torch.ones((BLOCK_INFO,NUM_X,NUM_Y,NUM_Z), dtype=torch.long, device=device) * -1
-        self.state[0,:,:,:] = self.ShapeNetID
-
-        # Account for target tensor in state as "extra-important missing cells"
-        self.state[2:5,:,:,:] = self.state[2:5,:,:,:] - 9*self.target_vox_tensor # x,y,z values only
-
-        # Reward/penalty system
-        self.correct_score = 10/self.sum_filled
-        self.blank_score = 0.01*self.correct_score
-        self.incorrect_penalty = 10*self.correct_score
-
-        # Track percent complete and terminal
-        self.perc_complete = 0
-        self.terminal = False
-
-        # Calculate max possible reward based on the target voxel model
-        max_reward = (self.correct_score * self.sum_filled) + self.blank_score * self.sum_unfilled
-        print(f'Max Reward = {max_reward:.2f}')
-        print()
-
-        # Initialize log
-        self.log = {
-            "latest_agent_block": {
-                "block_type": "None",
-                "x": -1,
-                "y": -1,
-                "z": -1,
-                "orientation": -1,
-                "block_conflict": False,
-            },
-            "latest_env_block": {
-                "block_type": "None",
-                "x": -1,
-                "y": -1,
-                "z": -1,
-                "orientation": -1,
-                "block_conflict": False,
-            },
-        }
         return self.state, self.reward, self.terminal
 
     def no_block_conflict(self, actions):
@@ -359,7 +325,7 @@ class BlockTrainingEnvironment(object):
                 "occupied_cells": occupied_cells,
                 "author": "environment"
             }
-            
+
             # Calculate the reward before this block is placed
             # for later comparisons
             grid_tensor_copy = self.grid_tensor.clone().cpu()
