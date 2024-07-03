@@ -126,6 +126,9 @@ class BlockTrainingEnvironment(object):
             # Load voxel model
             self.target_vox_tensor, self.sum_filled, self.sum_unfilled = self.load_vox_model(self.vox_file)
             
+            # Take difference between target voxel grid cells and current grid cells occupied
+            self.diff_tensor = self.target_vox_tensor - self.grid_tensor
+
             # First dimension across the entire state tensor set to ShapeNetID
             self.state[0,:,:,:] = self.ShapeNetID
             
@@ -250,7 +253,8 @@ class BlockTrainingEnvironment(object):
 
     def add_block(self, actions):
         """
-        Adds action's block to the grid and updates the state tensor
+        Adds action's block to the grid and updates the state tensor.
+        Updates grid_tensor and diff_tensor accordingly
 
         Parameters:
         actions - dictionary containing attributes of the block
@@ -273,6 +277,8 @@ class BlockTrainingEnvironment(object):
                                                 actions['orientation'], self.block_seq_index], dtype=torch.long, device=device)
             self.grid_tensor[x,y,z] = 1
         
+        # Take difference between target voxel grid cells and current grid cells occupied
+        self.diff_tensor = self.target_vox_tensor - self.grid_tensor
         return self.state
     
     def env_add_block(self):
@@ -493,17 +499,27 @@ class BlockTrainingEnvironment(object):
             # If there are no conflicts, BlockTrainingEnvironment adds agent block to the grid
             next_state = self.add_block(actions)
             self.block_seq_index += 1
+
+            # Environment adds a block in a random valid location
+            next_state = self.env_add_block()
+            self.block_seq_index += 1
+
+            # Calculate reward based on how well occupied grid cells match target voxel grid cells.
+            self.reward, self.perc_complete = self.calc_reward(self.diff_tensor)
+
+            # Log no conflict for agent block
+            self.log["latest_agent_block"]["block_conflict"] = False
         else:
             # If there is a conflict with existing blocks
+            # Increment block index
+            self.block_seq_index += 1
 
             # Environment state remains unchanged
             next_state = self.state
-
-            # Take difference between target voxel grid cells and current grid cells occupied
-            diff_tensor = self.target_vox_tensor - self.grid_tensor
+            # self.grid_tensor, diff_tensor, and perc_complete remain unchanged as well
 
             # Set reward to the block conflict penalty (should be >> typical +reward or -incorrect_penalties)
-            block_conflict_penalty = -1000*self.incorrect_penalty
+            self.reward = -1000*self.incorrect_penalty
 
             # Log conflict
             self.log["latest_agent_block"]["block_conflict"] = True
@@ -516,43 +532,12 @@ class BlockTrainingEnvironment(object):
                 "orientation": -1,
                 "block_conflict": False,
             }
-            
-            # Print to output every 50 blocks by agent
-            if self.block_seq_index % 50 == 0:
-                print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Reward = {self.reward:.2f}, Percent complete = {self.perc_complete*100:.2f}%')
-            
-            # Increment block index
-            self.block_seq_index += 1
-            
-            # Check if episode terminates
-            self.terminal = self.determine_terminal(diff_tensor, self.perc_complete)
-            
-            self.block_seq_index += 1
-            return next_state, block_conflict_penalty, self.terminal
         
-        # Environment adds a block in a random valid location
-        next_state = self.env_add_block()
-        self.block_seq_index += 1
-    
-        # Take difference between target voxel grid cells and current grid cells occupied
-        diff_tensor = self.target_vox_tensor - self.grid_tensor
-
-        # Calculate reward based on how well occupied grid cells match target voxel grid cells.
-        self.reward, self.perc_complete = self.calc_reward(diff_tensor)
-        
-        # Log no conflict for agent block
-        self.log["latest_agent_block"]["block_conflict"] = False
-        
-        # print(f'Reward = {reward}')
-
         # Print to output every 50 blocks by agent
         if self.block_seq_index % 50 == 0:
             print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Reward = {self.reward:.2f}, Percent complete = {self.perc_complete*100:.2f}%')
 
-        # Increment block index
-        self.block_seq_index += 1
-
         # Check if episode terminates
-        self.terminal = self.determine_terminal(diff_tensor, self.perc_complete)
+        self.terminal = self.determine_terminal(self.diff_tensor, self.perc_complete)
         
         return next_state, self.reward, self.terminal
