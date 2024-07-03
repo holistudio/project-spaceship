@@ -6,7 +6,7 @@ import datetime
 import CNN_agent as Agent
 import env4training as Env
 
-NUM_EPISODES = 1
+NUM_EPISODES = 2
 DIR = os.path.join('results', 'CNN')
 
 LOAD_CHECKPOINT = False
@@ -46,11 +46,11 @@ start_time = datetime.datetime.now()
 
 for ep in range(NUM_EPISODES):
     episode = episode + ep
-    print(f'==EPISODE {episode}==')
+    print(f'===== EPISODE {episode} =====')
 
     state, reward, terminal = env.reset()
     
-    print('=PLACING BLOCKS=')
+    print('= PLACING BLOCKS =')
     while not terminal:
         # print('AGENT selects ACTION')
         agent_actions, env_actions = agent.select_actions(state)
@@ -85,8 +85,9 @@ for ep in range(NUM_EPISODES):
             
         state = next_state
     
-    print(f'==END EPISODE {episode}==')
+    print()
     print(f'TIME ELAPSED: {datetime.datetime.now() - start_time}')
+    print(f'===== END EPISODE {episode} =====')
     print()
     print()
 

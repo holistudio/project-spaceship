@@ -155,7 +155,7 @@ class BlockTrainingEnvironment(object):
 
         # Load voxel model using binvox_rw library
         with open(vox_file, 'rb') as f:
-            print('=LOADING VOXEL MODEL=')
+            print('== LOADING VOXEL MODEL ==')
             exp_vox = binvox_rw.read_as_3d_array(f) # Expected voxels object
 
         # Scale down the voxel model and generate a target voxel tensor
@@ -209,7 +209,7 @@ class BlockTrainingEnvironment(object):
 
         # Re-initialize
         self.__init__(reset=True)
-        
+
         return self.state, self.reward, self.terminal
 
     def no_block_conflict(self, actions):
@@ -428,10 +428,10 @@ class BlockTrainingEnvironment(object):
             return True
         
         # If number of attempts exceed 100 blocks
-        # if self.block_seq_index > 100:
+        if self.block_seq_index > 100:
 
         # If number of attempts exceed the total number of filled cells for the target voxel model
-        if self.block_seq_index > self.sum_filled:
+        # if self.block_seq_index > self.sum_filled:
             print('! Number of moves exceeded !')
             return True
         
