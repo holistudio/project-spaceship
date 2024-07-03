@@ -491,7 +491,6 @@ class BlockTrainingEnvironment(object):
             "block_conflict": False
         }
 
-        # TODO: Re-think structure of if statements and code outside if-else sections
         # Check for conflicts between agent's proposed block and existing blocks in BlockTrainingEnvironment
         if (self.no_block_conflict(actions)):
             # print(f'Agent places {block_type} block at {grid_position}, orientation={orientation}')
@@ -532,10 +531,6 @@ class BlockTrainingEnvironment(object):
                 "orientation": -1,
                 "block_conflict": False,
             }
-        
-        # Print to output every 50 blocks by agent
-        if self.block_seq_index % 50 == 0:
-            print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Reward = {self.reward:.2f}, Percent complete = {self.perc_complete*100:.2f}%')
 
         # Check if episode terminates
         self.terminal = self.determine_terminal(self.diff_tensor, self.perc_complete)
