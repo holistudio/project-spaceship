@@ -362,7 +362,7 @@ class BlockTrainingEnvironment(object):
     def step(self, agent_env_actions):
         """
         BlockTrainingEnvironment one step forward.
-        
+
         Parameters:
         agent_env_actions - Agent's actions for placing a block specified in a tuple easy for the BlockTrainingEnvironment to easily interpret
 
@@ -386,7 +386,7 @@ class BlockTrainingEnvironment(object):
             grid_position = np.array([grid_x,grid_y,grid_z])
             occupied_cells = grid_position + BLOCK_DEFINITIONS[block_type]['o1_cells']
 
-        # Store actions into a dictionary
+        # Store agent block actions into a dictionary
         actions = {
             "block_type": block_type,
             "block_type_i": block_type_i,
@@ -408,7 +408,7 @@ class BlockTrainingEnvironment(object):
         if (self.no_block_conflict(actions)):
             # print(f'Agent places {block_type} block at {grid_position}, orientation={orientation}')
 
-            # If there are no conflicts, BlockTrainingEnvironment also adds a block in a valid location
+            # If there are no conflicts, BlockTrainingEnvironment adds agent block to the grid
             next_state = self.add_block(actions)
         else:
             # If there is a conflict with existing blocks
