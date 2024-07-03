@@ -108,8 +108,22 @@ class BlockTrainingEnvironment(object):
 
         # Initialize log
         self.log = {
-            "latest_block": {},
-            "block_conflict": False,
+            "latest_agent_block": {
+                "block_type": "None",
+                "x": -1,
+                "y": -1,
+                "z": -1,
+                "orientation": -1,
+                "block_conflict": False,
+            },
+            "latest_env_block": {
+                "block_type": "None",
+                "x": -1,
+                "y": -1,
+                "z": -1,
+                "orientation": -1,
+                "block_conflict": False,
+            },
         }
 
     def load_vox_model(self, vox_file):
@@ -213,14 +227,22 @@ class BlockTrainingEnvironment(object):
 
         # Initialize log
         self.log = {
-            "latest_block": {
+            "latest_agent_block": {
                 "block_type": "None",
                 "x": -1,
                 "y": -1,
                 "z": -1,
                 "orientation": -1,
+                "block_conflict": False,
             },
-            "block_conflict": False,
+            "latest_env_block": {
+                "block_type": "None",
+                "x": -1,
+                "y": -1,
+                "z": -1,
+                "orientation": -1,
+                "block_conflict": False,
+            },
         }
         return self.state, self.reward, self.terminal
 
@@ -334,9 +356,10 @@ class BlockTrainingEnvironment(object):
                 "block_type_i": block_type_i,
                 "grid_position": grid_position,
                 "orientation": orientation,
-                "occupied_cells": occupied_cells
+                "occupied_cells": occupied_cells,
+                "author": "environment"
             }
-
+            
             # Calculate the reward before this block is placed
             # for later comparisons
             grid_tensor_copy = self.grid_tensor.clone().cpu()
@@ -363,6 +386,16 @@ class BlockTrainingEnvironment(object):
                     valid_action = True
         
         # Environment adds a new block in random valid position
+        # Log latest block by environment
+        self.log["latest_env_block"] = {
+            "block_type": block_type,
+            "x": int(grid_x),
+            "y": int(grid_y),
+            "z": int(grid_z),
+            "orientation": int(orientation),
+            "block_conflict": False
+        }
+
         return self.add_block(env_actions)
 
     def calc_reward(self, diff_tensor):
@@ -472,16 +505,18 @@ class BlockTrainingEnvironment(object):
             "block_type_i": block_type_i,
             "grid_position": grid_position,
             "orientation": orientation,
-            "occupied_cells": occupied_cells
+            "occupied_cells": occupied_cells,
+            "author": "agent"
         }
 
-        # Log lastest block
-        self.log["latest_block"] = {
+        # Log latest block by agent
+        self.log["latest_agent_block"] = {
             "block_type": block_type,
             "x": int(grid_x),
             "y": int(grid_y),
             "z": int(grid_z),
             "orientation": int(orientation),
+            "block_conflict": False
         }
 
         # TODO: Re-think structure of if statements and code outside if-else sections
@@ -505,7 +540,16 @@ class BlockTrainingEnvironment(object):
             block_conflict_penalty = -1000*self.incorrect_penalty
 
             # Log conflict
-            self.log["block_conflict"] = True
+            self.log["latest_agent_block"]["block_conflict"] = True
+            # Environment doesn't add a block so log default values for env_block
+            self.log["latest_env_block"] = {
+                "block_type": "None",
+                "x": -1,
+                "y": -1,
+                "z": -1,
+                "orientation": -1,
+                "block_conflict": False,
+            }
             
             # Print to output every 50 blocks by agent
             if self.block_seq_index % 50 == 0:
@@ -530,8 +574,8 @@ class BlockTrainingEnvironment(object):
         # Calculate reward based on how well occupied grid cells match target voxel grid cells.
         self.reward, self.perc_complete = self.calc_reward(diff_tensor)
         
-        # Log no conflict
-        self.log["block_conflict"] = False
+        # Log no conflict for agent block
+        self.log["latest_agent_block"]["block_conflict"] = False
         
         # print(f'Reward = {reward}')
 
