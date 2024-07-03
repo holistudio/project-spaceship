@@ -261,14 +261,30 @@ class BlockTrainingEnvironment(object):
         return True
 
     def add_block(self, actions):
+        """
+        Adds action's block to the grid and updates the state tensor
+
+        Parameters:
+        actions - dictionary containing attributes of the block
+
+        Returns:
+        state - tensor used by agent for selecting the next action/block
+        """
+
+        # Get grid position of the block
         pos_x, pos_y, pos_z = actions["grid_position"]
+
+        # Get occupied cells of the block
         occupied_cells = actions['occupied_cells']
         n_cells, _ = occupied_cells.shape
+
+        # Loop through occupied cells and update state tensor
         for i in range(n_cells):
             x,y,z = list(occupied_cells[i])
             self.state[:,x,y,z] = torch.tensor([self.ShapeNetID, actions["block_type_i"], pos_x, pos_y, pos_z,
                                                 actions['orientation'], self.block_seq_index], dtype=torch.long, device=device)
             self.grid_tensor[x,y,z] = 1
+        
         return self.state
 
     def calc_reward(self, diff_tensor):
@@ -307,7 +323,7 @@ class BlockTrainingEnvironment(object):
 
     def step(self, agent_env_actions):
         """
-        Parameter:
+        Parameters:
         agent_env_actions - Agent's actions for placing a block specified in a tuple easy for the BlockTrainingEnvironment to easily interpret
 
         Returns: 
