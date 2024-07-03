@@ -334,12 +334,29 @@ class BlockTrainingEnvironment(object):
         return rew, perc_complete
 
     def determine_terminal(self, diff_tensor):
+        """
+        Check if episode should terminate, either because the blocks complete the model or the number of attempts have exceeded a limit.
+
+        Parameters:
+        diff_tensor - tensor of same shape as the 3D grid, containing 0s, 1s, and -1s signifying matches with target voxel model
+
+        Returns:
+        True or False - depending on whether blocks complete the model or the number of attempts have exceeded a limit.
+        """
+
+        # If all filled and unfilled cells match the target model
         if torch.all(diff_tensor == 0):
             return True
+        
+        # If number of attempts exceed 100 blocks
         # if self.block_seq_index > 100:
+
+        # If number of attempts exceed the total number of filled cells for the target voxel model
         if self.block_seq_index > self.sum_filled:
             print('! Number of moves exceeded !')
             return True
+        
+        # Otherwise, episode continues
         return False
 
     def step(self, agent_env_actions):
