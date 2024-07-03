@@ -464,6 +464,7 @@ class BlockTrainingEnvironment(object):
             "orientation": int(orientation),
         }
 
+        # TODO: Re-think structure of if statements and code outside if-else sections
         # Check for conflicts between agent's proposed block and existing blocks in BlockTrainingEnvironment
         if (self.no_block_conflict(actions)):
             # print(f'Agent places {block_type} block at {grid_position}, orientation={orientation}')
@@ -499,6 +500,7 @@ class BlockTrainingEnvironment(object):
             self.block_seq_index += 1
             return next_state, block_conflict_penalty, self.terminal
         
+        # Environment adds a block in a random valid location
         next_state = self.env_add_block()
         self.block_seq_index += 1
     
