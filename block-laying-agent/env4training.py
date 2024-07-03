@@ -210,7 +210,8 @@ class BlockTrainingEnvironment(object):
         max_reward = (self.correct_score * self.sum_filled) + self.blank_score * self.sum_unfilled
         print(f'Max Reward = {max_reward:.2f}')
         print()
-        
+
+        # Initialize log
         self.log = {
             "latest_block": {
                 "block_type": "None",
@@ -224,19 +225,39 @@ class BlockTrainingEnvironment(object):
         return self.state, self.reward, self.terminal
 
     def no_block_conflict(self, actions):
+        """
+        Checks if an action's block conflicts with existing blocks on the grid or is out of bounds.
+
+        Parameters:
+        actions - dictionary containing the occupied_cells of the action's block
+
+        Returns:
+        True or False depending on if other grid cells are the same as occupied cells.
+        """
+
+        # Get grid cells to check
         check_cells = actions['occupied_cells']
         n_cells, _ = check_cells.shape
+
+        # Loop through all cells that would be occupied by action's block
         for i in range(n_cells):
+            # x,y,z grid position to check
             x,y,z = list(check_cells[i])
+
+            # Check if block cell is out of bounds
             if (x>=self.grid_sizes[0]) or (y>=self.grid_sizes[1]) or (z>=self.grid_sizes[2]):
                 # print(f'! Block Out of Bounds at {x,y,z} !')
                 return False
             if (x<0) or (y<0) or (z<0):
                 # print(f'! Block Out of Bounds at {x,y,z} !')
                 return False
+            
+            # Check if block cell is already occupied in the grid by another block
             if self.grid_tensor[x,y,z] == 1:
                 # print(f'! Block Conflict at {x,y,z} !')
                 return False
+        
+        # All checks pass for all grid cells of the action's block
         return True
 
     def add_block(self, actions):
