@@ -49,7 +49,8 @@ for ep in range(NUM_EPISODES):
     print(f'==EPISODE {episode}==')
 
     state, reward, terminal = env.reset()
-
+    
+    print('=PLACING BLOCKS=')
     while not terminal:
         # print('AGENT selects ACTION')
         agent_actions, env_actions = agent.select_actions(state)
