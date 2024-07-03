@@ -210,9 +210,7 @@ class BlockTrainingEnvironment(object):
         max_reward = (self.correct_score * self.sum_filled) + self.blank_score * self.sum_unfilled
         print(f'Max Reward = {max_reward:.2f}')
         print()
-
-        print('=PLACING BLOCKS=')
-
+        
         self.log = {
             "latest_block": {
                 "block_type": "None",
