@@ -361,6 +361,8 @@ class BlockTrainingEnvironment(object):
 
     def step(self, agent_env_actions):
         """
+        BlockTrainingEnvironment one step forward.
+        
         Parameters:
         agent_env_actions - Agent's actions for placing a block specified in a tuple easy for the BlockTrainingEnvironment to easily interpret
 
