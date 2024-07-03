@@ -288,26 +288,37 @@ class BlockTrainingEnvironment(object):
         return self.state
     
     def env_add_block(self):
+        """
+        Environment adds a block at a random but valid location (i.e., no conflicts, consistent with target voxel model)
+
+        Returns: Updated state for agent with the added block
+        """
         # print(f'{datetime.datetime.now()}, Block {self.block_seq_index}, Environment attempts to add another block...')
         valid_action = False
 
         while (not valid_action):
-            # select a random block type
+            # Select a random block type
             block_type_i = np.random.randint(0, BLOCK_TYPES)
             block_type = list(BLOCK_DEFINITIONS.keys())[block_type_i]
 
-            # select a random orientation
+            # Select a random orientation
             orientation = np.random.randint(0, 2)
 
-            # select a random location based on target_vox_tensor
+            # Select a random position based on target voxel model's grid cells
             # Create a mask tensor to identify cells containing the value 1
             mask = (self.target_vox_tensor == 1)
-            # Find indices where the mask is True
+
+            # Find indices corresponding to where a target voxel grid cell is filled 
             indices = torch.nonzero(mask)
-            # Randomly select one index from the list of indices
+
+            # Randomly select one index from the list of indices of filled target voxel grid cells
             selected_location = indices[torch.randint(0, indices.size(0), (1,))]
+
+            # Get x y z position of the grid cell at the random index
             grid_x, grid_y, grid_z = selected_location[0][0].item(), selected_location[0][1].item(), selected_location[0][2].item()
 
+            # Based on random block type, orientation, and position
+            # determine occupied cells of block
             if orientation == 0:
                 grid_position = np.array([grid_x,grid_y,grid_z])
                 occupied_cells = grid_position + BLOCK_DEFINITIONS[block_type]['o0_cells']
@@ -315,7 +326,9 @@ class BlockTrainingEnvironment(object):
                 grid_position = np.array([grid_x,grid_y,grid_z])
                 occupied_cells = grid_position + BLOCK_DEFINITIONS[block_type]['o1_cells']
 
-            # check if block is valid
+            # Check if random block is valid
+
+            # Create a dictionary defining the random block
             env_actions = {
                 "block_type": block_type,
                 "block_type_i": block_type_i,
@@ -324,25 +337,32 @@ class BlockTrainingEnvironment(object):
                 "occupied_cells": occupied_cells
             }
 
+            # Calculate the reward before this block is placed
+            # for later comparisons
             grid_tensor_copy = self.grid_tensor.clone().cpu()
             target_vox_tensor_copy = self.target_vox_tensor.clone().cpu()
-
             diff_tensor_before = target_vox_tensor_copy - grid_tensor_copy
-
             reward_before, _ = self.calc_reward(diff_tensor_before)
 
-            # a valid block added by environment should:
-            # - not conflict with existing blocks
-            # - result in an improvement in reward
+            # Check if valid block added by environment does not conflict with existing blocks
             if (self.no_block_conflict(env_actions)):
+                # Loop through the occupied cells of the random block
                 n_cells, _ = occupied_cells.shape
                 for i in range(n_cells):
                     x,y,z = list(occupied_cells[i])
                     grid_tensor_copy[x,y,z] = 1
+                
+                # Calculate the reward that results from this random block's placement
                 diff_tensor_after = target_vox_tensor_copy - grid_tensor_copy
                 reward_after, _ = self.calc_reward(diff_tensor_after)
+
+                # Check if valid block results in an increase in reward
                 if reward_after > reward_before:
+                    # Only break out of the while loop
+                    # if block has no conflicts and increases the reward
                     valid_action = True
+        
+        # Environment adds a new block in random valid position
         return self.add_block(env_actions)
 
     def calc_reward(self, diff_tensor):
