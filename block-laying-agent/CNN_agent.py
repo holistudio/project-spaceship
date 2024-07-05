@@ -14,7 +14,7 @@ PATH = os.path.join(DIR, 'CNN_checkpoint.tar')
 n_h = 32
 
 BATCH_SIZE = 32 # 128
-LR = 1e-4
+LR = 1e-3 # 3e-4
 
 EPS_START = 0.9
 EPS_END = 0.05
