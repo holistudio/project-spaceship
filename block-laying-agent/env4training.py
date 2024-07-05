@@ -348,23 +348,23 @@ class BlockTrainingEnvironment(object):
                 "author": "environment"
             }
 
-            # Calculate the reward before this block is placed
+            # Get the reward before this block is placed
             # for later comparisons
-            grid_tensor_copy = self.grid_tensor.clone().cpu()
-            target_vox_tensor_copy = self.target_vox_tensor.clone().cpu()
-            diff_tensor_before = target_vox_tensor_copy - grid_tensor_copy
             reward_before = self.reward
             print(f'ENV: Reward before placing possible env block={reward_before}')
 
             # Check if valid block added by environment does not conflict with existing blocks
             if (self.no_block_conflict(env_actions)):
+                # Copy grid cells for possible block addition
+                grid_tensor_copy = self.grid_tensor.clone().cpu()
                 # Loop through the occupied cells of the random block
                 n_cells, _ = occupied_cells.shape
                 for i in range(n_cells):
                     x,y,z = list(occupied_cells[i])
                     grid_tensor_copy[x,y,z] = 1
                 
-                # Calculate the reward that results from this random block's placement
+                # Calculate the reward that results from this random possible block's placement
+                target_vox_tensor_copy = self.target_vox_tensor.clone().cpu()
                 diff_tensor_after = target_vox_tensor_copy - grid_tensor_copy
                 print('ENV: Checking reward after possible env block...')
                 reward_after, _ = self.calc_reward(diff_tensor_after)
@@ -522,7 +522,7 @@ class BlockTrainingEnvironment(object):
 
             # Calculate reward based on how well occupied grid cells match target voxel grid cells.
             self.reward, self.perc_complete = self.calc_reward(self.diff_tensor)
-            
+
             # Environment adds a block in a random valid location
             print('ENV: Environment attempting to add block...')
             next_state = self.env_add_block()
