@@ -3,11 +3,11 @@ import json
 import copy
 import datetime
 
-import CNN_agent as Agent
+import HCNN_agent as Agent
 import env4training as Env
 
 NUM_EPISODES = 2
-DIR = os.path.join('results', 'CNN')
+DIR = os.path.join('results', 'HCNN')
 
 START_EP = 0
 LOAD_CHECKPOINT = False
