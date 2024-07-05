@@ -253,19 +253,19 @@ class BlockTrainingEnvironment(object):
 
             # Check if block cell is out of bounds
             if (x>=self.grid_sizes[0]) or (y>=self.grid_sizes[1]) or (z>=self.grid_sizes[2]):
-                print(f'ENV: Block Out of Bounds at {x,y,z}!')
+                # print(f'ENV: Block Out of Bounds at {x,y,z}!')
                 return False
             if (x<0) or (y<0) or (z<0):
-                print(f'ENV: Block Out of Bounds at {x,y,z}!')
+                # print(f'ENV: Block Out of Bounds at {x,y,z}!')
                 return False
             
             # Check if block cell is already occupied in the grid by another block
             if self.grid_tensor[x,y,z] == 1:
-                print(f'ENV: Block Conflict at {x,y,z}!')
+                # print(f'ENV: Block Conflict at {x,y,z}!')
                 return False
         
         # All checks pass for all grid cells of the action's block
-        print(f'ENV: No Block Conflict!')
+        # print(f'ENV: No Block Conflict!')
         return True
 
     def add_block(self, actions):
@@ -310,7 +310,7 @@ class BlockTrainingEnvironment(object):
         # Get the reward before this block is placed
         # for later comparisons
         reward_before = self.reward
-        print(f'ENV: Reward before placing possible env block={reward_before}')
+        # (f'ENV: Reward before placing possible env block={reward_before}')
 
         while (not valid_action):
             # Select a random block type
@@ -367,7 +367,7 @@ class BlockTrainingEnvironment(object):
                 # Calculate the reward that results from this random possible block's placement
                 target_vox_tensor_copy = self.target_vox_tensor.clone().cpu()
                 diff_tensor_after = target_vox_tensor_copy - grid_tensor_copy
-                print('ENV: Checking reward after possible env block...')
+                # print('ENV: Checking reward after possible env block...')
                 reward_after, _ = self.calc_reward(diff_tensor_after)
 
                 # Check if valid block results in an increase in reward
@@ -433,7 +433,7 @@ class BlockTrainingEnvironment(object):
         # Calculate percent complete
         perc_complete = n_fill/self.sum_filled
 
-        print(f'ENV: Calculated Reward={rew}, Percent Complete={perc_complete}')
+        # print(f'ENV: Calculated Reward={rew}, Percent Complete={perc_complete}')
         return rew, perc_complete
 
     def determine_terminal(self, diff_tensor, perc_complete):
@@ -514,20 +514,20 @@ class BlockTrainingEnvironment(object):
         }
 
         # Check for conflicts between agent's proposed block and existing blocks in BlockTrainingEnvironment
-        print('ENV: Checking Agent Block Conflict...')
+        # print('ENV: Checking Agent Block Conflict...')
         if (self.no_block_conflict(actions)):
             # If there are no conflicts, BlockTrainingEnvironment adds agent block to the grid
             next_state = self.add_block(actions)
             self.block_seq_index += 1
-            print(f'ENV: Step {self.block_seq_index}, Agent places {self.log["latest_agent_block"]["block_type"]} block at {(self.log["latest_agent_block"]["x"],self.log["latest_agent_block"]["y"],self.log["latest_agent_block"]["z"])}, orientation={self.log["latest_agent_block"]["orientation"]}')
+            # print(f'ENV: Step {self.block_seq_index}, Agent places {self.log["latest_agent_block"]["block_type"]} block at {(self.log["latest_agent_block"]["x"],self.log["latest_agent_block"]["y"],self.log["latest_agent_block"]["z"])}, orientation={self.log["latest_agent_block"]["orientation"]}')
 
             # Calculate reward based on how well occupied grid cells match target voxel grid cells.
             self.reward, self.perc_complete = self.calc_reward(self.diff_tensor)
 
             # Environment adds a block in a random valid location
-            print('ENV: Environment attempting to add block...')
+            # print('ENV: Environment attempting to add block...')
             next_state = self.env_add_block()
-            print(f'ENV: Step {self.block_seq_index}, Env places {self.log["latest_env_block"]["block_type"]} block at {(self.log["latest_env_block"]["x"],self.log["latest_env_block"]["y"],self.log["latest_env_block"]["z"])}, orientation={self.log["latest_env_block"]["orientation"]}')
+            # print(f'ENV: Step {self.block_seq_index}, Env places {self.log["latest_env_block"]["block_type"]} block at {(self.log["latest_env_block"]["x"],self.log["latest_env_block"]["y"],self.log["latest_env_block"]["z"])}, orientation={self.log["latest_env_block"]["orientation"]}')
 
             # Calculate reward based on how well occupied grid cells match target voxel grid cells.
             self.reward, self.perc_complete = self.calc_reward(self.diff_tensor)
@@ -538,7 +538,7 @@ class BlockTrainingEnvironment(object):
             # If there is a conflict with existing blocks
             # Increment block index
             self.block_seq_index += 1
-            print(f'ENV: FAILED! Step {self.block_seq_index}, Agent attempted {self.log["latest_agent_block"]["block_type"]} block at {(self.log["latest_agent_block"]["x"],self.log["latest_agent_block"]["y"],self.log["latest_agent_block"]["z"])}, orientation={self.log["latest_agent_block"]["orientation"]}')
+            # print(f'ENV: FAILED! Step {self.block_seq_index}, Agent attempted {self.log["latest_agent_block"]["block_type"]} block at {(self.log["latest_agent_block"]["x"],self.log["latest_agent_block"]["y"],self.log["latest_agent_block"]["z"])}, orientation={self.log["latest_agent_block"]["orientation"]}')
 
             # Environment state remains unchanged
             next_state = self.state
@@ -546,7 +546,7 @@ class BlockTrainingEnvironment(object):
 
             # Set reward to the block conflict penalty (should be >> typical +reward or -incorrect_penalties)
             self.reward = -100000*self.incorrect_penalty
-            print(f'ENV: Penalty={self.reward}, Percent Complete={self.perc_complete}')
+            # print(f'ENV: Penalty={self.reward}, Percent Complete={self.perc_complete}')
 
             # Log conflict
             self.log["latest_agent_block"]["block_conflict"] = True
@@ -559,7 +559,7 @@ class BlockTrainingEnvironment(object):
                 "orientation": -1,
                 "block_conflict": False,
             }
-            print(f'ENV: Step {self.block_seq_index}, Env does nothing, {self.log["latest_env_block"]["block_type"]} block at {(self.log["latest_env_block"]["x"],self.log["latest_env_block"]["y"],self.log["latest_env_block"]["z"])}, orientation={self.log["latest_env_block"]["orientation"]}')
+            # print(f'ENV: Step {self.block_seq_index}, Env does nothing, {self.log["latest_env_block"]["block_type"]} block at {(self.log["latest_env_block"]["x"],self.log["latest_env_block"]["y"],self.log["latest_env_block"]["z"])}, orientation={self.log["latest_env_block"]["orientation"]}')
 
         # Check if episode terminates
         self.terminal = self.determine_terminal(self.diff_tensor, self.perc_complete)

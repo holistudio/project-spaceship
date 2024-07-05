@@ -53,13 +53,13 @@ for ep in range(NUM_EPISODES):
     
     print('== PLACING BLOCKS ==')
     while not terminal:
-        print('= AGENT selects ACTION =')
+        # print('= AGENT selects ACTION =')
         agent_actions, env_actions = agent.select_actions(state)
 
-        print('= ENV makes STEP =')
+        # print('= ENV makes STEP =')
         next_state, reward, terminal = env.step(env_actions)
 
-        print('= AGENT updates EXP =')
+        # print('= AGENT updates EXP =')
         loss = agent.update_experience(state,agent_actions,next_state,reward,terminal)
 
         log_everything(episode, env.block_seq_index, env.log, agent.log, loss, reward, terminal)
