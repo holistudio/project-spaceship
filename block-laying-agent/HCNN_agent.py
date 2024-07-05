@@ -11,7 +11,7 @@ from collections import namedtuple, deque
 DIR = os.path.join('results', 'HCNN')
 PATH = os.path.join(DIR, 'HCNN_checkpoint.tar')
 
-BATCH_SIZE = 128
+BATCH_SIZE = 32 # 128
 LR = 1e-3 # 3e-4
 
 EPS_START = 0.9
