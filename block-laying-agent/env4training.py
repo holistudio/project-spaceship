@@ -538,7 +538,7 @@ class BlockTrainingEnvironment(object):
             # If there is a conflict with existing blocks
             # Increment block index
             self.block_seq_index += 1
-            print(f'ENV: Step {self.block_seq_index}, Agent attempted placing but FAILED!')
+            print(f'ENV: FAILED! Step {self.block_seq_index}, Agent attempted {self.log["latest_agent_block"]["block_type"]} block at {(self.log["latest_agent_block"]["x"],self.log["latest_agent_block"]["y"],self.log["latest_agent_block"]["z"])}, orientation={self.log["latest_agent_block"]["orientation"]}')
 
             # Environment state remains unchanged
             next_state = self.state
@@ -559,6 +559,7 @@ class BlockTrainingEnvironment(object):
                 "orientation": -1,
                 "block_conflict": False,
             }
+            print(f'ENV: Step {self.block_seq_index}, Env does nothing, {self.log["latest_env_block"]["block_type"]} block at {(self.log["latest_env_block"]["x"],self.log["latest_env_block"]["y"],self.log["latest_env_block"]["z"])}, orientation={self.log["latest_env_block"]["orientation"]}')
 
         # Check if episode terminates
         self.terminal = self.determine_terminal(self.diff_tensor, self.perc_complete)
