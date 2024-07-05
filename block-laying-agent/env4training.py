@@ -527,7 +527,6 @@ class BlockTrainingEnvironment(object):
             # Environment adds a block in a random valid location
             print('ENV: Environment attempting to add block...')
             next_state = self.env_add_block()
-            self.block_seq_index += 1
             print(f'ENV: Step {self.block_seq_index}, Env places {self.log["latest_env_block"]["block_type"]} block at {(self.log["latest_env_block"]["x"],self.log["latest_env_block"]["y"],self.log["latest_env_block"]["z"])}, orientation={self.log["latest_env_block"]["orientation"]}')
 
             # Calculate reward based on how well occupied grid cells match target voxel grid cells.
@@ -546,7 +545,7 @@ class BlockTrainingEnvironment(object):
             # self.grid_tensor, diff_tensor, and perc_complete remain unchanged as well
 
             # Set reward to the block conflict penalty (should be >> typical +reward or -incorrect_penalties)
-            self.reward = -1000*self.incorrect_penalty
+            self.reward = -100000*self.incorrect_penalty
             print(f'ENV: Penalty={self.reward}, Percent Complete={self.perc_complete}')
 
             # Log conflict
