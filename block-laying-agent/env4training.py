@@ -353,8 +353,8 @@ class BlockTrainingEnvironment(object):
             grid_tensor_copy = self.grid_tensor.clone().cpu()
             target_vox_tensor_copy = self.target_vox_tensor.clone().cpu()
             diff_tensor_before = target_vox_tensor_copy - grid_tensor_copy
-            print('ENV: Checking reward before placing possible env block...')
-            reward_before, _ = self.calc_reward(diff_tensor_before)
+            reward_before = self.reward
+            print(f'ENV: Reward before placing possible env block={reward_before}')
 
             # Check if valid block added by environment does not conflict with existing blocks
             if (self.no_block_conflict(env_actions)):
@@ -520,6 +520,9 @@ class BlockTrainingEnvironment(object):
             self.block_seq_index += 1
             print(f'ENV: Step {self.block_seq_index}, Agent places {self.log["latest_agent_block"]["block_type"]} block at {(self.log["latest_agent_block"]["x"],self.log["latest_agent_block"]["y"],self.log["latest_agent_block"]["z"])}, orientation={self.log["latest_agent_block"]["orientation"]}')
 
+            # Calculate reward based on how well occupied grid cells match target voxel grid cells.
+            self.reward, self.perc_complete = self.calc_reward(self.diff_tensor)
+            
             # Environment adds a block in a random valid location
             print('ENV: Environment attempting to add block...')
             next_state = self.env_add_block()
