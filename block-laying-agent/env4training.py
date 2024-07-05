@@ -300,11 +300,17 @@ class BlockTrainingEnvironment(object):
     
     def env_add_block(self):
         """
-        Environment adds a block at a random but valid location (i.e., no conflicts, consistent with target voxel model)
+        Environment adds a block at a random but valid location (i.e., no conflicts, 
+        improves reward because block helps complete target voxel model)
 
         Returns: Updated state for agent with the added block
         """
         valid_action = False
+
+        # Get the reward before this block is placed
+        # for later comparisons
+        reward_before = self.reward
+        print(f'ENV: Reward before placing possible env block={reward_before}')
 
         while (not valid_action):
             # Select a random block type
@@ -347,11 +353,6 @@ class BlockTrainingEnvironment(object):
                 "occupied_cells": occupied_cells,
                 "author": "environment"
             }
-
-            # Get the reward before this block is placed
-            # for later comparisons
-            reward_before = self.reward
-            print(f'ENV: Reward before placing possible env block={reward_before}')
 
             # Check if valid block added by environment does not conflict with existing blocks
             if (self.no_block_conflict(env_actions)):
