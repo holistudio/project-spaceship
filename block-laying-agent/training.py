@@ -51,22 +51,22 @@ for ep in range(NUM_EPISODES):
 
     state, reward, terminal = env.reset()
     
-    print('= PLACING BLOCKS =')
+    print('== PLACING BLOCKS ==')
     while not terminal:
-        # print('AGENT selects ACTION')
+        print('= AGENT selects ACTION =')
         agent_actions, env_actions = agent.select_actions(state)
 
-        # print('ENV makes STEP')
+        print('= ENV makes STEP =')
         next_state, reward, terminal = env.step(env_actions)
 
-        # print('AGENT updates EXP')
+        print('= AGENT updates EXP =')
         loss = agent.update_experience(state,agent_actions,next_state,reward,terminal)
 
         log_everything(episode, env.block_seq_index, env.log, agent.log, loss, reward, terminal)
 
         # print(env.block_seq_index)
         if ((env.block_seq_index+1) >= check_block) or terminal:
-            print(f'{datetime.datetime.now()}, Block {env.block_seq_index}, Reward = {reward:.2f}, Percent complete = {env.perc_complete*100:.2f}%')
+            print(f'{datetime.datetime.now()} TRAINING: Block {env.block_seq_index}, Reward = {reward:.2f}, Percent complete = {env.perc_complete*100:.2f}%')
             # print('!!!!SAVE!!!!')
             agent.save_checkpoint(loss)
             log_file = os.path.join(DIR,f'episode_{episode}_blocks_{start_block}-{env.block_seq_index}_log.json')
@@ -87,7 +87,7 @@ for ep in range(NUM_EPISODES):
         state = next_state
     
     print()
-    print(f'TIME ELAPSED: {datetime.datetime.now() - start_time}')
+    print(f'TRAINING TIME ELAPSED: {datetime.datetime.now() - start_time}')
     print(f'===== END EPISODE {episode} =====')
     print()
     print()
