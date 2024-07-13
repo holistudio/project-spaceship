@@ -2,6 +2,7 @@
 
 - ...
 ## In progress
+ - [The Perceptron Controversy](https://yuxi-liu-wired.github.io/essays/posts/perceptron-controversy/)
  - [[Deep learning, reinforcement learning, and world models]] 
  - [[CLIP-Forge - Towards Zero-Shot Text-to-Shape Generation]]
  - [[Design Process is a Reinforcement Learning Problem]]
@@ -16,7 +17,9 @@
  - [The Neural MMO Platform for Massively Multiagent Research](https://arxiv.org/abs/2110.07594)
  - [Are Vision Transformers More Data Hungry Than Newborn Visual Systems?](https://proceedings.neurips.cc/paper_files/paper/2023/file/e75dce944052276caf89c17aca8963d3-Paper-Conference.pdf)
  - [Design Globally, Immerse Locally: A Synthetic Design Approach by Integrating Agent Based Modelling with Virtual Reality](https://papers.cumincad.org/data/works/att/caadria2018_161.pdf)
- - [The Perceptron Controversy](https://yuxi-liu-wired.github.io/essays/posts/perceptron-controversy/)
+
+ - [ImageNet classification with deep convolutional neural networks](https://dl.acm.org/doi/10.1145/3065386)
+ - [The Annotated Transformer](https://nlp.seas.harvard.edu/annotated-transformer/)
 
 ## Done
 - [[Beyond Heuristics - A Novel Design Space Model for Generative Space Planning in Architecture]]

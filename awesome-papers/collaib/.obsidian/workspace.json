@@ -8,12 +8,12 @@
         "type": "tabs",
         "children": [
           {
-            "id": "74003c0537d49315",
+            "id": "5661d44e20071e81",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "source/An Afternoon with Patrik Schumacher.md",
+                "file": "source/The Perceptron Controversy.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "source/An Afternoon with Patrik Schumacher.md",
+                "file": "source/The Perceptron Controversy.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "source/An Afternoon with Patrik Schumacher.md",
+                "file": "source/The Perceptron Controversy.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "source/An Afternoon with Patrik Schumacher.md"
+                "file": "source/The Perceptron Controversy.md"
               }
             }
           }
@@ -146,14 +146,19 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "b8fecd085a0b89b7",
+  "active": "5661d44e20071e81",
   "lastOpenFiles": [
-    "source/_notes-template.md",
+    "source/files/Minsky_and_Builder_robot_arm_blocks.jpg",
+    "authors/Liu, Yuxi.md",
+    "source/The Perceptron Controversy.md",
+    "source/Hypar with OpenAI API.md",
+    "source/Beyond Heuristics - A Novel Design Space Model for Generative Space Planning in Architecture.md",
+    "source/LeCun World Model Definition.md",
+    "source/_to-read.md",
     "source/An Afternoon with Patrik Schumacher.md",
+    "source/_notes-template.md",
     "source/files/Expert AI as a Healthcare Superpower Transcript.md",
     "world-model-represents-and-predicts.md",
-    "source/_to-read.md",
-    "source/LeCun World Model Definition.md",
     "world-model-encompasses-DL-RL.md",
     "encoder-collapse-is-a-problem.md",
     "latent-variables-help-fill-data-gaps.md",
@@ -162,18 +167,13 @@
     "evaluate-design-based-on-occupant-experience.md",
     "LLMs-for-design-can-work-in-many-possible-ways.md",
     "source/DALL-E.md",
-    "source/Beyond Heuristics - A Novel Design Space Model for Generative Space Planning in Architecture.md",
     "AI-helps-design-exploration.md",
     "source/Melete.md",
-    "source/Hypar with OpenAI API.md",
     "AI-should-work-with-a-suite-of-design-tools.md",
     "design-as-language-differs-from-verbal-language.md",
     "AI-helps-design-convergence.md",
     "random-sampling-addresses-high-dimensionality.md",
     "grid-size-affects-state-space.md",
-    "understanding-state-space.md",
-    "design-space-model-needs-to-be-well-defined.md",
-    "design-principles-apply-across-scale.md",
     "source/files/101_sequence_of_spaces.png",
     "source/files/Architect_ONET.xlsx",
     "source/files",
