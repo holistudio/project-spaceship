@@ -313,6 +313,9 @@ class BlockTrainingEnvironment(object):
         # (f'ENV: Reward before placing possible env block={reward_before}')
 
         while (not valid_action):
+            # TODO: When percent complete > 90% it may take a while or impossible to fill the remaining cells
+            # If all have been tried AND percent complete > 90% then the episode should just terminate
+
             # Select a random block type
             block_type_i = np.random.randint(0, BLOCK_TYPES)
             block_type = list(BLOCK_DEFINITIONS.keys())[block_type_i]
@@ -323,6 +326,9 @@ class BlockTrainingEnvironment(object):
             # Select a random position based on target voxel model's grid cells
             # Create a mask tensor to identify cells containing the value 1
             mask = (self.target_vox_tensor == 1)
+
+            # TODO: Select from remaining spaces in target voxel model not yet filled (intersection of target voxel model filled cells and unfilled grid cells)
+
 
             # Find indices corresponding to where a target voxel grid cell is filled 
             indices = torch.nonzero(mask)
@@ -375,6 +381,8 @@ class BlockTrainingEnvironment(object):
                     # Only break out of the while loop
                     # if block has no conflicts and increases the reward
                     valid_action = True
+            
+            # TODO: Record all intersection cells that have been tried, all block types and orientations
         
         # Environment adds a new block in random valid position
         # Log latest block by environment
@@ -531,6 +539,9 @@ class BlockTrainingEnvironment(object):
 
             # Calculate reward based on how well occupied grid cells match target voxel grid cells.
             self.reward, self.perc_complete = self.calc_reward(self.diff_tensor)
+
+            # TODO: If all block types and orientations have been tried by env_add_block() 
+            # AND percent complete > 90% then the episode should just terminate
 
             # Log no conflict for agent block
             self.log["latest_agent_block"]["block_conflict"] = False
