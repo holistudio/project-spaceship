@@ -524,8 +524,8 @@ class BlockTrainingEnvironment(object):
         
         # If all block types and orientations have been tried by env_add_block() 
         # success_add = False
-        # If percent complete > 90% then the episode should just terminate
-        if (perc_complete >= 0.9) and (success_add == False):
+        # If percent complete > 95% then the episode should just terminate
+        if (perc_complete >= 0.95) and (success_add == False):
             print('ENV: Pretty much done but difficult to complete...')
             return True
         
