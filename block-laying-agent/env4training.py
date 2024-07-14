@@ -312,6 +312,25 @@ class BlockTrainingEnvironment(object):
         reward_before = self.reward
         # (f'ENV: Reward before placing possible env block={reward_before}')
 
+        # Select a random position from remaining spaces in target voxel model not yet filled
+        # (intersection of target voxel model filled cells and unfilled grid cells)
+        # Create a mask tensor to identify cells containing the value 1
+        mask1 = (self.target_vox_tensor == 1)
+        #print(mask1.shape)
+        
+        # Find indices corresponding to where a target voxel grid cell is filled 
+        indices1 = torch.nonzero(mask1)
+        #print(indices1.shape)
+
+        # Create a mask tensor identifying unfilled grid cells among target voxel grid cells
+        # mask2 =  (self.grid_tensor[indices1] == 0)
+        mask2 =  (self.grid_tensor[indices1[:, 0], indices1[:, 1], indices1[:, 2]] == 0)
+        #print(mask2.shape)
+        
+        # Find indices corresponding to intersection of target voxel model filled cells and unfilled grid cells
+        indices2 = torch.nonzero(mask2)
+        #print(indices2.shape)
+
         # Record untried block types and orientations
         untried_block_orients = {
             "2x1": [0,1],
@@ -324,7 +343,7 @@ class BlockTrainingEnvironment(object):
         while (not valid_action):
             # TODO: When percent complete > 90% it may take a while or impossible to fill the remaining cells
             # If all have been tried AND percent complete > 90% then the episode should just terminate
-            print(untried_block_orients)
+            # print(untried_block_orients)
 
             # Select a random block type
             block_type_i = np.random.randint(0, len(list(untried_block_orients.keys())))
@@ -333,25 +352,6 @@ class BlockTrainingEnvironment(object):
             # Select a random orientation
             orientation_i = np.random.randint(0, len(untried_block_orients[block_type]))
             orientation = untried_block_orients[block_type][orientation_i]
-
-            # Select a random position from remaining spaces in target voxel model not yet filled
-            # (intersection of target voxel model filled cells and unfilled grid cells)
-            # Create a mask tensor to identify cells containing the value 1
-            mask1 = (self.target_vox_tensor == 1)
-            #print(mask1.shape)
-            
-            # Find indices corresponding to where a target voxel grid cell is filled 
-            indices1 = torch.nonzero(mask1)
-            #print(indices1.shape)
-
-            # Create a mask tensor identifying unfilled grid cells among target voxel grid cells
-            # mask2 =  (self.grid_tensor[indices1] == 0)
-            mask2 =  (self.grid_tensor[indices1[:, 0], indices1[:, 1], indices1[:, 2]] == 0)
-            #print(mask2.shape)
-            
-            # Find indices corresponding to intersection of target voxel model filled cells and unfilled grid cells
-            indices2 = torch.nonzero(mask2)
-            #print(indices2.shape)
 
             # Randomly select one index from the list of indices of target voxel model cells not yet filled
             # selected_location = indices2[torch.randint(0, indices2.size(0), (1,))]
