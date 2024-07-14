@@ -323,21 +323,35 @@ class BlockTrainingEnvironment(object):
             # Select a random orientation
             orientation = np.random.randint(0, 2)
 
-            # Select a random position based on target voxel model's grid cells
+            # Select a random position from remaining spaces in target voxel model not yet filled
+            # (intersection of target voxel model filled cells and unfilled grid cells)
             # Create a mask tensor to identify cells containing the value 1
-            mask = (self.target_vox_tensor == 1)
-
-            # TODO: Select from remaining spaces in target voxel model not yet filled (intersection of target voxel model filled cells and unfilled grid cells)
-
-
+            mask1 = (self.target_vox_tensor == 1)
+            #print(mask1.shape)
+            
             # Find indices corresponding to where a target voxel grid cell is filled 
-            indices = torch.nonzero(mask)
+            indices1 = torch.nonzero(mask1)
+            #print(indices1.shape)
 
-            # Randomly select one index from the list of indices of filled target voxel grid cells
-            selected_location = indices[torch.randint(0, indices.size(0), (1,))]
+            # Create a mask tensor identifying unfilled grid cells among target voxel grid cells
+            # mask2 =  (self.grid_tensor[indices1] == 0)
+            mask2 =  (self.grid_tensor[indices1[:, 0], indices1[:, 1], indices1[:, 2]] == 0)
+            #print(mask2.shape)
+            
+            # Find indices corresponding to intersection of target voxel model filled cells and unfilled grid cells
+            indices2 = torch.nonzero(mask2)
+            #print(indices2.shape)
+
+            # Randomly select one index from the list of indices of target voxel model cells not yet filled
+            # selected_location = indices2[torch.randint(0, indices2.size(0), (1,))]
+            selected_location = indices2[torch.randint(0, indices2.size(0), (1,))].squeeze().item()
+            selected_location = indices1[selected_location]
+            #print(selected_location)
 
             # Get x y z position of the grid cell at the random index
-            grid_x, grid_y, grid_z = selected_location[0][0].item(), selected_location[0][1].item(), selected_location[0][2].item()
+            # grid_x, grid_y, grid_z = selected_location[0][0].item(), selected_location[0][1].item(), selected_location[0][2].item()
+            grid_x, grid_y, grid_z = selected_location[0].item(), selected_location[1].item(), selected_location[2].item()
+            #print(grid_x, grid_y, grid_z)
 
             # Based on random block type, orientation, and position
             # determine occupied cells of block
