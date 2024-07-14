@@ -364,9 +364,10 @@ class BlockTrainingEnvironment(object):
                 }
                 return self.state, False
             
+            indices3 = list(untried_cells_blocks.keys())
             # Randomly select one index from the list of indices of target voxel model cells not yet filled
             # selected_location = indices2[torch.randint(0, indices2.size(0), (1,))]
-            selected_cell = indices2[torch.randint(0, indices2.size(0), (1,))].squeeze().item()
+            selected_cell = indices3[np.random.randint(0,len(indices3))]
             selected_location = indices1[selected_cell]
             #print(selected_location)
 
