@@ -3,6 +3,7 @@ import torch
 import binvox_rw
 import random
 import os
+import copy
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f'Device: {device}')
@@ -340,26 +341,32 @@ class BlockTrainingEnvironment(object):
             "3x2": [0,1],
             "4x2": [0,1]
         }
+
+        # Record untried cells and blocks
+        untried_cells_blocks = {}
+        for index in indices2[:,0]:
+            untried_cells_blocks[index.item()] = copy.copy(untried_block_orients)
+
         while (not valid_action):
             # TODO: When percent complete > 90% it may take a while or impossible to fill the remaining cells
             # If all have been tried AND percent complete > 90% then the episode should just terminate
             # print(untried_block_orients)
 
-            # Select a random block type
-            block_type_i = np.random.randint(0, len(list(untried_block_orients.keys())))
-            block_type = list(untried_block_orients.keys())[block_type_i]
 
-            # Select a random orientation
-            orientation_i = np.random.randint(0, len(untried_block_orients[block_type]))
-            orientation = untried_block_orients[block_type][orientation_i]
 
             # Randomly select one index from the list of indices of target voxel model cells not yet filled
             # selected_location = indices2[torch.randint(0, indices2.size(0), (1,))]
-            selected_location = indices2[torch.randint(0, indices2.size(0), (1,))].squeeze().item()
-            selected_location = indices1[selected_location]
+            selected_cell = indices2[torch.randint(0, indices2.size(0), (1,))].squeeze().item()
+            selected_location = indices1[selected_cell]
             #print(selected_location)
 
-            # TODO: Record all intersection cells that have been tried
+            # Select a random block type
+            block_type_i = np.random.randint(0, len(list(untried_cells_blocks[selected_cell].keys())))
+            block_type = list(untried_cells_blocks[selected_cell].keys())[block_type_i]
+
+            # Select a random orientation
+            orientation_i = np.random.randint(0, len(untried_cells_blocks[selected_cell][block_type]))
+            orientation = untried_cells_blocks[selected_cell][block_type][orientation_i]
 
             # Get x y z position of the grid cell at the random index
             # grid_x, grid_y, grid_z = selected_location[0][0].item(), selected_location[0][1].item(), selected_location[0][2].item()
@@ -408,11 +415,14 @@ class BlockTrainingEnvironment(object):
                     # Only break out of the while loop
                     # if block has no conflicts and increases the reward
                     valid_action = True
-            
+           
+            # Record all intersection cells that have been tried
             # Record all block types and orientations that have been tried
-            untried_block_orients[block_type].pop(orientation_i)
-            if len(untried_block_orients[block_type]) == 0:
-                untried_block_orients.pop(block_type)
+            untried_cells_blocks[selected_cell][block_type].pop(orientation_i)
+            if len(untried_cells_blocks[selected_cell][block_type]) == 0:
+                untried_cells_blocks[selected_cell].pop(block_type)
+            if len(list(untried_cells_blocks[selected_cell].keys())) == 0:
+                untried_cells_blocks.pop(selected_cell)
         
         # Environment adds a new block in random valid position
         # Log latest block by environment
