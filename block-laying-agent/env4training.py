@@ -312,16 +312,27 @@ class BlockTrainingEnvironment(object):
         reward_before = self.reward
         # (f'ENV: Reward before placing possible env block={reward_before}')
 
+        # Record untried block types and orientations
+        untried_block_orients = {
+            "2x1": [0,1],
+            "3x1": [0,1],
+            "4x1": [0,1],
+            "2x2": [0,1],
+            "3x2": [0,1],
+            "4x2": [0,1]
+        }
         while (not valid_action):
             # TODO: When percent complete > 90% it may take a while or impossible to fill the remaining cells
             # If all have been tried AND percent complete > 90% then the episode should just terminate
+            print(untried_block_orients)
 
             # Select a random block type
-            block_type_i = np.random.randint(0, BLOCK_TYPES)
-            block_type = list(BLOCK_DEFINITIONS.keys())[block_type_i]
+            block_type_i = np.random.randint(0, len(list(untried_block_orients.keys())))
+            block_type = list(untried_block_orients.keys())[block_type_i]
 
             # Select a random orientation
-            orientation = np.random.randint(0, 2)
+            orientation_i = np.random.randint(0, len(untried_block_orients[block_type]))
+            orientation = untried_block_orients[block_type][orientation_i]
 
             # Select a random position from remaining spaces in target voxel model not yet filled
             # (intersection of target voxel model filled cells and unfilled grid cells)
@@ -347,6 +358,8 @@ class BlockTrainingEnvironment(object):
             selected_location = indices2[torch.randint(0, indices2.size(0), (1,))].squeeze().item()
             selected_location = indices1[selected_location]
             #print(selected_location)
+
+            # TODO: Record all intersection cells that have been tried
 
             # Get x y z position of the grid cell at the random index
             # grid_x, grid_y, grid_z = selected_location[0][0].item(), selected_location[0][1].item(), selected_location[0][2].item()
@@ -396,7 +409,10 @@ class BlockTrainingEnvironment(object):
                     # if block has no conflicts and increases the reward
                     valid_action = True
             
-            # TODO: Record all intersection cells that have been tried, all block types and orientations
+            # Record all block types and orientations that have been tried
+            untried_block_orients[block_type].pop(orientation_i)
+            if len(untried_block_orients[block_type]) == 0:
+                untried_block_orients.pop(block_type)
         
         # Environment adds a new block in random valid position
         # Log latest block by environment
