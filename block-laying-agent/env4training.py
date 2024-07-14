@@ -304,7 +304,9 @@ class BlockTrainingEnvironment(object):
         Environment adds a block at a random but valid location (i.e., no conflicts, 
         improves reward because block helps complete target voxel model)
 
-        Returns: Updated state for agent with the added block
+        Returns: 
+        state - Updated state for agent with the added block
+        success_add - True or False depending on if environment successfully added a valid block
         """
         valid_action = False
 
@@ -348,12 +350,20 @@ class BlockTrainingEnvironment(object):
             untried_cells_blocks[index.item()] = copy.copy(untried_block_orients)
 
         while (not valid_action):
-            # TODO: When percent complete > 90% it may take a while or impossible to fill the remaining cells
-            # If all have been tried AND percent complete > 90% then the episode should just terminate
-            # print(untried_block_orients)
-
-
-
+            # When it is difficult to fill the remaining cells,
+            # If all blocks and cells have been tried AND percent complete > 90% then the episode should just terminate
+            if len(list(untried_cells_blocks.keys())) == 0:
+                # Environment doesn't add a block so log default values for env_block
+                self.log["latest_env_block"] = {
+                    "block_type": "None",
+                    "x": -1,
+                    "y": -1,
+                    "z": -1,
+                    "orientation": -1,
+                    "block_conflict": False,
+                }
+                return self.state, False
+            
             # Randomly select one index from the list of indices of target voxel model cells not yet filled
             # selected_location = indices2[torch.randint(0, indices2.size(0), (1,))]
             selected_cell = indices2[torch.randint(0, indices2.size(0), (1,))].squeeze().item()
@@ -434,7 +444,7 @@ class BlockTrainingEnvironment(object):
             "orientation": int(orientation),
             "block_conflict": False
         }
-        return self.add_block(env_actions)
+        return self.add_block(env_actions), True
 
     def calc_reward(self, diff_tensor):
         """
@@ -484,7 +494,7 @@ class BlockTrainingEnvironment(object):
         # print(f'ENV: Calculated Reward={rew}, Percent Complete={perc_complete}')
         return rew, perc_complete
 
-    def determine_terminal(self, diff_tensor, perc_complete):
+    def determine_terminal(self, diff_tensor, perc_complete, success_add):
         """
         Check if episode should terminate, either because the blocks complete the model or the number of attempts have exceeded a limit.
 
@@ -509,6 +519,13 @@ class BlockTrainingEnvironment(object):
         # If number of attempts exceed the total number of filled cells for the target voxel model
         if self.block_seq_index > self.sum_filled:
             print('ENV: Number of moves exceeded!')
+            return True
+        
+        # If all block types and orientations have been tried by env_add_block() 
+        # success_add = False
+        # If percent complete > 90% then the episode should just terminate
+        if (perc_complete >= 0.9) and (success_add == False):
+            print('ENV: Pretty much done but difficult to complete...')
             return True
         
         # Otherwise, episode continues
@@ -573,15 +590,16 @@ class BlockTrainingEnvironment(object):
             self.reward, self.perc_complete = self.calc_reward(self.diff_tensor)
 
             # Environment adds a block in a random valid location
+            # success_add records if a valid block was actually placed
+            # If all block types and orientations have been tried by env_add_block()
+            # success_add = False
+
             # print('ENV: Environment attempting to add block...')
-            next_state = self.env_add_block()
+            next_state, success_add = self.env_add_block()
             # print(f'ENV: Step {self.block_seq_index}, Env places {self.log["latest_env_block"]["block_type"]} block at {(self.log["latest_env_block"]["x"],self.log["latest_env_block"]["y"],self.log["latest_env_block"]["z"])}, orientation={self.log["latest_env_block"]["orientation"]}')
 
             # Calculate reward based on how well occupied grid cells match target voxel grid cells.
             self.reward, self.perc_complete = self.calc_reward(self.diff_tensor)
-
-            # TODO: If all block types and orientations have been tried by env_add_block() 
-            # AND percent complete > 90% then the episode should just terminate
 
             # Log no conflict for agent block
             self.log["latest_agent_block"]["block_conflict"] = False
@@ -594,6 +612,9 @@ class BlockTrainingEnvironment(object):
             # Environment state remains unchanged
             next_state = self.state
             # self.grid_tensor, diff_tensor, and perc_complete remain unchanged as well
+
+            # determine_terminal() ignores whether environment successfully adds block or not
+            success_add = True
 
             # Set reward to the block conflict penalty (should be >> typical +reward or -incorrect_penalties)
             self.reward = -100000*self.incorrect_penalty
@@ -613,6 +634,6 @@ class BlockTrainingEnvironment(object):
             # print(f'ENV: Step {self.block_seq_index}, Env does nothing, {self.log["latest_env_block"]["block_type"]} block at {(self.log["latest_env_block"]["x"],self.log["latest_env_block"]["y"],self.log["latest_env_block"]["z"])}, orientation={self.log["latest_env_block"]["orientation"]}')
 
         # Check if episode terminates
-        self.terminal = self.determine_terminal(self.diff_tensor, self.perc_complete)
+        self.terminal = self.determine_terminal(self.diff_tensor, self.perc_complete, success_add)
         
         return next_state, self.reward, self.terminal
