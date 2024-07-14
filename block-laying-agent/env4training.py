@@ -347,7 +347,7 @@ class BlockTrainingEnvironment(object):
         # Record untried cells and blocks
         untried_cells_blocks = {}
         for index in indices2[:,0]:
-            untried_cells_blocks[index.item()] = copy.copy(untried_block_orients)
+            untried_cells_blocks[index.item()] = copy.deepcopy(untried_block_orients)
 
         while (not valid_action):
             # When it is difficult to fill the remaining cells,
