@@ -55,10 +55,14 @@ public class Root
 public class VizEpisode : MonoBehaviour
 {
     public GameObject blockSet;
+    public int episode;
     public int stepIndex = 0;
-    private string filePath = "../../results/2024-03-21_HCNN/episode_0_blocks_0-50_log.json";
+    private string fileName;
+    private string filePath;
+    private string folderPath = "../../results/2024-03-21_HCNN/";
 
     private Root rootData;
+    private Step[] stepData;
 
     private bool upToDate = false;
     Vector3 convertToUnityPosition(LatestBlock latestBlockData)
@@ -154,11 +158,16 @@ public class VizEpisode : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Debug.Log("Hello world!");
+        fileName = "episode_0_blocks_0-50_log.json";
+        filePath = Path.Combine(folderPath, fileName);
+
         if (File.Exists(filePath))
         {
             // Deserialize the JSON data to a Root object
             rootData = JsonUtility.FromJson<Root>(File.ReadAllText(filePath));
+
+            stepData = rootData.record;
+            Debug.Log("Episode: " + stepData[0].episode); 
             // Debug.Log(step.loss);
             // Output the data to the console for verification
             // foreach (Step step in rootData.record)
@@ -170,10 +179,10 @@ public class VizEpisode : MonoBehaviour
             //     Debug.Log("Reward: " + step.reward);
             //     Debug.Log("Terminal: " + step.terminal);
             // }
-            for (int i = 0; i < stepIndex+1; i++)
-            {
-                addBlock(i);
-            }
+            // for (int i = 0; i < stepIndex+1; i++)
+            // {
+            //     addBlock(i);
+            // }
         }
     }
 
@@ -215,18 +224,6 @@ public class VizEpisode : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Check if the right arrow key is pressed
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            stepIndex++;
-            upToDate = false;
-        }
-
-        if (!upToDate)
-        {
-            addBlock(stepIndex);
-            upToDate = true;
-        }
         
     }
 }
