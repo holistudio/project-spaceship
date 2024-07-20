@@ -65,7 +65,7 @@ public class VizEpisode : MonoBehaviour
     public int stepIndex = 0;
     private string fileName;
     private string filePath;
-    private string folderPath = "../../results/2024-03-21_HCNN/";
+    private string folderPath = "../../results/2024-07-18_HCNN/";
 
     private Root rootData;
     private Step[] stepData;
@@ -166,38 +166,50 @@ public class VizEpisode : MonoBehaviour
     {
         e = episode;
         startBlockIndex = 0;
-        endBlockIndex = startBlockIndex + blocksPerEpisode;
-
-        fileName = $"episode_{e}_blocks_{startBlockIndex}-{endBlockIndex}_log.json";
-        filePath = Path.Combine(folderPath, fileName);
-
-        if (File.Exists(filePath))
+        bool endOfEpisode = false;
+        while (!endOfEpisode)
         {
-            // Deserialize the JSON data to a Root object
-            rootData = JsonUtility.FromJson<Root>(File.ReadAllText(filePath));
+            endBlockIndex = startBlockIndex + blocksPerEpisode - 1;
 
-            stepData = rootData.record;
-            // Debug.Log("Episode: " + stepData[0].episode); 
-            // Debug.Log(step.loss);
+            fileName = $"episode_{e}_blocks_{startBlockIndex}-{endBlockIndex}_log.json";
+            filePath = Path.Combine(folderPath, fileName);
 
-            // Output the data to the console for verification
-            foreach (Step step in rootData.record)
+            if (File.Exists(filePath))
             {
-                if (step.env.latest_agent_block.block_conflict == false)
+                // Deserialize the JSON data to a Root object
+                rootData = JsonUtility.FromJson<Root>(File.ReadAllText(filePath));
+
+                stepData = rootData.record;
+                // Debug.Log("Episode: " + stepData[0].episode); 
+                // Debug.Log(step.loss);
+
+                // Output the data to the console for verification
+                foreach (Step step in rootData.record)
                 {
-                    Debug.Log("Episode: " + step.episode);
-                    Debug.Log("Block: " + step.block);
-                    Debug.Log("Latest Agent Block Type: " + step.env.latest_agent_block.block_type);
-                    Debug.Log("Latest Env Block Type: " + step.env.latest_env_block.block_type);
-                    Debug.Log("Block Conflict: " + step.env.latest_agent_block.block_conflict);
+                    if (step.env.latest_agent_block.block_conflict == false)
+                    {
+                        Debug.Log("Episode: " + step.episode);
+                        Debug.Log("Block: " + step.block);
+                        Debug.Log("Latest Agent Block Type: " + step.env.latest_agent_block.block_type);
+                        Debug.Log("Latest Env Block Type: " + step.env.latest_env_block.block_type);
+                        Debug.Log("Block Conflict: " + step.env.latest_agent_block.block_conflict);
+                    }
+                    
                 }
-                
+
+
+                // for (int i = 0; i < stepIndex+1; i++)
+                // {
+                //     addBlock(i);
+                // }
+
+                startBlockIndex += blocksPerEpisode;
+            }
+            else
+            {
+                endOfEpisode = true;
             }
 
-            // for (int i = 0; i < stepIndex+1; i++)
-            // {
-            //     addBlock(i);
-            // }
         }
     }
 
