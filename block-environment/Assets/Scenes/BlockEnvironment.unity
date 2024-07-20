@@ -537,6 +537,7 @@ GameObject:
   m_Component:
   - component: {fileID: 637102228}
   - component: {fileID: 637102227}
+  - component: {fileID: 637102229}
   m_Layer: 0
   m_Name: VizResults
   m_TagString: Untagged
@@ -551,7 +552,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 637102226}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 49a4c22bd90274918ae7210825afceb3, type: 3}
   m_Name: 
@@ -573,6 +574,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &637102229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 637102226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11b08f215c0205345ab3516dc547281f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blockSet: {fileID: 1407963319}
+  stepIndex: 0
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
