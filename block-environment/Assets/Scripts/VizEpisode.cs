@@ -56,6 +56,10 @@ public class VizEpisode : MonoBehaviour
 {
     public GameObject blockSet;
     public int episode;
+    private int e;
+    public int blocksPerEpisode;
+    private int startBlockIndex;
+    private int endBlockIndex;
     public int stepIndex = 0;
     private string fileName;
     private string filePath;
@@ -158,7 +162,11 @@ public class VizEpisode : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        fileName = "episode_0_blocks_0-50_log.json";
+        e = episode;
+        startBlockIndex = 0;
+        endBlockIndex = startBlockIndex + blocksPerEpisode;
+
+        fileName = $"episode_{e}_blocks_{startBlockIndex}-{endBlockIndex}_log.json";
         filePath = Path.Combine(folderPath, fileName);
 
         if (File.Exists(filePath))
