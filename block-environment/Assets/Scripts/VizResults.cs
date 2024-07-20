@@ -8,49 +8,6 @@ using System.IO;
 using System.Text.Json;
 using UnityEditor.Experimental.GraphView;
 
-[System.Serializable]
-public class LatestBlock
-{
-    public string block_type;
-    public int x;
-    public int y;
-    public int z;
-    public int orientation;
-}
-
-[System.Serializable]
-public class Env
-{
-    public LatestBlock latest_block;
-    public bool block_conflict;
-}
-
-[System.Serializable]
-public class Agent
-{
-    public int[] actions;
-    public string explore_exploit;
-    public float epsilon;
-    public int eps_steps;
-}
-
-[System.Serializable]
-public class Step
-{
-    public int episode;
-    public int block;
-    public Env env;
-    public Agent agent;
-    public float loss;
-    public float reward;
-    public bool terminal;
-}
-
-[System.Serializable]
-public class Root
-{
-    public Step[] record;
-}
 
 public class VizResults : MonoBehaviour
 {
