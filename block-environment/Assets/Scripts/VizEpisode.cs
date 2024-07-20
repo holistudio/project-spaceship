@@ -16,12 +16,14 @@ public class LatestBlock
     public int y;
     public int z;
     public int orientation;
+    public bool block_conflict;
 }
 
 [System.Serializable]
 public class Env
 {
-    public LatestBlock latest_block;
+    public LatestBlock latest_agent_block;
+    public LatestBlock latest_env_block;
     public bool block_conflict;
 }
 
@@ -175,18 +177,23 @@ public class VizEpisode : MonoBehaviour
             rootData = JsonUtility.FromJson<Root>(File.ReadAllText(filePath));
 
             stepData = rootData.record;
-            Debug.Log("Episode: " + stepData[0].episode); 
+            // Debug.Log("Episode: " + stepData[0].episode); 
             // Debug.Log(step.loss);
+
             // Output the data to the console for verification
-            // foreach (Step step in rootData.record)
-            // {
-            //     Debug.Log("Episode: " + step.episode);
-            //     Debug.Log("Block: " + step.block);
-            //     Debug.Log("Latest Block Type: " + step.env.latest_block.block_type);
-            //     Debug.Log("Agent Actions: " + string.Join(", ", step.agent.actions));
-            //     Debug.Log("Reward: " + step.reward);
-            //     Debug.Log("Terminal: " + step.terminal);
-            // }
+            foreach (Step step in rootData.record)
+            {
+                if (step.env.latest_agent_block.block_conflict == false)
+                {
+                    Debug.Log("Episode: " + step.episode);
+                    Debug.Log("Block: " + step.block);
+                    Debug.Log("Latest Agent Block Type: " + step.env.latest_agent_block.block_type);
+                    Debug.Log("Latest Env Block Type: " + step.env.latest_env_block.block_type);
+                    Debug.Log("Block Conflict: " + step.env.latest_agent_block.block_conflict);
+                }
+                
+            }
+
             // for (int i = 0; i < stepIndex+1; i++)
             // {
             //     addBlock(i);
@@ -198,7 +205,7 @@ public class VizEpisode : MonoBehaviour
     {
         Step step = rootData.record[i];
 
-        LatestBlock listBlockData = step.env.latest_block;
+        LatestBlock listBlockData = step.env.latest_agent_block;
 
         Transform childTransform = blockSet.transform.Find(listBlockData.block_type);
         

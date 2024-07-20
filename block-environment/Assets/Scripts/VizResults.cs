@@ -138,7 +138,7 @@ public class VizResults : MonoBehaviour
     {
         Step step = rootData.record[i];
 
-        LatestBlock listBlockData = step.env.latest_block;
+        LatestBlock listBlockData = step.env.latest_agent_block;
 
         Transform childTransform = blockSet.transform.Find(listBlockData.block_type);
         
