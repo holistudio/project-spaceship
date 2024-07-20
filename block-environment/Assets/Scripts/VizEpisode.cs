@@ -214,6 +214,16 @@ public class VizEpisode : MonoBehaviour
                         Debug.Log("Latest Agent Block Type: " + step.env.latest_agent_block.block_type);
                         Debug.Log("Latest Env Block Type: " + step.env.latest_env_block.block_type);
                         Debug.Log("Block Conflict: " + step.env.latest_agent_block.block_conflict);
+                        string agentBlockType = step.env.latest_agent_block.block_type;
+                        string envBlockType = step.env.latest_env_block.block_type;
+                        if (!agentBlockType.Equals("None"))
+                        {
+                            addBlock(step, "agent");
+                        }
+                        if (!envBlockType.Equals("None"))
+                        {
+                            addBlock(step, "env");
+                        }
                     }
                     
                 }
@@ -234,39 +244,47 @@ public class VizEpisode : MonoBehaviour
         }
     }
 
-    void addBlock(int i)
+    void addBlock(Step step, string blockAuthor)
     {
-        Step step = rootData.record[i];
-
-        LatestBlock listBlockData = step.env.latest_agent_block;
-
-        Transform childTransform = blockSet.transform.Find(listBlockData.block_type);
-        
-        if (childTransform != null)
+        if (blockAuthor.Equals("agent") || blockAuthor.Equals("env"))
         {
-            GameObject blockType = childTransform.gameObject;
-            // Instantiate a copy of the original GameObject
-            GameObject blockCopy = Instantiate(blockType);
-
-            blockCopy.name = listBlockData.block_type;
-
-            // Set the copy's parent to this game object
-            blockCopy.transform.SetParent(transform);
-
-            Quaternion blockRotation;
-
-            if(listBlockData.orientation == 0)
+            LatestBlock listBlockData = step.env.latest_agent_block;
+            
+            if (blockAuthor.Equals("env"))
             {
-                blockRotation = Quaternion.Euler(0, 0, 0);
-            }
-            else
-            {
-                blockRotation = Quaternion.Euler(0, 90, 0);
+                listBlockData = step.env.latest_env_block;
             }
 
-            Vector3 unityPosition = convertToUnityPosition(listBlockData);
-            blockCopy.transform.SetLocalPositionAndRotation(unityPosition, blockRotation);
+            Transform childTransform = blockSet.transform.Find(listBlockData.block_type);
+            
+            if (childTransform != null)
+            {
+                GameObject blockType = childTransform.gameObject;
+                // Instantiate a copy of the original GameObject
+                GameObject blockCopy = Instantiate(blockType);
+
+                blockCopy.name = listBlockData.block_type;
+
+                // Set the copy's parent to this game object
+                blockCopy.transform.SetParent(transform);
+
+                Quaternion blockRotation;
+
+                if(listBlockData.orientation == 0)
+                {
+                    blockRotation = Quaternion.Euler(0, 0, 0);
+                }
+                else
+                {
+                    blockRotation = Quaternion.Euler(0, 90, 0);
+                }
+
+                Vector3 unityPosition = convertToUnityPosition(listBlockData);
+                blockCopy.transform.SetLocalPositionAndRotation(unityPosition, blockRotation);
+            }
+
         }
+        Debug.Log("Error: provide either 'agent' or 'env' as blockAuthor.");
     }
 
     // Update is called once per frame
