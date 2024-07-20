@@ -174,6 +174,27 @@ public class VizEpisode : MonoBehaviour
             fileName = $"episode_{e}_blocks_{startBlockIndex}-{endBlockIndex}_log.json";
             filePath = Path.Combine(folderPath, fileName);
 
+            // check if any files in the folder start with the last json file for the episode
+            // ex: find 'episode_0_blocks_1300-1311_log.json' instead of 'episode_0_blocks_1300-1349_log.json'
+            string fileNameStart = $"episode_{e}_blocks_{startBlockIndex}";
+            if (!File.Exists(filePath))
+            {
+                // Get all files in the folder
+                string[] files = Directory.GetFiles(folderPath);
+                foreach (string tempFilePath in files)
+                {
+                    // Get the file name from the full path
+                    string tempName = Path.GetFileName(tempFilePath);
+
+                    // Check if the file name starts with the specified sequence
+                    if (tempName.StartsWith(fileNameStart))
+                    {
+                        fileName = tempName;
+                        filePath = Path.Combine(folderPath, fileName);
+                    }
+                }
+            }
+
             if (File.Exists(filePath))
             {
                 // Deserialize the JSON data to a Root object
