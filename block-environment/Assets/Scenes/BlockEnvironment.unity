@@ -587,6 +587,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockSet: {fileID: 1407963319}
+  episode: 9
+  blocksPerEpisode: 50
   stepIndex: 0
 --- !u!1 &705507993
 GameObject:
@@ -872,7 +874,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 128
+  orthographic size: 67
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -897,7 +899,7 @@ Transform:
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
   m_LocalRotation: {x: 0.35355338, y: 0.35355338, z: -0.1464466, w: 0.8535535}
-  m_LocalPosition: {x: -188.7, y: 284.3, z: -154.5}
+  m_LocalPosition: {x: -182.9, y: 324.3, z: -182.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
