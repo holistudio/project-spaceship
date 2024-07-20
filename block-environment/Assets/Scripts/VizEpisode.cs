@@ -58,7 +58,6 @@ public class VizEpisode : MonoBehaviour
 {
     public GameObject blockSet;
     public int episode;
-    private int e;
     public int blocksPerEpisode;
     private int startBlockIndex;
     private int endBlockIndex;
@@ -164,19 +163,20 @@ public class VizEpisode : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        e = episode;
         startBlockIndex = 0;
         bool endOfEpisode = false;
+
         while (!endOfEpisode)
         {
             endBlockIndex = startBlockIndex + blocksPerEpisode - 1;
 
-            fileName = $"episode_{e}_blocks_{startBlockIndex}-{endBlockIndex}_log.json";
+            string fileNameStart = $"episode_{episode}_blocks_{startBlockIndex}";
+            fileName = $"{fileNameStart}-{endBlockIndex}_log.json";
             filePath = Path.Combine(folderPath, fileName);
 
             // check if any files in the folder start with the last json file for the episode
             // ex: find 'episode_0_blocks_1300-1311_log.json' instead of 'episode_0_blocks_1300-1349_log.json'
-            string fileNameStart = $"episode_{e}_blocks_{startBlockIndex}";
+            
             if (!File.Exists(filePath))
             {
                 // Get all files in the folder
@@ -199,12 +199,8 @@ public class VizEpisode : MonoBehaviour
             {
                 // Deserialize the JSON data to a Root object
                 rootData = JsonUtility.FromJson<Root>(File.ReadAllText(filePath));
-
                 stepData = rootData.record;
-                // Debug.Log("Episode: " + stepData[0].episode); 
-                // Debug.Log(step.loss);
 
-                // Output the data to the console for verification
                 foreach (Step step in rootData.record)
                 {
                     if (step.env.latest_agent_block.block_conflict == false)
@@ -227,13 +223,6 @@ public class VizEpisode : MonoBehaviour
                     }
                     
                 }
-
-
-                // for (int i = 0; i < stepIndex+1; i++)
-                // {
-                //     addBlock(i);
-                // }
-
                 startBlockIndex += blocksPerEpisode;
             }
             else
