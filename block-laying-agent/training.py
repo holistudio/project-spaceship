@@ -39,7 +39,7 @@ check_every = 50
 
 if LOAD_CHECKPOINT:
     agent.load_checkpoint()
-    episode = agent.episode + 1
+    START_EP = agent.episode + 1
 
 start_time = datetime.datetime.now()
 
