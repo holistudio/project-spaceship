@@ -3,6 +3,7 @@ import torch
 import binvox_rw
 import random
 import os
+import copy
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f'Device: {device}')
@@ -303,7 +304,9 @@ class BlockTrainingEnvironment(object):
         Environment adds a block at a random but valid location (i.e., no conflicts, 
         improves reward because block helps complete target voxel model)
 
-        Returns: Updated state for agent with the added block
+        Returns: 
+        state - Updated state for agent with the added block
+        success_add - True or False depending on if environment successfully added a valid block
         """
         valid_action = False
 
@@ -312,26 +315,74 @@ class BlockTrainingEnvironment(object):
         reward_before = self.reward
         # (f'ENV: Reward before placing possible env block={reward_before}')
 
+        # Select a random position from remaining spaces in target voxel model not yet filled
+        # (intersection of target voxel model filled cells and unfilled grid cells)
+        # Create a mask tensor to identify cells containing the value 1
+        mask1 = (self.target_vox_tensor == 1)
+        #print(mask1.shape)
+        
+        # Find indices corresponding to where a target voxel grid cell is filled 
+        indices1 = torch.nonzero(mask1)
+        #print(indices1.shape)
+
+        # Create a mask tensor identifying unfilled grid cells among target voxel grid cells
+        # mask2 =  (self.grid_tensor[indices1] == 0)
+        mask2 =  (self.grid_tensor[indices1[:, 0], indices1[:, 1], indices1[:, 2]] == 0)
+        #print(mask2.shape)
+        
+        # Find indices corresponding to intersection of target voxel model filled cells and unfilled grid cells
+        indices2 = torch.nonzero(mask2)
+        #print(indices2.shape)
+
+        # Record untried block types and orientations
+        untried_block_orients = {
+            "2x1": [0,1],
+            "3x1": [0,1],
+            "4x1": [0,1],
+            "2x2": [0,1],
+            "3x2": [0,1],
+            "4x2": [0,1]
+        }
+
+        # Record untried cells and blocks
+        untried_cells_blocks = {}
+        for index in indices2[:,0]:
+            untried_cells_blocks[index.item()] = copy.deepcopy(untried_block_orients)
+
         while (not valid_action):
+            # When it is difficult to fill the remaining cells,
+            # If all blocks and cells have been tried AND percent complete > 90% then the episode should just terminate
+            if len(list(untried_cells_blocks.keys())) == 0:
+                # Environment doesn't add a block so log default values for env_block
+                self.log["latest_env_block"] = {
+                    "block_type": "None",
+                    "x": -1,
+                    "y": -1,
+                    "z": -1,
+                    "orientation": -1,
+                    "block_conflict": False,
+                }
+                return self.state, False
+            
+            indices3 = list(untried_cells_blocks.keys())
+            # Randomly select one index from the list of indices of target voxel model cells not yet filled
+            # selected_location = indices2[torch.randint(0, indices2.size(0), (1,))]
+            selected_cell = indices3[np.random.randint(0,len(indices3))]
+            selected_location = indices1[selected_cell]
+            #print(selected_location)
+
             # Select a random block type
-            block_type_i = np.random.randint(0, BLOCK_TYPES)
-            block_type = list(BLOCK_DEFINITIONS.keys())[block_type_i]
+            block_type_i = np.random.randint(0, len(list(untried_cells_blocks[selected_cell].keys())))
+            block_type = list(untried_cells_blocks[selected_cell].keys())[block_type_i]
 
             # Select a random orientation
-            orientation = np.random.randint(0, 2)
-
-            # Select a random position based on target voxel model's grid cells
-            # Create a mask tensor to identify cells containing the value 1
-            mask = (self.target_vox_tensor == 1)
-
-            # Find indices corresponding to where a target voxel grid cell is filled 
-            indices = torch.nonzero(mask)
-
-            # Randomly select one index from the list of indices of filled target voxel grid cells
-            selected_location = indices[torch.randint(0, indices.size(0), (1,))]
+            orientation_i = np.random.randint(0, len(untried_cells_blocks[selected_cell][block_type]))
+            orientation = untried_cells_blocks[selected_cell][block_type][orientation_i]
 
             # Get x y z position of the grid cell at the random index
-            grid_x, grid_y, grid_z = selected_location[0][0].item(), selected_location[0][1].item(), selected_location[0][2].item()
+            # grid_x, grid_y, grid_z = selected_location[0][0].item(), selected_location[0][1].item(), selected_location[0][2].item()
+            grid_x, grid_y, grid_z = selected_location[0].item(), selected_location[1].item(), selected_location[2].item()
+            #print(grid_x, grid_y, grid_z)
 
             # Based on random block type, orientation, and position
             # determine occupied cells of block
@@ -375,6 +426,14 @@ class BlockTrainingEnvironment(object):
                     # Only break out of the while loop
                     # if block has no conflicts and increases the reward
                     valid_action = True
+           
+            # Record all intersection cells that have been tried
+            # Record all block types and orientations that have been tried
+            untried_cells_blocks[selected_cell][block_type].pop(orientation_i)
+            if len(untried_cells_blocks[selected_cell][block_type]) == 0:
+                untried_cells_blocks[selected_cell].pop(block_type)
+            if len(list(untried_cells_blocks[selected_cell].keys())) == 0:
+                untried_cells_blocks.pop(selected_cell)
         
         # Environment adds a new block in random valid position
         # Log latest block by environment
@@ -386,7 +445,7 @@ class BlockTrainingEnvironment(object):
             "orientation": int(orientation),
             "block_conflict": False
         }
-        return self.add_block(env_actions)
+        return self.add_block(env_actions), True
 
     def calc_reward(self, diff_tensor):
         """
@@ -436,7 +495,7 @@ class BlockTrainingEnvironment(object):
         # print(f'ENV: Calculated Reward={rew}, Percent Complete={perc_complete}')
         return rew, perc_complete
 
-    def determine_terminal(self, diff_tensor, perc_complete):
+    def determine_terminal(self, diff_tensor, perc_complete, success_add):
         """
         Check if episode should terminate, either because the blocks complete the model or the number of attempts have exceeded a limit.
 
@@ -461,6 +520,13 @@ class BlockTrainingEnvironment(object):
         # If number of attempts exceed the total number of filled cells for the target voxel model
         if self.block_seq_index > self.sum_filled:
             print('ENV: Number of moves exceeded!')
+            return True
+        
+        # If all block types and orientations have been tried by env_add_block() 
+        # success_add = False
+        # If percent complete > 95% then the episode should just terminate
+        if (perc_complete >= 0.95) and (success_add == False):
+            print('ENV: Pretty much done but difficult to complete...')
             return True
         
         # Otherwise, episode continues
@@ -519,15 +585,21 @@ class BlockTrainingEnvironment(object):
             # If there are no conflicts, BlockTrainingEnvironment adds agent block to the grid
             next_state = self.add_block(actions)
             self.block_seq_index += 1
-            # print(f'ENV: Step {self.block_seq_index}, Agent places {self.log["latest_agent_block"]["block_type"]} block at {(self.log["latest_agent_block"]["x"],self.log["latest_agent_block"]["y"],self.log["latest_agent_block"]["z"])}, orientation={self.log["latest_agent_block"]["orientation"]}')
+            if self.perc_complete > 0.95:
+                print(f'ENV: Step {self.block_seq_index}, Agent places {self.log["latest_agent_block"]["block_type"]} block at {(self.log["latest_agent_block"]["x"],self.log["latest_agent_block"]["y"],self.log["latest_agent_block"]["z"])}, orientation={self.log["latest_agent_block"]["orientation"]}')
 
             # Calculate reward based on how well occupied grid cells match target voxel grid cells.
             self.reward, self.perc_complete = self.calc_reward(self.diff_tensor)
 
             # Environment adds a block in a random valid location
-            # print('ENV: Environment attempting to add block...')
-            next_state = self.env_add_block()
-            # print(f'ENV: Step {self.block_seq_index}, Env places {self.log["latest_env_block"]["block_type"]} block at {(self.log["latest_env_block"]["x"],self.log["latest_env_block"]["y"],self.log["latest_env_block"]["z"])}, orientation={self.log["latest_env_block"]["orientation"]}')
+            # success_add records if a valid block was actually placed
+            # If all block types and orientations have been tried by env_add_block()
+            # success_add = False
+            if self.perc_complete > 0.95:
+                print('ENV: Environment attempting to add block...')
+            next_state, success_add = self.env_add_block()
+            if self.perc_complete > 0.95:
+                print(f'ENV: Step {self.block_seq_index}, Env places {self.log["latest_env_block"]["block_type"]} block at {(self.log["latest_env_block"]["x"],self.log["latest_env_block"]["y"],self.log["latest_env_block"]["z"])}, orientation={self.log["latest_env_block"]["orientation"]}')
 
             # Calculate reward based on how well occupied grid cells match target voxel grid cells.
             self.reward, self.perc_complete = self.calc_reward(self.diff_tensor)
@@ -538,11 +610,15 @@ class BlockTrainingEnvironment(object):
             # If there is a conflict with existing blocks
             # Increment block index
             self.block_seq_index += 1
-            # print(f'ENV: FAILED! Step {self.block_seq_index}, Agent attempted {self.log["latest_agent_block"]["block_type"]} block at {(self.log["latest_agent_block"]["x"],self.log["latest_agent_block"]["y"],self.log["latest_agent_block"]["z"])}, orientation={self.log["latest_agent_block"]["orientation"]}')
+            if self.perc_complete > 0.95:
+                print(f'ENV: FAILED! Step {self.block_seq_index}, Agent attempted {self.log["latest_agent_block"]["block_type"]} block at {(self.log["latest_agent_block"]["x"],self.log["latest_agent_block"]["y"],self.log["latest_agent_block"]["z"])}, orientation={self.log["latest_agent_block"]["orientation"]}')
 
             # Environment state remains unchanged
             next_state = self.state
             # self.grid_tensor, diff_tensor, and perc_complete remain unchanged as well
+
+            # determine_terminal() ignores whether environment successfully adds block or not
+            success_add = True
 
             # Set reward to the block conflict penalty (should be >> typical +reward or -incorrect_penalties)
             self.reward = -100000*self.incorrect_penalty
@@ -559,9 +635,10 @@ class BlockTrainingEnvironment(object):
                 "orientation": -1,
                 "block_conflict": False,
             }
-            # print(f'ENV: Step {self.block_seq_index}, Env does nothing, {self.log["latest_env_block"]["block_type"]} block at {(self.log["latest_env_block"]["x"],self.log["latest_env_block"]["y"],self.log["latest_env_block"]["z"])}, orientation={self.log["latest_env_block"]["orientation"]}')
+            # if self.perc_complete > 0.95:
+            #     print(f'ENV: Step {self.block_seq_index}, Env does nothing, {self.log["latest_env_block"]["block_type"]} block at {(self.log["latest_env_block"]["x"],self.log["latest_env_block"]["y"],self.log["latest_env_block"]["z"])}, orientation={self.log["latest_env_block"]["orientation"]}')
 
         # Check if episode terminates
-        self.terminal = self.determine_terminal(self.diff_tensor, self.perc_complete)
+        self.terminal = self.determine_terminal(self.diff_tensor, self.perc_complete, success_add)
         
         return next_state, self.reward, self.terminal
