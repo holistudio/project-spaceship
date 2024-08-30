@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "c99bd3a35ad3ade5",
+        "id": "18b6e86aa3f53cf8",
         "type": "tabs",
         "children": [
           {
-            "id": "5661d44e20071e81",
+            "id": "cd12e72fa849d65b",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "source/Exploring Challenges and Opportunities to Support Designers in Learning to Co-create with AI-based Manufacturing Design Tools.md",
+                "file": "source/Building machines that learn and think like people.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "source/Exploring Challenges and Opportunities to Support Designers in Learning to Co-create with AI-based Manufacturing Design Tools.md",
+                "file": "source/Building machines that learn and think like people.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "source/Exploring Challenges and Opportunities to Support Designers in Learning to Co-create with AI-based Manufacturing Design Tools.md",
+                "file": "source/Building machines that learn and think like people.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "source/Exploring Challenges and Opportunities to Support Designers in Learning to Co-create with AI-based Manufacturing Design Tools.md"
+                "file": "source/Building machines that learn and think like people.md"
               }
             }
           }
@@ -146,11 +146,12 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "5661d44e20071e81",
+  "active": "cd12e72fa849d65b",
   "lastOpenFiles": [
-    "source/An Approach for Domain-Infromed Generative Design.md",
-    "source/Exploring Challenges and Opportunities to Support Designers in Learning to Co-create with AI-based Manufacturing Design Tools.md",
     "source/_to-read.md",
+    "source/Building machines that learn and think like people.md",
+    "source/Exploring Challenges and Opportunities to Support Designers in Learning to Co-create with AI-based Manufacturing Design Tools.md",
+    "source/An Approach for Domain-Infromed Generative Design.md",
     "source/_notes-template.md",
     "source/Beyond Heuristics - A Novel Design Space Model for Generative Space Planning in Architecture.md",
     "source/The Perceptron Controversy.md",
@@ -174,7 +175,6 @@
     "AI-should-work-with-a-suite-of-design-tools.md",
     "design-as-language-differs-from-verbal-language.md",
     "AI-helps-design-convergence.md",
-    "random-sampling-addresses-high-dimensionality.md",
     "source/files/101_sequence_of_spaces.png",
     "source/files/Architect_ONET.xlsx",
     "source/files",

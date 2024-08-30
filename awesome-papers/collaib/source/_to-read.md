@@ -4,6 +4,8 @@
 - [[An Approach for Domain-Infromed Generative Design]]
 - [The Perceptron Controversy](https://yuxi-liu-wired.github.io/essays/posts/perceptron-controversy/)
 ## In progress
+ - [Building Machines That Learn and Think Like People](http://dspace.mit.edu/bitstream/handle/1721.1/102089/CBMM-Memo-046.pdf;jsessionid=F7921CA37EB45D043423302FF498AC62?sequence=1)
+	 - [Video](https://cbmm.mit.edu/video/building-machines-learn-think-people-prof-josh-tenenbaum-icml2018)
  - [[Deep learning, reinforcement learning, and world models]] 
  - [[CLIP-Forge - Towards Zero-Shot Text-to-Shape Generation]]
  - [[Design Process is a Reinforcement Learning Problem]]
@@ -11,8 +13,6 @@
 
 ## To read
 
- - [Building Machines That Learn and Think Like People](http://dspace.mit.edu/bitstream/handle/1721.1/102089/CBMM-Memo-046.pdf;jsessionid=F7921CA37EB45D043423302FF498AC62?sequence=1)
-	 - [Video](https://cbmm.mit.edu/video/building-machines-learn-think-people-prof-josh-tenenbaum-icml2018)
  - [The History and Risks of Reinforcement Learning and Human Feedback](https://arxiv.org/abs/2310.13595)
  - [ActFloor-GAN: Activity-Guided Adversarial Networks for Human-Centric Floorplan Design](https://ieeexplore.ieee.org/abstract/document/9609576/)
  - [The Neural MMO Platform for Massively Multiagent Research](https://arxiv.org/abs/2110.07594)
