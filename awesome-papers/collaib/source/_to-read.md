@@ -1,8 +1,9 @@
 ## To process
 
-- ...
+- [[Exploring Challenges and Opportunities to Support Designers in Learning to Co-create with AI-based Manufacturing Design Tools]]
+- [[An Approach for Domain-Infromed Generative Design]]
+- [The Perceptron Controversy](https://yuxi-liu-wired.github.io/essays/posts/perceptron-controversy/)
 ## In progress
- - [The Perceptron Controversy](https://yuxi-liu-wired.github.io/essays/posts/perceptron-controversy/)
  - [[Deep learning, reinforcement learning, and world models]] 
  - [[CLIP-Forge - Towards Zero-Shot Text-to-Shape Generation]]
  - [[Design Process is a Reinforcement Learning Problem]]
