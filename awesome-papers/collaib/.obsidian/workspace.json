@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "source/Exploring Challenges and Opportunities to Support Designers in Learning to Co-create with AI-based Manufacturing Design Tools.md",
+                "file": "source/Playing Atari with Deep Reinforcement Learning.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "source/Exploring Challenges and Opportunities to Support Designers in Learning to Co-create with AI-based Manufacturing Design Tools.md",
+                "file": "source/Playing Atari with Deep Reinforcement Learning.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "source/Exploring Challenges and Opportunities to Support Designers in Learning to Co-create with AI-based Manufacturing Design Tools.md",
+                "file": "source/Playing Atari with Deep Reinforcement Learning.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "source/Exploring Challenges and Opportunities to Support Designers in Learning to Co-create with AI-based Manufacturing Design Tools.md"
+                "file": "source/Playing Atari with Deep Reinforcement Learning.md"
               }
             }
           }
@@ -146,11 +146,12 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "b8fecd085a0b89b7",
+  "active": "cd12e72fa849d65b",
   "lastOpenFiles": [
+    "source/Exploring Challenges and Opportunities to Support Designers in Learning to Co-create with AI-based Manufacturing Design Tools.md",
+    "source/Playing Atari with Deep Reinforcement Learning.md",
     "source/Building machines that learn and think like people.md",
     "source/_to-read.md",
-    "source/Exploring Challenges and Opportunities to Support Designers in Learning to Co-create with AI-based Manufacturing Design Tools.md",
     "source/An Approach for Domain-Infromed Generative Design.md",
     "source/_notes-template.md",
     "source/Beyond Heuristics - A Novel Design Space Model for Generative Space Planning in Architecture.md",
@@ -174,7 +175,6 @@
     "source/Melete.md",
     "AI-should-work-with-a-suite-of-design-tools.md",
     "design-as-language-differs-from-verbal-language.md",
-    "AI-helps-design-convergence.md",
     "source/files/101_sequence_of_spaces.png",
     "source/files/Architect_ONET.xlsx",
     "source/files",
