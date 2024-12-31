@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "source/Playing Atari with Deep Reinforcement Learning.md",
+                "file": "source/The Society of Mind.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Playing Atari with Deep Reinforcement Learning"
+              "title": "The Society of Mind"
             }
           }
         ]
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "source/Playing Atari with Deep Reinforcement Learning.md",
+                "file": "source/Building machines that learn and think like people.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -103,7 +103,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Playing Atari with Deep Reinforcement Learning"
+              "title": "Backlinks for Building machines that learn and think like people"
             }
           },
           {
@@ -112,12 +112,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "source/Playing Atari with Deep Reinforcement Learning.md",
+                "file": "source/Building machines that learn and think like people.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from Playing Atari with Deep Reinforcement Learning"
+              "title": "Outgoing links from Building machines that learn and think like people"
             }
           },
           {
@@ -139,10 +139,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "source/Playing Atari with Deep Reinforcement Learning.md"
+                "file": "source/Building machines that learn and think like people.md"
               },
               "icon": "lucide-list",
-              "title": "Outline of Playing Atari with Deep Reinforcement Learning"
+              "title": "Outline of Building machines that learn and think like people"
             }
           }
         ]
@@ -162,14 +162,16 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "cd12e72fa849d65b",
+  "active": "b8fecd085a0b89b7",
   "lastOpenFiles": [
-    "source/Exploring Challenges and Opportunities to Support Designers in Learning to Co-create with AI-based Manufacturing Design Tools.md",
-    "source/Playing Atari with Deep Reinforcement Learning.md",
+    "source/_notes-template.md",
+    "source/The Society of Mind.md",
     "source/Building machines that learn and think like people.md",
+    "LLMs-for-design-can-work-in-many-possible-ways.md",
+    "source/Playing Atari with Deep Reinforcement Learning.md",
+    "source/Exploring Challenges and Opportunities to Support Designers in Learning to Co-create with AI-based Manufacturing Design Tools.md",
     "source/_to-read.md",
     "source/An Approach for Domain-Infromed Generative Design.md",
-    "source/_notes-template.md",
     "source/Beyond Heuristics - A Novel Design Space Model for Generative Space Planning in Architecture.md",
     "source/The Perceptron Controversy.md",
     "source/files/Minsky_and_Builder_robot_arm_blocks.jpg",
@@ -185,12 +187,10 @@
     "source/Sequence of Spaces Quote.md",
     "occupant-experience-influenced-by-sequence-of-spaces-qualities.md",
     "evaluate-design-based-on-occupant-experience.md",
-    "LLMs-for-design-can-work-in-many-possible-ways.md",
     "source/DALL-E.md",
     "AI-helps-design-exploration.md",
     "source/Melete.md",
     "AI-should-work-with-a-suite-of-design-tools.md",
-    "design-as-language-differs-from-verbal-language.md",
     "source/files/101_sequence_of_spaces.png",
     "source/files/Architect_ONET.xlsx",
     "source/files",
