@@ -27,5 +27,5 @@
 - [[Hypar with OpenAI API]]
 - [[Melete]]
 - [[Sequence of Spaces Quote]]
--  [[LeCun World Model Definition]]
+- [[LeCun World Model Definition]]
 - [[DALL-E]]
