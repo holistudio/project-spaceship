@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "source/_to-read.md",
+                "file": "source/Building machines that learn and think like people.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "_to-read"
+              "title": "Building machines that learn and think like people"
             }
           }
         ]
@@ -164,15 +164,17 @@
   },
   "active": "cd12e72fa849d65b",
   "lastOpenFiles": [
-    "AI-should-work-with-a-suite-of-design-tools.md",
-    "design-as-language-differs-from-verbal-language.md",
     "source/The Society of Mind.md",
+    "design-as-language-differs-from-verbal-language.md",
+    "AI-helps-design-exploration.md",
+    "AI-helps-design-convergence.md",
+    "source/_to-read.md",
+    "AI-should-work-with-a-suite-of-design-tools.md",
     "source/_notes-template.md",
     "source/Building machines that learn and think like people.md",
     "LLMs-for-design-can-work-in-many-possible-ways.md",
     "source/Playing Atari with Deep Reinforcement Learning.md",
     "source/Exploring Challenges and Opportunities to Support Designers in Learning to Co-create with AI-based Manufacturing Design Tools.md",
-    "source/_to-read.md",
     "source/An Approach for Domain-Infromed Generative Design.md",
     "source/Beyond Heuristics - A Novel Design Space Model for Generative Space Planning in Architecture.md",
     "source/The Perceptron Controversy.md",
@@ -189,8 +191,6 @@
     "source/Sequence of Spaces Quote.md",
     "occupant-experience-influenced-by-sequence-of-spaces-qualities.md",
     "evaluate-design-based-on-occupant-experience.md",
-    "source/DALL-E.md",
-    "AI-helps-design-exploration.md",
     "source/files/101_sequence_of_spaces.png",
     "source/files/Architect_ONET.xlsx",
     "source/files",
