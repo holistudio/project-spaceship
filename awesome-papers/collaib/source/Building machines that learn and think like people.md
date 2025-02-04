@@ -71,3 +71,6 @@ Here's the thing with RL:
 - model-free RL is fast but not necessarily best for optimizing controls to maximize the same reward function
 
 "We review evidence that humans combine model-based and model-free learning algorithms both competitively and cooperatively and that these interactions are supervised by metacognitive processes."
+
+### 2. Cognitive and neural inspiration in artificial intelligence
+
