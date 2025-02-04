@@ -1,7 +1,7 @@
 ## To process
 
 - [[Exploring Challenges and Opportunities to Support Designers in Learning to Co-create with AI-based Manufacturing Design Tools]]
-- [[An Approach for Domain-Infromed Generative Design]]
+- [[An Approach for Domain-Informed Generative Design]]
 - [The Perceptron Controversy](https://yuxi-liu-wired.github.io/essays/posts/perceptron-controversy/)
 ## In progress
  - [Building Machines That Learn and Think Like People](http://dspace.mit.edu/bitstream/handle/1721.1/102089/CBMM-Memo-046.pdf;jsessionid=F7921CA37EB45D043423302FF498AC62?sequence=1)
