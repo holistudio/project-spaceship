@@ -82,3 +82,34 @@ As an agency, BUILDER does what its sub agents collectively accomplish
 "As agency, it seems to know its job. As agent, it cannot know anything at all."
 
 Get comfortable switching perspectives between agent and agency
+
+## Chapter 2 - Wholes and Parts
+
+### 2.1 Components and Connections
+It's not enough to design each agent, but design how the different agents are organized and interact with each other for the larger system's goals.
+
+### 2.2 Novelists and Reductionists
+"The 'laws of thought' depend not only upon the properties of those brain cells, but also on how they are connected"
+
+"In physics, we're used to explanations in terms of perhaps a dozen basic principles. For psychology, our explanations will have to combine hundreds of smaller theories. To physicists, that number may seem too large. To humanists, it may seem too small."
+
+### 2.3 Parts and Wholes
+
+"I suspect the actual function of such terms \[like 'holistic' and 'gestalt'] is to anesthetize a sense of ignorance."
+
+Two sets of questions, first subjective, next objective
+- What makes a drawing more than just its separate lines?
+- How is a personality more than a set of traits?
+- In what way is a culture more than a mere collection of customs?
+
+ - What makes a tower more than separate blocks?
+ - Why is a chain more than its various links?
+ - How is a wall more than a set of many bricks?
+
+"Why do the 'objective' questions seem less mysterious? Because we have good ways to answer them, - in terms of how things interact."
+
+This resembles Christopher Alexander's [[Pattern Language]] - it's not just the pattern of buildings and features but how they interact with the pattern of daily life.
+
+"Many people assume that those 'subjective' kinds of questions are impossible to answer because they involve our minds. But that doesn't mean they can't be answered. It only means that we must first know more about our minds...But this is a subject about which we have never learned very much...Such questions will be answered in time. But it will just prolong the wait if we keep using pseudo-explanation words like "holistic" and "gestalt."...It's harmful, though, when naming leads the mind to think that names alone bring meaning close."
+
+This might be agreeing and disagreeing with the Quality in [[Zen and Art of Motorcycle Maintenance]] - though Pirsig could say that Minsky is concerned with the subjective quality and not the Quality that gives rise to subjective and objective thoughts, etc. Minsky is clearly advocating for an objective approach to the mind to break it down into parts AND reminding us that the interactions between parts helps explain for the "greater than the sum of its parts" effect. So Minsky would still agree that "something is destroyed when you cut things up into pieces - but you gain something else as well." Pirsig may only caution that, in attempting to break down the human mind to explain how it works, one risks failing to explain the nature of reasoning behind breaking down the human mind.
