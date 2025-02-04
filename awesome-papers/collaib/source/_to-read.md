@@ -10,6 +10,7 @@
  - [[CLIP-Forge - Towards Zero-Shot Text-to-Shape Generation]]
  - [[Design Process is a Reinforcement Learning Problem]]
  - [[Harnessing Game-Inspired Content Creation for Intuitive Generative Design and Optimization]]
+ - [[AI Safety for Fleshy Humans]]
 
 ## To read
 
