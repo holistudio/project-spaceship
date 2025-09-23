@@ -32,6 +32,23 @@ A log of project progress and specific lessons learned.
 
 ## Log
 
+### 2025-09-23
+
+Hello again world! It's been some time. I'm still getting re-situated with what I did up to the point but some initial thoughts have been stewing in the back of my mind:
+
+<img src="img/250923_bug.png">
+
+ - **Block Overlap Bug:** Back when I hastily made a visual for the project on my personal website, I noticed a few instances where two blocks were overlapping in their location.
+    - What could cause this issue? One place to check is the `no_block_conflict()` function in `env4training.py`
+    - Another place could be the `no_block_conflict()` function works fine but that I'm just visualizing the block location/orientations incorrectly in `VizResults.cs` and `VizEpisode.cs` in the `addBlock()` function
+
+ - **Perfect Builder Agent:** This also presents a chance for me to start coding another idea: a "perfect builder" agent that always stacks blocks in valid locations for a given shape. 
+ 
+ - **Scale Down Models:** The other thing I want to quickly figure out is if it's easy to scale down the voxel models even more. Right now based on a quick read of `write_json.ipynb` it seems I already scale down the ShapeNet voxel models by a factor of 2 so maybe quickly visualize models by say 3 or 4 instead.
+    - The raw models are in 128x128x128 so the scaled down models might be around 64x64x64...so see what the models look like in a 32x32x32 volume.
+    - This could easily turn into "well what's the best way to scale down a voxel model" but I will try to just getting one spaceship model to look OK in a smaller volume and move on.
+
+So with a smaller ShapeNet voxel model and a "perfect builder" agent, I should be able to then visualize blocks in Unity and detect the overlapping blocks quicker to fix the bug.
 
 ### 2024-03-21
 
