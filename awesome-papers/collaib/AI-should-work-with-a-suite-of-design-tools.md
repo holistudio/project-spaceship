@@ -1,4 +1,0 @@
-
-[[Hypar with OpenAI API]]
-"AH: I love this comment. I don't think a technology like this means we have to abandon the tools already at our disposal — I don't even think that's possible. I imagine the ideal future design scenario being highly multi-modal — AI-powered with high-level text descriptions (and loose sketch inputs too!) as well as manual precision data entry, modeling, explicit commands + operations, all working together...
-Different communication + design media privilege different aspects, and we'll always want to use the best tool for the job. I think "essay" form will be great for outlining the high-level broad strokes + constraints of a project, but we'll immediately need to dive in and start manipulating results directly."
