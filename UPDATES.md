@@ -32,6 +32,67 @@ A log of project progress and specific lessons learned.
 
 ## Log
 
+### 2025-10-09
+
+Since it has been awhile since I first wrote the code for reading binvox files from ShapeNet dataset and scaling down voxel models, I thought I should review the code and write back out the pseudo-code for scaling down voxel models.
+
+```
+s = scale_factor # ≥1
+
+# original model checker
+x = y = z = 0
+
+# scaled model filler
+sx = sy = sz = 0
+
+fill_threshold = 3 # ≥1
+
+# x = sx = 0
+while x < width:
+	y = sy = 0
+	while y < height:
+		z = zy = 0
+		while z < depth:
+			# based on scale_factor
+			# check small chunk of the voxel model
+			scan_chunk = model[x:x+s,y:y+s,z:z+s]
+			
+			# count the number of solid cubes inside the sub-volume
+			cube_count = sum(scan_chunk)
+			
+			# if the number of solid cubes is great than or equal to fill_threshold
+			# scaled_model gets a cube filled at (sx, sy, sz)
+			if cube_count >= 3:
+				scaled_model[sx,sy,sz] = 1
+			
+			# advance original model checker to next chunk
+			z += s
+			# advance scaled model filler next voxel space
+			sz += 1
+		y += s
+		sy += 1
+	x +=s
+	sx += 1
+```
+
+I have not researched how others have scaled down voxel models in the past but so far based on some quick tests on two different models, the above method seems to work very well for different values of `scale_factor`:
+
+<img src="img/scaling_tests.png" width="600 px">
+
+The left-most images are original scale voxel models from ShapeNet, followed by scaling down by factors 2, 3, and 4 as you look from left to right (different camera zooms, but to help judge 3D scale, just know that all models are made with unit cubes of the same size in Unity).
+
+Judging by the Birdhouse model, scaling down a model by a factor of 4 is the most I should do. At that scale factor, the original hole in the birdhouse is the size of a 2x2 unit cubes. So increasing scale factor greater than 4 will likely "destroy" this notable feature of the birdhouse.
+
+So moving forward, I'll make sure to train the RL agent with scaled down models first, at a scale factor of 4. 
+
+Things to note for future reference:
+ - Original ShapeNet model bounding box: `(128, 128, 128)`
+ - `scale_factor=2` bounding box: `( 64,  64,  64)`
+ - `scale_factor=3` bounding box: `( 43,  43,  43)`
+ - `scale_factor=4` bounding box: `( 32,  32,  32)`
+
+Will write more later on debugging the block overlap issue in a bit.
+
 ### 2025-09-23
 
 Hello again world! It's been some time. I'm still getting re-situated with what I did up to the point but some initial thoughts have been stewing in the back of my mind:
