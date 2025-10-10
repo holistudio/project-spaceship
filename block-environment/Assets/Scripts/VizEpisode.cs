@@ -64,7 +64,7 @@ public class VizEpisode : MonoBehaviour
     public int stepIndex = 0;
     private string fileName;
     private string filePath;
-    private string folderPath = "../../results/2024-07-18_HCNN/";
+    private string folderPath = "../../results/2025-10-09_env/";
 
     private Root rootData;
     private Step[] stepData;
