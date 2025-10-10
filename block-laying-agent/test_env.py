@@ -41,10 +41,11 @@ for ep in range(NUM_EPISODES):
 
     print('== PLACING BLOCKS ==')
     while not terminal:
-        env_actions = todo()
+
+        agent_env_actions = None
 
         # print('= ENV makes STEP =')
-        next_state, reward, terminal = env.step(env_actions)
+        next_state, reward, terminal = env.step(agent_env_actions)
 
         log_everything(episode, env.block_seq_index, env.log, reward, terminal)
 
