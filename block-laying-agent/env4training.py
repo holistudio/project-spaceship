@@ -545,51 +545,102 @@ class BlockTrainingEnvironment(object):
         terminal - if episode should terminate or not
         """
 
-        # Convert agent_env_actions into block type, position and orientation
-        block_type_i, orientation, grid_x, grid_y, grid_z = agent_env_actions
+        if bool(agent_env_actions):
+            # Convert agent_env_actions into block type, position and orientation
+            block_type_i, orientation, grid_x, grid_y, grid_z = agent_env_actions
 
-        # Get block type as specified in BLOCK_DEFINITIONS dictionary
-        block_type = list(BLOCK_DEFINITIONS.keys())[block_type_i]
+            # Get block type as specified in BLOCK_DEFINITIONS dictionary
+            block_type = list(BLOCK_DEFINITIONS.keys())[block_type_i]
 
-        # Based on grid position and orientation, determine cells occupied in the grid
-        if orientation == 0:
-            grid_position = np.array([grid_x,grid_y,grid_z])
-            occupied_cells = grid_position + BLOCK_DEFINITIONS[block_type]['o0_cells']
-        if orientation == 1:
-            grid_position = np.array([grid_x,grid_y,grid_z])
-            occupied_cells = grid_position + BLOCK_DEFINITIONS[block_type]['o1_cells']
+            # Based on grid position and orientation, determine cells occupied in the grid
+            if orientation == 0:
+                grid_position = np.array([grid_x,grid_y,grid_z])
+                occupied_cells = grid_position + BLOCK_DEFINITIONS[block_type]['o0_cells']
+            if orientation == 1:
+                grid_position = np.array([grid_x,grid_y,grid_z])
+                occupied_cells = grid_position + BLOCK_DEFINITIONS[block_type]['o1_cells']
 
-        # Store agent block actions into a dictionary
-        actions = {
-            "block_type": block_type,
-            "block_type_i": block_type_i,
-            "grid_position": grid_position,
-            "orientation": orientation,
-            "occupied_cells": occupied_cells,
-            "author": "agent"
-        }
+            # Store agent block actions into a dictionary
+            actions = {
+                "block_type": block_type,
+                "block_type_i": block_type_i,
+                "grid_position": grid_position,
+                "orientation": orientation,
+                "occupied_cells": occupied_cells,
+                "author": "agent"
+            }
 
-        # Log latest block by agent
-        self.log["latest_agent_block"] = {
-            "block_type": block_type,
-            "x": int(grid_x),
-            "y": int(grid_y),
-            "z": int(grid_z),
-            "orientation": int(orientation),
-            "block_conflict": False
-        }
+            # Log latest block by agent
+            self.log["latest_agent_block"] = {
+                "block_type": block_type,
+                "x": int(grid_x),
+                "y": int(grid_y),
+                "z": int(grid_z),
+                "orientation": int(orientation),
+                "block_conflict": False
+            }
 
-        # Check for conflicts between agent's proposed block and existing blocks in BlockTrainingEnvironment
-        # print('ENV: Checking Agent Block Conflict...')
-        if (self.no_block_conflict(actions)):
-            # If there are no conflicts, BlockTrainingEnvironment adds agent block to the grid
-            next_state = self.add_block(actions)
+            # Check for conflicts between agent's proposed block and existing blocks in BlockTrainingEnvironment
+            # print('ENV: Checking Agent Block Conflict...')
+            if (self.no_block_conflict(actions)):
+                # If there are no conflicts, BlockTrainingEnvironment adds agent block to the grid
+                next_state = self.add_block(actions)
+                self.block_seq_index += 1
+                if self.perc_complete > 0.95:
+                    print(f'ENV: Step {self.block_seq_index}, Agent places {self.log["latest_agent_block"]["block_type"]} block at {(self.log["latest_agent_block"]["x"],self.log["latest_agent_block"]["y"],self.log["latest_agent_block"]["z"])}, orientation={self.log["latest_agent_block"]["orientation"]}')
+
+                # Calculate reward based on how well occupied grid cells match target voxel grid cells.
+                self.reward, self.perc_complete = self.calc_reward(self.diff_tensor)
+
+                # Environment adds a block in a random valid location
+                # success_add records if a valid block was actually placed
+                # If all block types and orientations have been tried by env_add_block()
+                # success_add = False
+                if self.perc_complete > 0.95:
+                    print('ENV: Environment attempting to add block...')
+                next_state, success_add = self.env_add_block()
+                if self.perc_complete > 0.95:
+                    print(f'ENV: Step {self.block_seq_index}, Env places {self.log["latest_env_block"]["block_type"]} block at {(self.log["latest_env_block"]["x"],self.log["latest_env_block"]["y"],self.log["latest_env_block"]["z"])}, orientation={self.log["latest_env_block"]["orientation"]}')
+
+                # Calculate reward based on how well occupied grid cells match target voxel grid cells.
+                self.reward, self.perc_complete = self.calc_reward(self.diff_tensor)
+
+                # Log no conflict for agent block
+                self.log["latest_agent_block"]["block_conflict"] = False
+            else:
+                # If there is a conflict with existing blocks
+                # Increment block index
+                self.block_seq_index += 1
+                if self.perc_complete > 0.95:
+                    print(f'ENV: FAILED! Step {self.block_seq_index}, Agent attempted {self.log["latest_agent_block"]["block_type"]} block at {(self.log["latest_agent_block"]["x"],self.log["latest_agent_block"]["y"],self.log["latest_agent_block"]["z"])}, orientation={self.log["latest_agent_block"]["orientation"]}')
+
+                # Environment state remains unchanged
+                next_state = self.state
+                # self.grid_tensor, diff_tensor, and perc_complete remain unchanged as well
+
+                # determine_terminal() ignores whether environment successfully adds block or not
+                success_add = True
+
+                # Set reward to the block conflict penalty (should be >> typical +reward or -incorrect_penalties)
+                self.reward = -100000*self.incorrect_penalty
+                # print(f'ENV: Penalty={self.reward}, Percent Complete={self.perc_complete}')
+
+                # Log conflict
+                self.log["latest_agent_block"]["block_conflict"] = True
+                # Environment doesn't add a block so log default values for env_block
+                self.log["latest_env_block"] = {
+                    "block_type": "None",
+                    "x": -1,
+                    "y": -1,
+                    "z": -1,
+                    "orientation": -1,
+                    "block_conflict": False,
+                }
+                # if self.perc_complete > 0.95:
+                #     print(f'ENV: Step {self.block_seq_index}, Env does nothing, {self.log["latest_env_block"]["block_type"]} block at {(self.log["latest_env_block"]["x"],self.log["latest_env_block"]["y"],self.log["latest_env_block"]["z"])}, orientation={self.log["latest_env_block"]["orientation"]}')
+        else:
+            # print('NO AGENT ACTION')
             self.block_seq_index += 1
-            if self.perc_complete > 0.95:
-                print(f'ENV: Step {self.block_seq_index}, Agent places {self.log["latest_agent_block"]["block_type"]} block at {(self.log["latest_agent_block"]["x"],self.log["latest_agent_block"]["y"],self.log["latest_agent_block"]["z"])}, orientation={self.log["latest_agent_block"]["orientation"]}')
-
-            # Calculate reward based on how well occupied grid cells match target voxel grid cells.
-            self.reward, self.perc_complete = self.calc_reward(self.diff_tensor)
 
             # Environment adds a block in a random valid location
             # success_add records if a valid block was actually placed
@@ -606,37 +657,6 @@ class BlockTrainingEnvironment(object):
 
             # Log no conflict for agent block
             self.log["latest_agent_block"]["block_conflict"] = False
-        else:
-            # If there is a conflict with existing blocks
-            # Increment block index
-            self.block_seq_index += 1
-            if self.perc_complete > 0.95:
-                print(f'ENV: FAILED! Step {self.block_seq_index}, Agent attempted {self.log["latest_agent_block"]["block_type"]} block at {(self.log["latest_agent_block"]["x"],self.log["latest_agent_block"]["y"],self.log["latest_agent_block"]["z"])}, orientation={self.log["latest_agent_block"]["orientation"]}')
-
-            # Environment state remains unchanged
-            next_state = self.state
-            # self.grid_tensor, diff_tensor, and perc_complete remain unchanged as well
-
-            # determine_terminal() ignores whether environment successfully adds block or not
-            success_add = True
-
-            # Set reward to the block conflict penalty (should be >> typical +reward or -incorrect_penalties)
-            self.reward = -100000*self.incorrect_penalty
-            # print(f'ENV: Penalty={self.reward}, Percent Complete={self.perc_complete}')
-
-            # Log conflict
-            self.log["latest_agent_block"]["block_conflict"] = True
-            # Environment doesn't add a block so log default values for env_block
-            self.log["latest_env_block"] = {
-                "block_type": "None",
-                "x": -1,
-                "y": -1,
-                "z": -1,
-                "orientation": -1,
-                "block_conflict": False,
-            }
-            # if self.perc_complete > 0.95:
-            #     print(f'ENV: Step {self.block_seq_index}, Env does nothing, {self.log["latest_env_block"]["block_type"]} block at {(self.log["latest_env_block"]["x"],self.log["latest_env_block"]["y"],self.log["latest_env_block"]["z"])}, orientation={self.log["latest_env_block"]["orientation"]}')
 
         # Check if episode terminates
         self.terminal = self.determine_terminal(self.diff_tensor, self.perc_complete, success_add)
