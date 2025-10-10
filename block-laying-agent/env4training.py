@@ -8,9 +8,9 @@ import copy
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f'Device: {device}')
 
-NUM_X = 64
-NUM_Y = 64
-NUM_Z = 64
+NUM_X = 32
+NUM_Y = 32
+NUM_Z = 32
 GRID_SIZES = (NUM_X, NUM_Y, NUM_Z)
 
 NUM_ORIENTATION = 2
@@ -179,7 +179,7 @@ class BlockTrainingEnvironment(object):
             exp_vox = binvox_rw.read_as_3d_array(f) # Expected voxels object
 
         # Scale down the voxel model and generate a target voxel tensor
-        scale_down_factor = 2
+        scale_down_factor = 4
         max_x, max_y, max_z = exp_vox.data.shape
 
         # Initialize target voxel tensor based on the voxel model and scale_down_factor
