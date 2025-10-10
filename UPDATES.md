@@ -77,7 +77,7 @@ while x < width:
 
 I have not researched how others have scaled down voxel models in the past but so far based on some quick tests on two different models, the above method seems to work very well for different values of `scale_factor`:
 
-<img src="img/scaling_tests.png" width="600 px">
+<img src="img/251009_scaling_tests.png" width="600 px">
 
 The left-most images are original scale voxel models from ShapeNet, followed by scaling down by factors 2, 3, and 4 as you look from left to right (different camera zooms, but to help judge 3D scale, just know that all models are made with unit cubes of the same size in Unity).
 
@@ -86,12 +86,27 @@ Judging by the Birdhouse model, scaling down a model by a factor of 4 is the mos
 So moving forward, I'll make sure to train the RL agent with scaled down models first, at a scale factor of 4. 
 
 Things to note for future reference:
+
  - Original ShapeNet model bounding box: `(128, 128, 128)`
  - `scale_factor=2` bounding box: `( 64,  64,  64)`
  - `scale_factor=3` bounding box: `( 43,  43,  43)`
  - `scale_factor=4` bounding box: `( 32,  32,  32)`
 
-Will write more later on debugging the block overlap issue in a bit.
+Calling it a night with some progress on debugging the block overlap bug. The bug still persists but a couple things are clear:
+
+ - The current RL training environment allows an RL agent to place overlapping blocks but it receives a huge penalty / negative reward.
+ - The current RL training environment then adds a block (`env_add_block()`) simulating a "perfect human builder" that knows where to place a block to help complete the 3D voxel model. 
+ - `env_add_block()` has code that checks for overlap and tries a different block type, position, and orientation automatically if it detects a potential overlap.
+ - To see if the block overlap bug still occurs without an RL agent, I wrote a separate "training loop" in `test_env.py` where only the environment adds blocks with RL action set to `None`.
+ - Unfortunately the bug persists:
+
+<img src="img/251009_scaled_bug.png">
+
+
+With RL agent code ignored in the above result, there remain two sources for this bug:
+ - The environment isn’t checking a block overlap correctly (`env4training.py` is wrong).
+ - The way the blocks are displayed in Unity is incorrect (`VisEpisode.cs` is wrong).
+
 
 ### 2025-09-23
 
