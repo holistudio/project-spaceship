@@ -578,7 +578,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockSet: {fileID: 1407963319}
-  stepIndex: 0
+  stepIndex: 40
 --- !u!4 &637102228
 Transform:
   m_ObjectHideFlags: 0
