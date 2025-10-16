@@ -134,28 +134,28 @@ public class VizEpisode : MonoBehaviour
             {
                 unityPosition.x = gridPosition.x + 1.5f;
                 unityPosition.y = gridPosition.y + 0.5f;
-                unityPosition.z = gridPosition.z;
+                unityPosition.z = gridPosition.z + 1.0f;
             }
             else
             {
-                unityPosition.x = gridPosition.x + 1;
+                unityPosition.x = gridPosition.x + 1.0f;
                 unityPosition.y = gridPosition.y + 0.5f;
-                unityPosition.z = gridPosition.z + 0.5f;
+                unityPosition.z = gridPosition.z + 1.5f;
             }
         }
         else if (blockType.Equals("4x2"))
         {
             if(orient == 0)
             {
-                unityPosition.x = gridPosition.x + 2;
+                unityPosition.x = gridPosition.x + 2.0f;
                 unityPosition.y = gridPosition.y + 0.5f;
-                unityPosition.z = gridPosition.z;
+                unityPosition.z = gridPosition.z + 1.0f;
             }
             else
             {
-                unityPosition.x = gridPosition.x + 1;
+                unityPosition.x = gridPosition.x + 1.0f;
                 unityPosition.y = gridPosition.y + 0.5f;
-                unityPosition.z = gridPosition.z + 1;
+                unityPosition.z = gridPosition.z + 2.0f;
             }
         }
         return  unityPosition;
