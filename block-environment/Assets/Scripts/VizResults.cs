@@ -13,7 +13,7 @@ public class VizResults : MonoBehaviour
 {
     public GameObject blockSet;
     public int stepIndex = 0;
-    private string filePath = "../../results/2024-03-21_HCNN/episode_0_blocks_0-50_log.json";
+    private string filePath = "../../results/2025-10-09_env/episode_0_blocks_0-49_log.json";
 
     private Root rootData;
 
@@ -138,7 +138,8 @@ public class VizResults : MonoBehaviour
     {
         Step step = rootData.record[i];
 
-        LatestBlock listBlockData = step.env.latest_agent_block;
+        // LatestBlock listBlockData = step.env.latest_agent_block;
+        LatestBlock listBlockData = step.env.latest_env_block;
 
         Transform childTransform = blockSet.transform.Find(listBlockData.block_type);
         
