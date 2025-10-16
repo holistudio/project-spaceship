@@ -32,6 +32,62 @@ A log of project progress and specific lessons learned.
 
 ## Log
 
+### 2025-10-16
+
+First a reminder note to self:
+
+`VizResults.cs` was written to visualize blocks step by step after pressing the right arrow key, after pressing Play
+ - this visualization seems to be restricted to a single JSON file record of blocks placed
+
+`VizEpisode.cs` was written to just conveniently visualize all blocks from all episodes after pressing Play.
+ - this visualization reads all JSON files in a single folder following a filename convention.
+
+So for starters to debug the block over lap issue, first check `VizResults.cs` block by block and at least check to see if the blocks are being shown correctly in the Unity code vs the block position orientation info in the JSON file
+ - `classes_flow.drawio` shows the supposed relationship between JSON position orientation info vs Unity block position/orientation values
+
+Basically, I have two block "grid systems": one in Python for training RL agents, one in Unity for visualizing blocks. The issue could just be how I map from Python-grid to Unity-grid and there may not be any errors with how I'm checking overlapping blocks in Python-grid...I hope
+
+Using `VizResults.cs` I went through block by block and found the first case of two blocks overlapping in Unity.
+
+<img src="img/251016_first_overlap.png" width="300 px">
+
+Then I used Excel to compute which grid cells the block should occupy in the Python grid system.
+
+<img src="img/251016_excel_debug.png" width="600 px">
+
+Luckily the two blocks are on the same y-coordinate, so I can also just use Excel to draw how the two blocks should be placed in Python-grid system:
+
+<img src="img/251016_python_grid_positions.png" width="300 px">
+
+No overlap issues based on Python-grid
+
+Then I double checked `classes_flow.drawio` and found an error!
+
+<img src="img/251016_grid_positions_wrong.png" width="600 px">
+
+ - `classes_flow.drawio` showed incorrect Python grid position values!
+ - Block types 3x2 and 4x2 were affected where Python grid z-position is off by one!
+ - This should affect only how Unity displays the blocks, not how block conflicts are checked in Python scripts.
+
+So I updated the `convertToUnityPosition()` function in `VizResults.cs` and checked the same two blocks...
+
+<img src="img/251016_unity_grid_positions.png" width="600 px">
+
+Bug fixed! 
+
+...or so I thought.
+
+I also updated the `convertToUnityPosition()` function in `VizEpisode.cs` then generated an entire episode's blocks, hoping to not see any block overlaps:
+
+<img src="img/251016_still_bug.png" width="600 px">
+
+Alas, the bug still persists.
+
+Will circle back to this maybe next week but some final thoughts:
+ - double check the rest of `classes_flow.drawio` make sure all Python-grid vs Unity-grid position mappings make sense.
+ - writing a modified version of `VizEpisode.cs` that stops when Unity detects box collisions could be useful...but also an over-engineered solution for debugging purposes.
+ - so for now, it may still be best to go back to playing `VizResults.cs` and going step by step.
+
 ### 2025-10-09
 
 Since it has been awhile since I first wrote the code for reading binvox files from ShapeNet dataset and scaling down voxel models, I thought I should review the code and write back out the pseudo-code for scaling down voxel models.
