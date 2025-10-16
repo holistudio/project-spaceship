@@ -7,6 +7,7 @@ using System.Linq;
 using System.IO;
 using System.Text.Json;
 using UnityEditor.Experimental.GraphView;
+using Unity.VisualScripting;
 
 
 public class VizResults : MonoBehaviour
@@ -150,6 +151,7 @@ public class VizResults : MonoBehaviour
             GameObject blockCopy = Instantiate(blockType);
 
             blockCopy.name = listBlockData.block_type;
+            blockCopy.GetComponent<Block>().sequenceIndex = step.block;
 
             // Set the copy's parent to this game object
             blockCopy.transform.SetParent(transform);
