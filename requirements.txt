@@ -1,3 +1,7 @@
-numpy
+ipython
+ipywidgets
 ipykernel
+pandas
 matplotlib
+tqdm
+scipy
