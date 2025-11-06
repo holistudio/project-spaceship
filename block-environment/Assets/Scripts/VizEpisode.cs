@@ -252,7 +252,7 @@ public class VizEpisode : MonoBehaviour
                 // Instantiate a copy of the original GameObject
                 GameObject blockCopy = Instantiate(blockType);
 
-                blockCopy.name = listBlockData.block_type;
+                blockCopy.name = listBlockData.block_type + "_" + step.block.ToString();
 
                 // Set the copy's parent to this game object
                 blockCopy.transform.SetParent(transform);
