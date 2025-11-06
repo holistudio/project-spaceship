@@ -32,6 +32,32 @@ A log of project progress and specific lessons learned.
 
 ## Log
 
+### 2025-11-06
+
+OK found another bug...
+
+<img src="img/251106_bug.png" width="300 px">
+
+...and fixed it. 
+
+<img src="img/251106_bug_fix.png" width="300 px">
+
+Again, the issue was in the `convertToUnityPosition()` function in  `VizResults.cs` and `VizEpisode.cs`
+
+```
+if (blockType.Equals("2x1"))
+        {
+            if(orient == 0)
+            {
+                unityPosition.x = gridPosition.x + 1;
+                unityPosition.y = gridPosition.y + 0.5f;
+                unityPosition.z = gridPosition.z + 0.5f; <== was -0.5f
+                ...
+```
+
+But there are still overlap issues! I think at this point I've ruled out the issues with visualizing results in Unity, which means the other bugs are in the python code in the `block-laying-agent` folder.
+
+
 ### 2025-10-16
 
 First a reminder note to self:
