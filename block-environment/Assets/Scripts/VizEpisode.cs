@@ -83,7 +83,7 @@ public class VizEpisode : MonoBehaviour
             {
                 unityPosition.x = gridPosition.x + 1;
                 unityPosition.y = gridPosition.y + 0.5f;
-                unityPosition.z = gridPosition.z - 0.5f;
+                unityPosition.z = gridPosition.z + 0.5f;
             }
             else
             {
