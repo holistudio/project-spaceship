@@ -445,8 +445,28 @@ class BlockTrainingEnvironment(object):
             "orientation": int(orientation),
             "block_conflict": False
         }
+        self.sanity_check(self.log["latest_env_block"])
         return self.add_block(env_actions), True
+    
+    def sanity_check(self, latest_env_block):
+        block_type = latest_env_block['block_type']
+        grid_x,grid_y,grid_z = latest_env_block['x'],latest_env_block['y'],latest_env_block['z']
+        orientation = latest_env_block['orientation']
+        if orientation == 0:
+            grid_position = np.array([grid_x,grid_y,grid_z])
+            occupied_cells = grid_position + BLOCK_DEFINITIONS[block_type]['o0_cells']
+        if orientation == 1:
+            grid_position = np.array([grid_x,grid_y,grid_z])
+            occupied_cells = grid_position + BLOCK_DEFINITIONS[block_type]['o1_cells']
+        
+        # Get occupied cells of the block
+        n_cells, _ = occupied_cells.shape
 
+        for i in range(n_cells):
+            x, y, z = list(occupied_cells[i])
+            assert self.grid_tensor[x,y,z] != 1
+
+        
     def calc_reward(self, diff_tensor):
         """
         Calculates the reward based on the difference between the target voxel model's grid cells and current grid cells occupied
