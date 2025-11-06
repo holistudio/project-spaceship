@@ -14,7 +14,7 @@ public class VizResults : MonoBehaviour
 {
     public GameObject blockSet;
     public int stepIndex = 0;
-    private string filePath = "../../results/2025-10-09_env/episode_0_blocks_0-49_log.json";
+    private string filePath = "../../results/2025-10-09_env/episode_0_blocks_100-149_log.json";
 
     private Root rootData;
 
@@ -32,7 +32,7 @@ public class VizResults : MonoBehaviour
             {
                 unityPosition.x = gridPosition.x + 1;
                 unityPosition.y = gridPosition.y + 0.5f;
-                unityPosition.z = gridPosition.z - 0.5f;
+                unityPosition.z = gridPosition.z + 0.5f;
             }
             else
             {
@@ -131,6 +131,7 @@ public class VizResults : MonoBehaviour
             for (int i = 0; i < stepIndex+1; i++)
             {
                 addBlock(i);
+                Debug.Log("Step: " + i);
             }
         }
     }
@@ -180,6 +181,7 @@ public class VizResults : MonoBehaviour
         {
             stepIndex++;
             upToDate = false;
+            Debug.Log("Step: " + stepIndex);
         }
 
         if (!upToDate)
