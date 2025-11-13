@@ -292,8 +292,12 @@ class BlockTrainingEnvironment(object):
         # Loop through occupied cells and update state tensor
         for i in range(n_cells):
             x,y,z = list(occupied_cells[i])
-            self.state[:,x,y,z] = torch.tensor([self.ShapeNetID, actions["block_type_i"], pos_x, pos_y, pos_z,
-                                                actions['orientation'], self.block_seq_index], dtype=torch.long, device=device)
+            self.state[:,x,y,z] = torch.tensor([self.ShapeNetID, 
+                                                actions["block_type_i"], 
+                                                pos_x, pos_y, pos_z,
+                                                actions['orientation'], 
+                                                self.block_seq_index], 
+                                                dtype=torch.long, device=device)
             self.grid_tensor[x,y,z] = 1
         
         # Take difference between target voxel grid cells and current grid cells occupied
