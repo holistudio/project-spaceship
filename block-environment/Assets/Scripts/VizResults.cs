@@ -14,7 +14,7 @@ public class VizResults : MonoBehaviour
 {
     public GameObject blockSet;
     public int stepIndex = 0;
-    private string filePath = "../../results/2025-10-09_env/episode_0_blocks_100-149_log.json";
+    private string filePath = "../../results/2025-11-13_env/episode_0_blocks_100-149_log.json";
 
     private Root rootData;
 
