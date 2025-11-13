@@ -355,7 +355,8 @@ class BlockTrainingEnvironment(object):
 
         while (not valid_action):
             # When it is difficult to fill the remaining cells,
-            # If all blocks and cells have been tried AND percent complete > 90% then the episode should just terminate
+            # If all blocks and cells have been tried AND percent complete > 90%,
+            # then the episode should just terminate
             if len(list(untried_cells_blocks.keys())) == 0:
                 # Environment doesn't add a block so log default values for env_block
                 self.log["latest_env_block"] = {
