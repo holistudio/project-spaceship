@@ -373,7 +373,6 @@ class BlockTrainingEnvironment(object):
             
             indices3 = list(untried_cells_blocks.keys())
             # Randomly select one index from the list of indices of target voxel model cells not yet filled
-            # selected_location = indices2[torch.randint(0, indices2.size(0), (1,))]
             selected_cell = indices3[np.random.randint(0,len(indices3))]
             selected_location = indices1[selected_cell]
             #print(selected_location)
@@ -387,7 +386,6 @@ class BlockTrainingEnvironment(object):
             orientation = untried_cells_blocks[selected_cell][block_type][orientation_i]
 
             # Get x y z position of the grid cell at the random index
-            # grid_x, grid_y, grid_z = selected_location[0][0].item(), selected_location[0][1].item(), selected_location[0][2].item()
             grid_x, grid_y, grid_z = selected_location[0].item(), selected_location[1].item(), selected_location[2].item()
             #print(grid_x, grid_y, grid_z)
 
@@ -452,13 +450,18 @@ class BlockTrainingEnvironment(object):
             "orientation": int(orientation),
             "block_conflict": False
         }
+
+        # Double check the latest environment block at least does not overlap existing blocks
         self.sanity_check(self.log["latest_env_block"])
         return self.add_block(env_actions), True
     
-    def sanity_check(self, latest_env_block):
-        block_type = latest_env_block['block_type']
-        grid_x,grid_y,grid_z = latest_env_block['x'],latest_env_block['y'],latest_env_block['z']
-        orientation = latest_env_block['orientation']
+    def sanity_check(self, latest_block):
+        """
+        Double check the latest block does not overlap with the existing blocks
+        """
+        block_type = latest_block['block_type']
+        grid_x,grid_y,grid_z = latest_block['x'],latest_block['y'],latest_block['z']
+        orientation = latest_block['orientation']
         if orientation == 0:
             grid_position = np.array([grid_x,grid_y,grid_z])
             occupied_cells = grid_position + BLOCK_DEFINITIONS[block_type]['o0_cells']
@@ -469,6 +472,7 @@ class BlockTrainingEnvironment(object):
         # Get occupied cells of the block
         n_cells, _ = occupied_cells.shape
 
+        # Check each occupied cell of the latest_block against the current grid_tensor
         for i in range(n_cells):
             x, y, z = list(occupied_cells[i])
             assert self.grid_tensor[x,y,z] != 1
