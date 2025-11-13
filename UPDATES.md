@@ -32,6 +32,30 @@ A log of project progress and specific lessons learned.
 
 ## Log
 
+
+### 2025-11-13
+
+Last week, after concluding there were no more bugs in the Unity C# code (`VizResults.cs`, `VizEpisode.cs`) that re-maps blocks in the Python training environment block position/coordinate system to Unity's coordinate system, I thought I still saw some block overlaps and found the issue may have been within my Python `env4training.py` code...
+
+After struggling to find any errors in `env4training.py` I decided to just add a `sanity_check()` function that just double checks the latest block added and make sure it doesn't overlap. In particular, the sanity check makes an assertion
+
+```
+
+for i in range(n_cells):
+  x, y, z = list(occupied_cells[i])
+  assert self.grid_tensor[x,y,z] != 1
+```
+
+After making those changes, I re-ran `test_env.py` last week and again today and visualized the results in Unity...
+
+<img src="img/251113_no_bugs.png">
+
+...and there are no more block overlap bugs!
+
+Now I'd like to just take some time and re-familiarize with my code so that I have a clear picture of how to get back into the RL agent part of this project...
+
+(I promise to myself that I will not end up re-factor my code to somehow "optimize" it...just review and add comments here and there to arrive at how a PPO RL agent might work with this better.)
+
 ### 2025-11-06
 
 OK found another bug...
