@@ -351,6 +351,8 @@ class BlockTrainingEnvironment(object):
         # Record untried cells and blocks
         untried_cells_blocks = {}
         for index in indices2[:,0]:
+            # copy untried_block_orients to each cell 
+            # that's part of the target voxel model but currently unfilled
             untried_cells_blocks[index.item()] = copy.deepcopy(untried_block_orients)
 
         while (not valid_action):
