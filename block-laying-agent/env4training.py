@@ -549,6 +549,7 @@ class BlockTrainingEnvironment(object):
         #if self.block_seq_index > 100:
 
         # If number of attempts exceed the total number of filled cells for the target voxel model
+        # then it is likely going to take too long to complete the given voxel model with 100% filled
         if self.block_seq_index > self.sum_filled:
             print('ENV: Number of moves exceeded!')
             return True
