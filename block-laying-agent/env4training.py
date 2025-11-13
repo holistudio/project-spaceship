@@ -7,6 +7,7 @@ import copy
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f'Device: {device}')
+print()
 
 NUM_X = 32
 NUM_Y = 32
