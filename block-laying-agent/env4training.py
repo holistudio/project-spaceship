@@ -331,7 +331,6 @@ class BlockTrainingEnvironment(object):
         #print(indices1.shape)
 
         # Create a mask tensor identifying unfilled grid cells among target voxel grid cells
-        # mask2 =  (self.grid_tensor[indices1] == 0)
         mask2 =  (self.grid_tensor[indices1[:, 0], indices1[:, 1], indices1[:, 2]] == 0)
         #print(mask2.shape)
         
