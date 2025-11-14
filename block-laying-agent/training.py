@@ -60,7 +60,7 @@ for ep in range(NUM_EPISODES):
         next_state, reward, terminal = env.step(env_actions)
 
         # print('= AGENT updates EXP =')
-        loss = agent.update_experience(state,agent_actions,next_state,reward,terminal)
+        loss = agent.update_experience(state, agent_actions, next_state, reward, terminal)
 
         log_everything(episode, env.block_seq_index, env.log, agent.log, loss, reward, terminal)
 
