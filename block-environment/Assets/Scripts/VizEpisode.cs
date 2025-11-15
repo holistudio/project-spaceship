@@ -11,20 +11,19 @@ using UnityEditor.Experimental.GraphView;
 [System.Serializable]
 public class LatestBlock
 {
+    public int block_ix;
     public string block_type;
     public int x;
     public int y;
     public int z;
     public int orientation;
-    public bool block_conflict;
+    public string author;
 }
 
 [System.Serializable]
 public class Env
 {
-    public LatestBlock latest_agent_block;
-    public LatestBlock latest_env_block;
-    public bool block_conflict;
+    public LatestBlock latest_block;
 }
 
 [System.Serializable]
@@ -42,8 +41,8 @@ public class Step
     public int episode;
     public int block;
     public Env env;
-    public Agent agent;
-    public float loss;
+    // public Agent agent;
+    // public float loss;
     public float reward;
     public bool terminal;
 }
@@ -64,7 +63,7 @@ public class VizEpisode : MonoBehaviour
     public int stepIndex = 0;
     private string fileName;
     private string filePath;
-    private string folderPath = "../../results/2025-11-13_env/";
+    private string folderPath = "../../results/2025-11-14_refactor/";
 
     private Root rootData;
     private Step[] stepData;
@@ -203,25 +202,16 @@ public class VizEpisode : MonoBehaviour
 
                 foreach (Step step in rootData.record)
                 {
-                    if (step.env.latest_agent_block.block_conflict == false)
+
+                    Debug.Log("Episode: " + step.episode);
+                    Debug.Log("Block: " + step.block);
+                    Debug.Log("Latest Agent Block Type: " + step.env.latest_block.block_type);
+                    string agentBlockType = step.env.latest_block.block_type;
+                    string author = step.env.latest_block.author;
+                    if (!agentBlockType.Equals("None"))
                     {
-                        Debug.Log("Episode: " + step.episode);
-                        Debug.Log("Block: " + step.block);
-                        Debug.Log("Latest Agent Block Type: " + step.env.latest_agent_block.block_type);
-                        Debug.Log("Latest Env Block Type: " + step.env.latest_env_block.block_type);
-                        Debug.Log("Block Conflict: " + step.env.latest_agent_block.block_conflict);
-                        string agentBlockType = step.env.latest_agent_block.block_type;
-                        string envBlockType = step.env.latest_env_block.block_type;
-                        if (!agentBlockType.Equals("None"))
-                        {
-                            addBlock(step, "agent");
-                        }
-                        if (!envBlockType.Equals("None"))
-                        {
-                            addBlock(step, "env");
-                        }
+                        addBlock(step, author);
                     }
-                    
                 }
                 startBlockIndex += blocksPerEpisode;
             }
@@ -235,15 +225,10 @@ public class VizEpisode : MonoBehaviour
 
     void addBlock(Step step, string blockAuthor)
     {
-        if (blockAuthor.Equals("agent") || blockAuthor.Equals("env"))
+        if (blockAuthor.Equals("agent_0") || blockAuthor.Equals("agent_1"))
         {
-            LatestBlock listBlockData = step.env.latest_agent_block;
+            LatestBlock listBlockData = step.env.latest_block;
             
-            if (blockAuthor.Equals("env"))
-            {
-                listBlockData = step.env.latest_env_block;
-            }
-
             Transform childTransform = blockSet.transform.Find(listBlockData.block_type);
             
             if (childTransform != null)
@@ -273,7 +258,6 @@ public class VizEpisode : MonoBehaviour
             }
 
         }
-        Debug.Log("Error: provide either 'agent' or 'env' as blockAuthor.");
     }
 
     // Update is called once per frame
