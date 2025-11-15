@@ -32,6 +32,65 @@ A log of project progress and specific lessons learned.
 
 ## Log
 
+### 2025-11-14
+
+It's finally occurred to me that how I'm training the RL agent now is probably going to be different than how the RL agent continues to learn interacting with humans, especially w.r.t. the reward function.
+
+I'm inclined to not worry about this for now just to get some basic RL agents (PPO) working. But I can also start thinking of what the "online RL learning" feedback loop looks like in a conceptual diagram. It's just that right now the reward is based on a specific 3D voxel shape, where it's known where the blocks should go. But in the final "human-in-the-loop" version, the human designer doesn't have such a clear picture of where all the blocks will go, only some vague ideas.
+
+One way a human designer can give feedback to the RL agent is to have the user delete a couple blocks that the RL agent suggests and these deletions serve as negative feedback while the rest can be assumed to be neutral or positive feedback.
+
+
+The following was how I conceptualized the observation/state previously: Overall a 4D tensor of shape `(7, 32, 32, 32)` or `(BLOCK_INFO, NUM_X, NUM_Y, NUM_Z)`
+
+Why is `BLOCK_INFO=7`?
+
+`BLOCK_INFO` captures relevant things about the blocks (lines 295-299 in `env4training.py`)
+
+```
+ShapeNetID, 
+block_type_i # which of the 6 types of block occupies the grid cell
+pos_x, pos_y, pos_z # position of the block's anchor (not the x,y,z coordinates of the grid cell itself)
+orientation # 0 or 1
+block_seq_index
+```
+
+For some reason I thought it was important to communicate the `ShapeNetID` to RLAgent. In hindsight I'm not sure this is a good idea for now. I think this was because I imagined another model would guess which object it was and that could inform the RL agent's predictions but I'll see if that's really needed when I'm ready to move beyond a specific 3D shape.
+
+I now think `BLOCK_INFO=5`:
+
+```
+block_type_i # which of the 6 types of block occupies the grid cell
+pos_x, pos_y, pos_z # position of the block's anchor (not the x,y,z coordinates of the grid cell itself)
+orientation # 0 or 1
+```
+
+I've refactored the `BlockEnvironment` code with this simplified schema. I also created a separate `TeacherAgent` that does what was previously done by the environment via the `env_add_block` function. This allows the `training.py` file to more closely resemble multi-agent training loops like those found in PettingZoo.
+
+The blocks from a single episode with two `TeacherAgents` look OK:
+
+<img src="img/251114_OK.png" width="300 px">
+
+But the resulting terminal output doesn't make quite a lot of sense:
+```
+===== EPISODE 0 =====
+ENV: Loading Voxel Model
+ENV: Total Filled Cells=752
+ENV: Model Filled Percent=2.29%
+== PLACING BLOCKS ==
+2025-11-14 18:03:13.848679 TRAINING: Block 49, Reward = 204.00, Percent complete = 19.28%
+2025-11-14 18:03:15.211261 TRAINING: Block 99, Reward = 431.00, Percent complete = 40.82%
+2025-11-14 18:03:16.136494 TRAINING: Block 149, Reward = 605.00, Percent complete = 56.38%
+2025-11-14 18:03:16.932268 TRAINING: Block 199, Reward = 759.00, Percent complete = 69.41%
+2025-11-14 18:03:17.470844 TRAINING: Block 249, Reward = 919.00, Percent complete = 80.98%
+2025-11-14 18:03:17.943154 TRAINING: Block 299, Reward = 1051.00, Percent complete = 90.96%
+2025-11-14 18:03:18.505912 TRAINING: Block 317, Reward = 1097.00, Percent complete = 94.81%
+```
+
+If I'm assigning only +1 reward for each correctly filled cell, how can the total reward be greater than the total number of filled cells?
+
+I'll need to take a closer look at this but at least the good news is after refactoring there are still no overlapping block issues.
+
 
 ### 2025-11-13
 
