@@ -13,9 +13,10 @@ def main():
 
     for ep in range(episodes):
         print(f"\n\n{"#"*5} EPISODE {ep+1:,} {"#"*5}\n")
-        # idx = 0
-        # env.reset()
-        # for a in env.agent_iter():
+        idx = 0
+        env.reset()
+        for a in env.agent_iter():
+            print(env.timestep, a)
             # agent = agent_list[idx]
             # observation, reward, termination, truncation, info = env.last()
             
@@ -28,6 +29,7 @@ def main():
                 # else:
                     # actions = agent.step(observation)
             
+            env.step()
             # env.step(actions)
 
             # if idx % 2 == 0:
@@ -37,6 +39,9 @@ def main():
                 # agent.experience(observation, actions, reward)
                 
             # idx = (idx+1)%2
+            idx += 1
+            if idx > 5:
+                break
     # env.close()
     pass
 
