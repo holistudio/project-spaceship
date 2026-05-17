@@ -3,7 +3,8 @@ from environment import BlockEnvironment
 def main():
     episodes = 5
 
-    env = BlockEnvironment()
+    max_rounds = 3
+    env = BlockEnvironment(max_timesteps=max_rounds*2)
 
     # teacher_agent = TeacherAgent()
     # block_agent = PPOBlockAgent()
@@ -16,8 +17,9 @@ def main():
         print(f"\n\n{"#"*5} EPISODE {ep+1:,} {"#"*5}\n")
         idx = 0
         env.reset()
-        for a in env.agent_iter():
-            print(env.timestep, a)
+
+        while not (env.termination or env.truncation):
+            print(env.timestep, env.current_player)
             # agent = agent_list[idx]
             observation, reward, termination, truncation = env.last()
             
@@ -40,9 +42,6 @@ def main():
                 # agent.experience(observation, actions, reward)
                 
             # idx = (idx+1)%2
-            idx += 1
-            if idx > 5:
-                break
     # env.close()
     pass
 
