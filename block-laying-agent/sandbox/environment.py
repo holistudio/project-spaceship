@@ -61,6 +61,7 @@ class BlockEnvironment(object):
 
     def __init__(self, grid_dim=32, max_timesteps=10_000):
         print("INITIALIZING ENVIRONMENT...", end="")
+
         self.timestep = 0
         self.max_timesteps = max_timesteps
         self.block_id = 0
@@ -72,19 +73,19 @@ class BlockEnvironment(object):
         self.action_space = np.arange(self.num_block_types * 
                                       self.num_orientations * 
                                       self.grid_shape[0] * self.grid_shape[1] * self.grid_shape[2])
+        self.action_mask, self.edge_invalid_actions = self._initial_action_mask()
 
         self.players = ['user', 'agent']
         self._player_selector = iter(self.players)
         self.current_player = next(self._player_selector)
 
-        
         self.observation = {
             "observation": {
                 "user_blocks": [],
                 "agent_blocks": [],
                 "voxel_grid": self.voxel_grid
             },
-            # "actions_mask": self._mask_actions()
+            "action_mask": self.action_mask
         }
         self.reward = 0
         self.termination = False
@@ -93,15 +94,57 @@ class BlockEnvironment(object):
         print("done\n\n")
         pass
 
+    def _initial_action_mask(self):
+        action_mask = np.ones(self.action_space.shape, dtype=bool)
+        invalid_idx = set()
+        
+        X, Y, Z = self.grid_shape
+        xs, zs = list(range(X)), list(range(Z))
+        xs = xs[:3] + xs[-3:]
+        zs = zs[:3] + zs[-3:]
+        for block_type_i, block_type in enumerate(BLOCK_DEFINITIONS):
+            for orientation in range(self.num_orientations):
+                # only check edge of X and Z ranges [3, -3:]
+                for x in xs:
+                    # check every Y coordinate (up/down)
+                    for y in range(Y):
+                        for z in zs:
+
+                            # check if the specific block position + orientation is out-of-bounds
+                            position = np.array([x,y,z])
+                            if orientation == 0:
+                                cells = BLOCK_DEFINITIONS[block_type]["o0_cells"]
+                            else:
+                                cells = BLOCK_DEFINITIONS[block_type]["o1_cells"]
+                            cells = position + cells
+                            out_bounds = np.count_nonzero(
+                                (cells[:, 0] < 0) | (cells[:, 0] > X) |
+                                (cells[:, 1] < 0) | (cells[:, 1] > Y) |
+                                (cells[:, 2] < 0) | (cells[:, 2] > Z) 
+                            )
+                            if out_bounds > 0:
+                                # assumes the lexicographic order: block_type → orientation → x → y → z
+                                idx = (block_type_i * (self.num_orientations * X * Y * Z) +
+                                    orientation * (X * Y * Z) +
+                                    x * (Y * Z) +
+                                    y * (Z) +
+                                    z 
+                                )
+                                action_mask[idx] = False
+                                invalid_idx.add(idx)
+        return action_mask, invalid_idx
 
     def reset(self):
         print("RESETTING ENVIRONMENT...", end="")
+
         self.timestep = 0
         self.block_id = 0
         self.voxel_grid = np.zeros(self.grid_shape)
         self.action_space = np.arange(self.num_block_types * 
                                       self.num_orientations * 
                                       self.grid_shape[0] * self.grid_shape[1] * self.grid_shape[2])
+        self.action_mask, self.edge_invalid_actions = self._initial_action_mask()
+        
         
         self._player_selector = iter(self.players)
         self.current_player = next(self._player_selector)
@@ -112,11 +155,12 @@ class BlockEnvironment(object):
                 "agent_blocks": [],
                 "voxel_grid": self.voxel_grid
             },
-            # "actions_mask": self._mask_actions()
+            "action_mask": self.action_mask
         }
         self.reward = 0
         self.termination = False
         self.truncation = False
+
         print("done")
         pass
 
@@ -128,9 +172,40 @@ class BlockEnvironment(object):
 
     def last(self):
         return self.observation, self.reward, self.termination, self.truncation
+    
+    def _action_to_placement(self, a):
+        X, Y, Z = self.grid_shape
+        O = self.num_orientations
 
+        # decompose the action index
+        # assumes the lexicographic order: block_type → orientation → x → y → z
+        remainder, z = divmod(a, Z)
+        remainder, y = divmod(remainder, Y)
+        remainder, x = divmod(remainder, X)
+        x, y, z = int(x), int(y), int(z)
+
+        remainder, orientation = divmod(remainder, O)
+        orientation = int(orientation)
+
+        block_type_i= remainder
+        block_type = BLOCK_TYPES[block_type_i]
+
+        return {
+            "block_type": block_type,
+            "orientation": orientation,
+            "position": (x, y, z)
+        }   
+    
+    def sample_action(self, mask):
+        if mask is not None:
+            actions = self.action_space[mask]
+        a = actions[np.random.randint(0,len(actions),())]
+        print(a)
+        placement = self._action_to_placement(a)
+        print(f"{placement["block_type"]} Block: {placement["position"], placement["orientation"]}")
+        return a
+    
     # close():
-
 
 
     # _check_action(action):
@@ -147,8 +222,9 @@ class BlockEnvironment(object):
         # new_blocks = actions["new_blocks"]
         
         # for a in new_blocks:
-            # _check_actions(a)
+            # _check_action(a)
             # update voxel grid
+            # update action mask
             # update observation
 
         # if current_player == 'user':
@@ -158,7 +234,10 @@ class BlockEnvironment(object):
 
             # update agent_blocks based on change_blocks
             # change_blocks = actions["change_blocks"]
-            # _check_actions(a)
+            # _check_action(a)
+            # update voxel grid
+            # update action mask
+            # update observation
 
             # update reward
             # reward += actions["score"]
