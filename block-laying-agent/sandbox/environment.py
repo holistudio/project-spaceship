@@ -60,7 +60,7 @@ class Block(object):
 class BlockEnvironment(object):
 
     def __init__(self, grid_dim=32):
-
+        print("INITIALIZING ENVIRONMENT...", end="")
         self.timestep = 0
         self.block_id = 0
 
@@ -83,6 +83,7 @@ class BlockEnvironment(object):
             # }
             # "actions_mask": self._mask_actions()
         #}
+        print("done\n\n")
         pass
 
 
