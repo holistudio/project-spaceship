@@ -85,6 +85,10 @@ class BlockEnvironment(object):
             },
             # "actions_mask": self._mask_actions()
         }
+        self.reward = 0
+        self.termination = False
+        self.truncation = False
+
         print("done\n\n")
         pass
 
@@ -109,6 +113,9 @@ class BlockEnvironment(object):
             },
             # "actions_mask": self._mask_actions()
         }
+        self.reward = 0
+        self.termination = False
+        self.truncation = False
         print("done")
         pass
 
@@ -118,8 +125,8 @@ class BlockEnvironment(object):
             yield self.current_player
             i += 1
 
-    # last():
-        # return observation, reward, termination, truncation, info
+    def last(self):
+        return self.observation, self.reward, self.termination, self.truncation
 
     # close():
 
