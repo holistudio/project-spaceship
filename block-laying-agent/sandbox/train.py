@@ -1,7 +1,8 @@
+from environment import BlockEnvironment
 def main():
     episodes = 5
 
-    # env = BlockEnvironment()
+    env = BlockEnvironment()
 
     # teacher_agent = TeacherAgent()
     # block_agent = PPOBlockAgent()
@@ -11,7 +12,7 @@ def main():
     # agent_list = [user, block_agent]
 
     for ep in range(episodes):
-        print(f"{"#"*5} EPISODE {ep+1:,} {"#"*5}")
+        print(f"\n\n{"#"*5} EPISODE {ep+1:,} {"#"*5}\n")
         # idx = 0
         # env.reset()
         # for a in env.agent_iter():
