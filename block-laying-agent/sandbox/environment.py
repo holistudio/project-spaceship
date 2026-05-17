@@ -66,15 +66,17 @@ class BlockEnvironment(object):
 
         self.grid_shape = (grid_dim, grid_dim, grid_dim)
         self.voxel_grid = np.zeros(self.grid_shape)
-        num_block_types = len(BLOCK_TYPES)
-        num_orientations = 2
-        self.action_space = np.arange(num_block_types * num_orientations * grid_dim * grid_dim * grid_dim)
+        self.num_block_types = len(BLOCK_TYPES)
+        self.num_orientations = 2
+        self.action_space = np.arange(self.num_block_types * 
+                                      self.num_orientations * 
+                                      self.grid_shape[0] * self.grid_shape[1] * self.grid_shape[2])
 
         self.players = ['user', 'agent']
-        self.current_player = 'user'
+        self._player_selector = iter(self.players)
+        self.current_player = next(self._player_selector)
 
         
-
         # observation = {
             # "observation": {
                 # "user_blocks": [],
@@ -87,44 +89,74 @@ class BlockEnvironment(object):
         pass
 
 
-# reset():
+    def reset(self):
+        print("RESETTING ENVIRONMENT...", end="")
+        self.timestep = 0
+        self.block_id = 0
+        self.voxel_grid = np.zeros(self.grid_shape)
+        self.action_space = np.arange(self.num_block_types * 
+                                      self.num_orientations * 
+                                      self.grid_shape[0] * self.grid_shape[1] * self.grid_shape[2])
+        
+        self._player_selector = iter(self.players)
+        self.current_player = next(self._player_selector)
 
-# agent_iter():
+        # observation = {
+            # "observation": {
+                # "user_blocks": [],
+                # "agent_blocks": [],
+                # "voxel_grid": voxel_grid
+            # }
+            # "actions_mask": self._mask_actions()
+        #}
+        print("done")
+        pass
 
-# last():
-    # return observation, reward, termination, truncation, info
+    def agent_iter(self, max_iter=2**63):
+        i = 0
+        while i < max_iter and self.players:
+            yield self.current_player
+            i += 1
 
-# close():
+    # last():
+        # return observation, reward, termination, truncation, info
+
+    # close():
 
 
 
-# _check_action(action):
-    # if the block (position, orientation) overlaps with existing voxel grid
-    # stop and raise error
+    # _check_action(action):
+        # if the block (position, orientation) overlaps with existing voxel grid
+        # stop and raise error
 
-# _mask_actions():
-    # go through action space
-    # if the block (position, orientation) overlaps with existing voxel grid,
-    # mask it out
+    # _mask_actions():
+        # go through action space
+        # if the block (position, orientation) overlaps with existing voxel grid,
+        # mask it out
 
-# step(actions):
-    # new_blocks = actions["new_blocks"]
-    
-    # for a in new_blocks:
-        # _check_actions(a)
-        # update voxel grid
-        # update observation
+    def step(self, actions=None):
+        self.timestep += 1
+        # new_blocks = actions["new_blocks"]
+        
+        # for a in new_blocks:
+            # _check_actions(a)
+            # update voxel grid
+            # update observation
 
-    # if current_player == 'user':
-        # user_terminal = actions["done"]
-        # if user_terminal:
-            # return 
+        # if current_player == 'user':
+            # user_terminal = actions["done"]
+            # if user_terminal:
+                # return 
 
-        # update agent_blocks based on change_blocks
-        # change_blocks = actions["change_blocks"]
-        # _check_actions(a)
+            # update agent_blocks based on change_blocks
+            # change_blocks = actions["change_blocks"]
+            # _check_actions(a)
 
-        # update reward
-        # reward += actions["score"]
-
-    # pass
+            # update reward
+            # reward += actions["score"]
+        try:
+            self.current_player = next(self._player_selector)
+        except StopIteration:
+            self._player_selector = iter(self.players)
+            self.current_player = next(self._player_selector)
+        pass
