@@ -77,14 +77,14 @@ class BlockEnvironment(object):
         self.current_player = next(self._player_selector)
 
         
-        # observation = {
-            # "observation": {
-                # "user_blocks": [],
-                # "agent_blocks": [],
-                # "voxel_grid": voxel_grid
-            # }
+        self.observation = {
+            "observation": {
+                "user_blocks": [],
+                "agent_blocks": [],
+                "voxel_grid": self.voxel_grid
+            },
             # "actions_mask": self._mask_actions()
-        #}
+        }
         print("done\n\n")
         pass
 
@@ -101,14 +101,14 @@ class BlockEnvironment(object):
         self._player_selector = iter(self.players)
         self.current_player = next(self._player_selector)
 
-        # observation = {
-            # "observation": {
-                # "user_blocks": [],
-                # "agent_blocks": [],
-                # "voxel_grid": voxel_grid
-            # }
+        self.observation = {
+            "observation": {
+                "user_blocks": [],
+                "agent_blocks": [],
+                "voxel_grid": self.voxel_grid
+            },
             # "actions_mask": self._mask_actions()
-        #}
+        }
         print("done")
         pass
 
@@ -154,6 +154,8 @@ class BlockEnvironment(object):
 
             # update reward
             # reward += actions["score"]
+
+        # iterate to next player
         try:
             self.current_player = next(self._player_selector)
         except StopIteration:
