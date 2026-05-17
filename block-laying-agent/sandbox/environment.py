@@ -59,9 +59,10 @@ class Block(object):
 
 class BlockEnvironment(object):
 
-    def __init__(self, grid_dim=32):
+    def __init__(self, grid_dim=32, max_timesteps=10_000):
         print("INITIALIZING ENVIRONMENT...", end="")
         self.timestep = 0
+        self.max_timesteps = max_timesteps
         self.block_id = 0
 
         self.grid_shape = (grid_dim, grid_dim, grid_dim)
@@ -161,6 +162,12 @@ class BlockEnvironment(object):
 
             # update reward
             # reward += actions["score"]
+
+        # check truncation
+        if self.timestep >= self.max_timesteps:
+            print(f"{"!"*5} EPISODE TRUNCATED {"!"*5}\n")
+            self.truncation = True
+
 
         # iterate to next player
         try:
