@@ -13,7 +13,7 @@ teacher_config = {
 }
 
 # class TeacherAgent
-# __init__(config):
+# __init__(env, config):
     # num_user_blocks = num_user_blocks
     # num_agent_blocks = num_agent_blocks
     # target_object, total_target_voxels = _load_target_voxel(target_object_id)
@@ -24,6 +24,10 @@ teacher_config = {
     # unmoved_score = 1
     # moved_score = -0.1
     # removed_score = -2
+
+    # num_block_types = env.num_block_types
+    # num_orientations = env.num_orientations
+    # grid_shape = env.grid_shape
 
 # _load_target_voxel(target_object_id):
     # return target_object, total_target_voxels
@@ -110,6 +114,12 @@ teacher_config = {
         # place new blocks
         # for _ in range(num_user_blocks):
             # block, voxel_grid = place_block(voxel_grid)
-            # actions["new_blocks"].append(block)
+            # action = (block_type_i * (self.num_orientations * self.grid_shape[0] * self.grid_shape[1] * self.grid_shape[2]) +
+            # orientation * (self.grid_shape[0] * self.grid_shape[1] * self.grid_shape[2]) +
+            # x * (self.grid_shape[1] * self.grid_shape[2]) +
+            # y * (self.grid_shape[2]) +
+            # z 
+            # )
+            # actions["new_blocks"].append(action)
 
         # return actions
