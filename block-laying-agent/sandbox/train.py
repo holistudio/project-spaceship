@@ -1,4 +1,5 @@
 from environment import BlockEnvironment
+
 def main():
     episodes = 5
 
@@ -18,7 +19,7 @@ def main():
         for a in env.agent_iter():
             print(env.timestep, a)
             # agent = agent_list[idx]
-            # observation, reward, termination, truncation, info = env.last()
+            observation, reward, termination, truncation = env.last()
             
             # if termination or truncation:
                 # actions = None
@@ -32,7 +33,7 @@ def main():
             env.step()
             # env.step(actions)
 
-            # if idx % 2 == 0:
+            # if idx % 2 != 0:
                 # TODO: revisit this later in terms of 
                 # associating the reward correctly to 
                 # block_agent's PREVIOUS (NOT LATEST) obs/actions
